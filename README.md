@@ -37,7 +37,7 @@ The display of flea market prices should always be viewed with a degree of cauti
 
 Please note that all of the following information may be incomplete or misinterpreted on my part, especially my knowledge or interpretation of how SPT simulates the flea market.
 
-### How does the mod calculate the prices?
+### How does the mod calculate the flea prices?
 
 The SPT-server only has one price for the flea price for each item. To create offers, the SPT server takes this price and generates random offers using a price range. By default, this is 80%-120% (SPT 3.11.x). The mod takes this "average" flea price and the set minimum of the price range and calculates the lowest expected price of the item on the flea market. 
 
