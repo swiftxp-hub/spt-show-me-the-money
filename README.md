@@ -6,7 +6,7 @@ A BepInEx plugin and an accompanying server mod for SPT (Single Player Tarkov).
 
 ## What does it do?
 
-The BepInEx plugin modifies the in-game tooltip of items to display price informations. The dealer who would buy the item for the best price and a flea market selling price is displayed. The display is divided into "Price per slot" and "Total"-price. The best sales offer is highlighted. The flea markt price is always the lowest expected profit (please see the "[For nerds](#for-nerds)" section for more details on this). Also flea market taxes can be included (experimental function).
+The BepInEx plugin modifies the in-game tooltip of items to display price informations (in stash and in raid). The dealer who would buy the item for the best price and a flea market selling price is displayed. The display is divided into "Price per slot" and "Total"-price. The best sales offer is highlighted. The flea markt price is always the lowest expected profit (please see the "[For nerds](#for-nerds)" section for more details on this). Also flea market taxes can be included (experimental function).
 
 The accompanying server mod provides two endpoints for the BepInEx plugin, which are used to retrieve the flea market prices and the price ranges set for the SPT-server's flea market.
 
@@ -20,7 +20,40 @@ Basically none.
 
 ## Installation
 
-Extract the contents of the release zip file into your SPT install directory. Done.
+### If you have a completely normal installation of SP-Tarkov (everything inside one folder, on one machine, like the SPT-Installer is doing it):
+
+Extract the contents of the .zip file into your SPT directory. 
+
+You should end up having the following files copied to your SPT directory:
+- C:\yourSPTfolder\BepInEx\plugins\SwiftXP.ShowMeTheMoney.dll
+- C:\yourSPTfolder\user\mods\swiftxp-showmethemoney\package.json
+- C:\yourSPTfolder\user\mods\swiftxp-showmethemoney\src\mod.ts
+
+### If you have your client and your server separated
+
+Extract the "BepInEx" folder from the .zip to your client and extract the "user" folder to your server.
+
+You should end up having the following files copied...
+
+... on your client:
+- C:\yourSPTclient\BepInEx\plugins\SwiftXP.ShowMeTheMoney.dll
+
+... on your server:
+- C:\yourSPTserver\user\mods\swiftxp-showmethemoney\package.json
+- C:\yourSPTserver\user\mods\swiftxp-showmethemoney\src\mod.ts
+
+### If you use the Fika headless client
+
+There is no need to install anything to your Fika headless client for this mod to work properly. I would actually recommend to NOT install my mod on your Fika headless client. This also means that I recommend to add my mod to your Exclusions.json if you use [Corter's Mod Sync](https://github.com/c-orter/ModSync). [Please see his FAQ on how to add sync-exclusions](https://github.com/c-orter/ModSync/wiki/Configuration#exclusions).
+
+## Configuration
+
+Please use the BepInEx configurator to configure features of the mod (usually accessible by pressing F12 or F1 when you are in-game.).
+
+![BepInEx Plugin Configuration](https://raw.githubusercontent.com/swiftxp-hub/spt-show-me-the-money/refs/heads/main/Assets/plugin-configuration.png)
+(Default configuration with freshly installed mod)
+
+As you can see, you can also manually trigger the plugin to retrieve the current flea market prices from your SPT server (this can be useful if you use [DrakiaXYZ's SPT-LiveFleaPrices](https://github.com/DrakiaXYZ/SPT-LiveFleaPrices) - however, the flea market prices are also refreshed from the SPT-server every time the game is started).
 
 ## Known compatibility
 
