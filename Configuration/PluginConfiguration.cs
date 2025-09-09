@@ -40,7 +40,7 @@ public class PluginConfiguration
             "Pulls the current flea prices from your SPT server instance.",
             () =>
             {
-                SimpleStaticLogger.Instance.Log(BepInEx.Logging.LogLevel.Info, "Updating flea prices...");
+                SimpleStaticLogger.Instance.LogInfo("Updating flea prices...");
                 bool pricesUpdated = RagfairPriceTable.Instance.UpdatePrices();
 
                 if (pricesUpdated)

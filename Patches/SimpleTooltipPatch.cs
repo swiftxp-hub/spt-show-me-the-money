@@ -6,7 +6,6 @@ using SwiftXP.ShowMeTheMoney.Models;
 using System.Reflection;
 using UnityEngine;
 using System;
-using BepInEx.Logging;
 using System.Text;
 using SwiftXP.ShowMeTheMoney.Sessions;
 using HarmonyLib;
@@ -23,7 +22,7 @@ public class SimpleTooltipPatch : ModulePatch
     {
         SimpleStaticLogger.Instance.LogDebug($"SimpleTooltipPatch.PatchPrefix - Item: {Plugin.HoveredItem?.TemplateId}");
 
-        if (IsInsuredByTooltip(text) || IsCheckmarkTooltip(text))
+        if (IsTemporaryDisabled() || IsInsuredByTooltip(text) || IsCheckmarkTooltip(text))
             return;
 
         try
@@ -64,8 +63,13 @@ public class SimpleTooltipPatch : ModulePatch
         }
         catch (Exception exception)
         {
-            SimpleStaticLogger.Instance.Log(LogLevel.Error, $"An unexpected error occured. Message: {exception.Message}");
+            SimpleStaticLogger.Instance.LogError($"An unexpected error occured. Message: {exception.Message}");
         }
+    }
+
+    private static bool IsTemporaryDisabled()
+    {
+        return Plugin.DisableTemporary;
     }
 
     private static bool IsInsuredByTooltip(in string text)

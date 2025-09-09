@@ -20,7 +20,7 @@ public class RagfairPriceTable
 
     public bool UpdatePrices()
     {
-        SimpleStaticLogger.Instance.Log(BepInEx.Logging.LogLevel.Info, "Trying to query ragfair price table from remote...");
+        SimpleStaticLogger.Instance.LogInfo("Trying to query ragfair price table from remote...");
 
         Dictionary<string, double>? queriedPrices = null;
         string pricesJson = RequestHandler.GetJson(Plugin.RemotePathToGetPriceTable);
@@ -30,7 +30,7 @@ public class RagfairPriceTable
 
         if (queriedPrices is not null)
         {
-            SimpleStaticLogger.Instance.Log(BepInEx.Logging.LogLevel.Info, $"Ragfair price table was queried! Got {queriedPrices.Count} prices from remote...");
+            SimpleStaticLogger.Instance.LogInfo($"Ragfair price table was queried! Got {queriedPrices.Count} prices from remote...");
 
             LastQuery = DateTime.UtcNow;
             Prices = queriedPrices;
@@ -39,7 +39,7 @@ public class RagfairPriceTable
         }
         else
         {
-            SimpleStaticLogger.Instance.Log(BepInEx.Logging.LogLevel.Error, "Ragfair price table could not be queried!");
+            SimpleStaticLogger.Instance.LogInfo("Ragfair price table could not be queried!");
         }
 
         return false;

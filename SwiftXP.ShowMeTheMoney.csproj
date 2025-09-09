@@ -7,7 +7,7 @@
 
     <AssemblyName>SwiftXP.ShowMeTheMoney</AssemblyName>
     <Product>Show Me The Money</Product>
-    <Version>1.2.3</Version>
+    <Version>1.2.4</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <RestoreAdditionalProjectSources>
       https://api.nuget.org/v3/index.json;
@@ -33,6 +33,10 @@
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\spt-shared-dlls\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Sirenix.Serialization, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\spt-shared-dlls\Sirenix.Serialization.dll</HintPath>
     </Reference>
     <Reference Include="spt-common">
       <HintPath>..\spt-shared-dlls\spt-common.dll</HintPath>

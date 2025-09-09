@@ -21,6 +21,8 @@ public class Plugin : BaseUnityPlugin
 
     public static Item? HoveredItem { get; set; }
 
+    public static bool DisableTemporary { get; set; }
+
     private void Awake()
     {
         BindBepInExConfiguration();
@@ -30,14 +32,14 @@ public class Plugin : BaseUnityPlugin
 
     private void BindBepInExConfiguration()
     {
-        SimpleStaticLogger.Instance.Log(BepInEx.Logging.LogLevel.Info, "Bind configuration...");
+        SimpleStaticLogger.Instance.LogInfo("Bind configuration...");
 
         Configuration = new PluginConfiguration(Config);
     }
 
     private void InitPriceRangesAndTable()
     {
-        SimpleStaticLogger.Instance.Log(BepInEx.Logging.LogLevel.Info, "Initializing price ranges and table...");
+        SimpleStaticLogger.Instance.LogInfo("Initializing price ranges and table...");
 
         RagfairPriceRanges.Instance.GetPriceRanges();
         RagfairPriceTable.Instance.UpdatePrices();
@@ -45,9 +47,12 @@ public class Plugin : BaseUnityPlugin
 
     private void EnablePatches()
     {
-        SimpleStaticLogger.Instance.Log(BepInEx.Logging.LogLevel.Info, "Enable patches...");
+        SimpleStaticLogger.Instance.LogInfo("Enable patches...");
 
         new TraderPatch().Enable();
+
+        new EditBuildScreenShowPatch().Enable();
+        new EditBuildScreenClosePatch().Enable();
 
         new GridItemOnPointerEnterPatch().Enable();
         new GridItemOnPointerExitPatch().Enable();

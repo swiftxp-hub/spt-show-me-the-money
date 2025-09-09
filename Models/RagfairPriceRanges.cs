@@ -17,7 +17,7 @@ public class RagfairPriceRanges
 
     public void GetPriceRanges()
     {
-        SimpleStaticLogger.Instance.Log(BepInEx.Logging.LogLevel.Info, "Trying to query ragfair price ranges from remote...");
+        SimpleStaticLogger.Instance.LogInfo("Trying to query ragfair price ranges from remote...");
 
         PriceRanges? priceRanges = null;
         string priceRangesJson = RequestHandler.GetJson(Plugin.RemotePathToGetRagfairConfigPriceRanges);
@@ -27,13 +27,13 @@ public class RagfairPriceRanges
 
         if (priceRanges is not null)
         {
-            SimpleStaticLogger.Instance.Log(BepInEx.Logging.LogLevel.Info, $"Ragfair price ranges was queried!");
+            SimpleStaticLogger.Instance.LogInfo($"Ragfair price ranges was queried!");
 
             Ranges = priceRanges;
         }
         else
         {
-            SimpleStaticLogger.Instance.Log(BepInEx.Logging.LogLevel.Error, "ragfair price ranges could not be queried!");
+            SimpleStaticLogger.Instance.LogInfo("ragfair price ranges could not be queried!");
         }
     }
 }
