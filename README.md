@@ -59,3 +59,9 @@ The "Include flea tax" option then deducts the estimated fee for listing the ite
 However, you can also disable the "Include flea tax" option and only enable "Show flea tax." Then the fee will not be deducted in the tooltip, but you will see what you would likely pay in flea tax. However, the orange highlighting, which indicates which sales option yields more profit, may then be incorrect. 
 
 For items consisting of several parts, i.e., armor or weapons, the mod currently only displays the flea price of the base item. Therefore, if the weapon is heavily modded, this has no effect on the flea price display in the tooltip, as the calculation for this would be quite complex (I may integrate this in future versions). Armor cannot be sold anyway if there are still plates in it.
+
+## Motivation behind this mod
+
+Me and my friends are playing SPT in coop with FIKA. Until now, we have always used a different mod from another modder to display the best prices for items. Unfortunately, I realized that this mod put a lot of strain on our very small VServer we use for the SPT-server. A lot of small requests were being sent to the SPT-server. This regularly led to quite severe lags. Our tiny little VServer was not able to keep up.
+
+Since I had wanted to create mods for SPT for quite some time, I took this as an opportunity to write a new plugin for us to display prices, which performs all calculations on the client computer and puts as little strain on the SPT-server as possible. Now that we have been using it for a while, I have decided to make it publicly available.
