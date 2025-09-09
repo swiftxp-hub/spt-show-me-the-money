@@ -3,6 +3,7 @@ using EFT.Communications;
 using SwiftXP.ShowMeTheMoney.ConfigurationManager;
 using SwiftXP.ShowMeTheMoney.Loggers;
 using SwiftXP.ShowMeTheMoney.Models;
+using SwiftXP.ShowMeTheMoney.Notifications;
 
 namespace SwiftXP.ShowMeTheMoney.Configuration;
 
@@ -42,22 +43,15 @@ public class PluginConfiguration
                 SimpleStaticLogger.Instance.Log(BepInEx.Logging.LogLevel.Info, "Updating flea prices...");
                 bool pricesUpdated = RagfairPriceTable.Instance.UpdatePrices();
 
-                GClass2314 updatedPricesMessage = new GClass2314(
-                    "Flea prices updated successfully.",
-                    ENotificationDurationType.Long,
-                    ENotificationIconType.Default
-                );
-
-                if (!pricesUpdated)
+                if (pricesUpdated)
                 {
-                    updatedPricesMessage = new GClass2314(
-                        "Flea prices could not be updated.",
-                        ENotificationDurationType.Long,
-                        ENotificationIconType.Alert
-                    );
-                }
+                    NotificationsService.Instance.SendLongNotice("Flea prices updated successfully.");
 
-                NotificationManagerClass.DisplayNotification(updatedPricesMessage);
+                }
+                else
+                {
+                    NotificationsService.Instance.SendLongAlert("Flea prices could not be updated.");
+                }
             },
             0
         );
