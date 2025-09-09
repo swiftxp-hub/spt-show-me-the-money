@@ -4,7 +4,7 @@ A BepInEx plugin and an accompanying server mod for SPT (Single Player Tarkov).
 
 ## What does it do?
 
-The BepInEx plugin modifies the in-game tooltip of items to display price informations. The dealer who would buy the item for the best price and a flea market selling price is displayed. The display is divided into "Price per slot" and "Total"-price. The best sales offer is highlighted. The flea markt price is always the lowest possible price (please see the see the "[For nerds](#for-nerds)" section for more details on this). Also flea market taxes can be included (experimental function).
+The BepInEx plugin modifies the in-game tooltip of items to display price informations. The dealer who would buy the item for the best price and a flea market selling price is displayed. The display is divided into "Price per slot" and "Total"-price. The best sales offer is highlighted. The flea markt price is always the lowest expected profit (please see the "[For nerds](#for-nerds)" section for more details on this). Also flea market taxes can be included (experimental function).
 
 The accompanying server mod provides two endpoints for the BepInEx plugin, which are used to retrieve the flea market prices and the price ranges set for the SPT-server's flea market.
 
