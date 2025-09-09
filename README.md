@@ -29,7 +29,7 @@ You should end up having the following files copied to your SPT directory:
 - C:\yourSPTfolder\user\mods\swiftxp-showmethemoney\package.json
 - C:\yourSPTfolder\user\mods\swiftxp-showmethemoney\src\mod.ts
 
-### If you have your client and your server separated
+### If you have your client and your server separated:
 
 Extract the "BepInEx" folder from the .zip to your client and extract the "user" folder to your server.
 
