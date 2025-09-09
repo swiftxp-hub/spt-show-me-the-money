@@ -14,7 +14,7 @@ public class EditBuildScreenClosePatch : ModulePatch
     }
 
     [PatchPostfix]
-    public static void PatchPostfix(InventoryScreen __instance)
+    public static void PatchPostfix(EditBuildScreen __instance)
     {
         Plugin.DisableTemporary = false;
     }
