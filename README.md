@@ -1,21 +1,61 @@
-MIT License
+# Show me the money SPT-mod
 
-Copyright (c) 2025 SwiftXP
+A BepInEx plugin and an accompanying server mod for SPT (Single Player Tarkov).
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+## What does it do?
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+The BepInEx plugin modifies the in-game tooltip of items to display price informations. The dealer who would buy the item for the best price and a flea market selling price is displayed. The display is divided into "Price per slot" and "Total"-price. The best sales offer is highlighted. The flea markt price is always the lowest possible price (please see the see the "[For nerds](#for-nerds)" section for more details on this). Also flea market taxes can be included (experimental function).
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+The accompanying server mod provides two endpoints for the BepInEx plugin, which are used to retrieve the flea market prices and the price ranges set for the SPT-server's flea market.
+
+Several configuration options are offered via the BepInEx configurator.
+
+The mod is written in such a way that the load on the SPT-server is as low as possible. Only when the game is started are the average flea market prices and ranges retrieved from the SPT-server. After that, all calculations are performed on the client, so that the item tooltip should not have any noticeable delay.
+
+## Requirements
+
+Basically none.
+
+## Installation
+
+Extract the contents of the release zip file into your SPT install directory. Done.
+
+## Known compatibility
+
+- [SPT-LiveFleaPrices](https://github.com/DrakiaXYZ/SPT-LiveFleaPrices) v1.5.2
+
+## Known problems
+
+The display of flea market prices should always be viewed with a degree of caution. The calculations are only theoretical in nature and may give the impression that the actual flea market offers have different prices. In particular, when flea market taxes are included (experimental feature), differences may theoretically arise, especially when presets and packs are put up for sale, as these are not currently taken fully into account in the calculation (I may integrate this in future versions). For more information on the calculations see the "[For nerds](#for-nerds)" section in this readme.
+
+## Tested environment
+
+- SPT 3.11.4 (this mod should work with every SPT 3.11 release, but it's not tested except for version 3.11.4)
+- EFT 16.1.3.35392
+
+## For nerds
+
+Please note that all of the following information may be incomplete or misinterpreted on my part, especially my knowledge or interpretation of how SPT simulates the flea market.
+
+### How does the mod calculate the prices?
+
+The SPT-server only has one price for the flea price for each item. To create offers, the SPT server takes this price and generates random offers using a price range. By default, this is 80%-120% (SPT 3.11.x). The mod takes this "average" flea price and the set minimum of the price range and calculates the lowest expected price of the item on the flea market. 
+
+Using the "FP-100 filter absorber" as an example: 
+332.400 * 0,8 = ~277.000
+
+This means you always see the value that gives you "a 100% chance of selling" on SPT's virtual flea market.
+
+The "Include flea tax" option then deducts the estimated fee for listing the item on the flea market. Tarkov's own method is used for this. This should actually be very accurate, but as always, it's a little more complicated in reality. That's why I've marked the function in the mod as "Experimental", because I can't guarantee that it will always be 100% accurate. Also fees for presets and packs are not fully considered by the mod at the moment (I may integrate this in future versions).
+
+However, you can also disable the "Include flea tax" option and only enable "Show flea tax." Then the fee will not be deducted in the tooltip, but you will see what you would likely pay in flea tax. However, the orange highlighting, which indicates which sales option yields more profit, may then be incorrect. 
+
+The price per slot calculation is very simple:
+Total price / number of item slots
+
+Using the "FP-100 filter absorber" as an example:
+277.000 / 9 = ~30.777 
+
+For items consisting of several parts, i.e., armor or weapons, the mod currently only displays the flea price of the base item. Therefore, if the weapon is heavily modded, this has no effect on the flea price display in the tooltip, as the calculation for this would be quite complex (I may integrate this in future versions).
+
+Armor cannot be sold anyway if there are still plates in it.
