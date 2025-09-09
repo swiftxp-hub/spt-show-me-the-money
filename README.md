@@ -90,7 +90,7 @@ Please note that all of the following information may be incomplete or misinterp
 The SPT-server only has one price for the flea price for each item. To create offers, the SPT server takes this price and generates random offers using a price range. By default, this is 80%-120% (SPT 3.11.x). The mod takes this "average" flea price and the set minimum of the price range and calculates the lowest expected price of the item on the flea market. 
 
 Using the "FP-100 filter absorber" as an example: 
-332.400 * 0,8 = ~277.000
+91.400 * 0,8 = ~86.200
 
 This means you always see the value that gives you "a 100% chance of selling" on SPT's virtual flea market.
 
