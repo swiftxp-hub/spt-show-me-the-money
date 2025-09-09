@@ -22,7 +22,7 @@ Extract the contents of the release zip file into your SPT install directory. Do
 
 ## Known compatibility
 
-- [SPT-LiveFleaPrices](https://github.com/DrakiaXYZ/SPT-LiveFleaPrices) v1.5.2
+- [SPT-LiveFleaPrices](https://github.com/DrakiaXYZ/SPT-LiveFleaPrices) v1.5.2 by DrakiaXYZ
 
 ## Known problems
 
