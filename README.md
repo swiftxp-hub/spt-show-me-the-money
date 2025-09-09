@@ -28,10 +28,14 @@ Extract the contents of the release zip file into your SPT install directory. Do
 
 The display of flea market prices should always be viewed with a degree of caution. The calculations are only theoretical in nature and may give the impression that the actual flea market offers have different prices. In particular, when flea market taxes are included (experimental feature), differences may theoretically arise, especially when presets and packs are put up for sale, as these are not currently taken fully into account in the calculation (I may integrate this in future versions). For more information on the calculations see the "[For nerds](#for-nerds)" section in this readme.
 
+## Problems that may occur
+
+I developed and tested the mod exclusively with the English version of EFT. It is therefore possible that the mod may not work properly with other translations of EFT.
+
 ## Tested environment
 
 - SPT 3.11.4 (this mod should work with every SPT 3.11 release, but it's not tested except for version 3.11.4)
-- EFT 16.1.3.35392
+- EFT 16.1.3.35392 (English version)
 
 ## Support and feature requests
 
