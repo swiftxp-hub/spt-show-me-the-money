@@ -48,7 +48,7 @@ There is no need to install anything to your Fika headless client for this mod t
 
 ## Configuration
 
-Please use the BepInEx configurator to configure features of the mod (usually accessible by pressing F12 or F1 when you are in-game.).
+Please use the BepInEx configurator to configure features of the mod (usually accessible by pressing F12 or F1 when you are in-game.):
 
 ![BepInEx Plugin Configuration](https://raw.githubusercontent.com/swiftxp-hub/spt-show-me-the-money/refs/heads/main/Assets/plugin-configuration.png)
 (Default configuration with freshly installed mod)
