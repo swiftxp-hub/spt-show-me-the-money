@@ -65,12 +65,14 @@ As you can see, you can also manually trigger the plugin to retrieve the current
 - [SPT-LiveFleaPrices](https://github.com/DrakiaXYZ/SPT-LiveFleaPrices) v1.5.2 by DrakiaXYZ
 
 ## Known problems
+- **Peacekeeper / USD:**<br />Currently, the mod only calculates in rubles. Unfortunately, this also means that items that could be sold to Peacekeeper with the highest profit (in USD) are not always correctly identified.
 
-The display of flea market prices should always be viewed with a degree of caution. The calculations are only theoretical in nature and may give the impression that the actual flea market offers have different prices. In particular, when flea market taxes are included (experimental feature), differences may theoretically arise, especially when presets and packs are put up for sale, as these are not currently taken fully into account in the calculation (I may integrate this in future versions). For more information on the calculations see the "[For nerds](#for-nerds)" section in this readme.
+- **Flea market prices:**<br />The display of flea market prices should always be viewed with a degree of caution. The calculations are only theoretical in nature and may give the impression that the actual flea market offers have different prices. In particular, when flea market taxes are included (experimental feature), differences may theoretically arise, especially when presets and packs are put up for sale, as these are not currently taken fully into account in the calculation (I may integrate this in future versions). For more information on the calculations see the "[For nerds](#for-nerds)" section in this readme.
 
 ## Problems that may occur
 
-I developed and tested the mod exclusively with the English version of EFT. It is therefore possible that the mod may not work properly with other translations of EFT.
+- I developed and tested the mod exclusively with the English version of EFT. It is therefore possible that the mod may not work properly with other translations of EFT.
+-Sales price information for traders added by other mods may or may not work.
 
 ## Tested environment
 

@@ -1,6 +1,6 @@
 using BepInEx.Configuration;
 using EFT.Communications;
-using SwiftXP.ShowMeTheMoney.ConfigurationManager;
+using SwiftXP.SPT.Common.ConfigurationManager;
 using SwiftXP.ShowMeTheMoney.Loggers;
 using SwiftXP.ShowMeTheMoney.Models;
 using SwiftXP.ShowMeTheMoney.Notifications;
