@@ -1,11 +1,10 @@
 using EFT.UI.DragAndDrop;
 using HarmonyLib;
 using SPT.Reflection.Patching;
-using SwiftXP.SPT.Common.Loggers;
 using System.Reflection;
 using UnityEngine.EventSystems;
 
-namespace SwiftXP.ShowMeTheMoney.Patches;
+namespace SwiftXP.SPT.ShowMeTheMoney.Patches;
 
 public class GridItemOnPointerExitPatch : ModulePatch
 {

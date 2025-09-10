@@ -1,19 +1,21 @@
 ﻿using BepInEx;
 using EFT.InventoryLogic;
-using SwiftXP.ShowMeTheMoney.Configuration;
-using SwiftXP.ShowMeTheMoney.Models;
-using SwiftXP.ShowMeTheMoney.Patches;
+using SwiftXP.SPT.ShowMeTheMoney.Configuration;
+using SwiftXP.SPT.ShowMeTheMoney.Models;
+using SwiftXP.SPT.ShowMeTheMoney.Patches;
 using SwiftXP.SPT.Common.Loggers;
 
-namespace SwiftXP.ShowMeTheMoney;
+namespace SwiftXP.SPT.ShowMeTheMoney;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 [BepInProcess("EscapeFromTarkov.exe")]
 public class Plugin : BaseUnityPlugin
 {
-    public const string RemotePathToGetRagfairConfigPriceRanges = "/showMeTheMoney/getRagfairConfigPriceRanges";
+    public const string RemotePathToGetCurrencyPurchasePrices = "/showMeTheMoney/getCurrencyPurchasePrices";
 
     public const string RemotePathToGetPriceTable = "/showMeTheMoney/getPriceTable";
+
+    public const string RemotePathToGetRagfairConfigPriceRanges = "/showMeTheMoney/getRagfairConfigPriceRanges";
 
     public const string HighlightColorCode = "#dd831a";
 
@@ -41,10 +43,11 @@ public class Plugin : BaseUnityPlugin
 
     private void InitPriceRangesAndTable()
     {
-        SimpleSptLogger.LogInfo("Initializing price ranges and table...");
+        SimpleSptLogger.LogInfo("Initializing currency purchase prices, price ranges and price table...");
 
-        RagfairPriceRanges.Instance.GetPriceRanges();
-        RagfairPriceTable.Instance.UpdatePrices();
+        CurrencyPurchasePricesService.Instance.GetCurrencyPurchasePrices();
+        RagfairPriceRangesService.Instance.GetPriceRanges();
+        RagfairPriceTableService.Instance.UpdatePrices();
     }
 
     private void EnablePatches()

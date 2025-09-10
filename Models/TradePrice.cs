@@ -1,23 +1,64 @@
-namespace SwiftXP.ShowMeTheMoney.Models;
+using EFT;
+using CurrencyUtility = GClass2934;
+
+namespace SwiftXP.SPT.ShowMeTheMoney.Models;
 
 public class TradePrice
 {
-    public TradePrice(string traderName, double pricePerSlot, double pricePerObject, double priceTotal, double? tax = null)
+    public string TraderName { get; }
+
+    public double Price { get; set; }
+
+    public double? CurrencyCourse { get; set; }
+
+    public MongoID? CurrencyId { get; set; }
+
+    public double? Tax { get; set; }
+
+    public string CurrencySymbol
+    {
+        get
+        {
+            if (CurrencyId.HasValue)
+                return CurrencyUtility.GetCurrencyCharById(CurrencyId.Value);
+
+            return "₽";
+        }
+    }
+
+    public TradePrice(string traderName, double price, double? currencyCourse = null, MongoID? currencyId = null, double? tax = null)
     {
         TraderName = traderName;
-        PricePerSlot = pricePerSlot;
-        PricePerObject = pricePerObject;
-        PriceTotal = priceTotal;
+        Price = price;
+        CurrencyCourse = currencyCourse;
+        CurrencyId = currencyId;
         Tax = tax;
     }
 
-    public string TraderName { get; }
+    public double GetSlotPrice(int itemSlotCount)
+    {
+        return Price / itemSlotCount;
+    }
 
-    public double PricePerSlot { get; }
+    public double GetSlotPriceInRouble(int itemSlotCount)
+    {
+        double totalPriceInRouble = GetTotalPriceInRouble();
 
-    public double PricePerObject { get; }
+        return totalPriceInRouble / itemSlotCount;
+    }
 
-    public double PriceTotal { get; }
+    public double GetObjectPriceInRouble(int stackObjectsCount)
+    {
+        double totalPriceInRouble = GetTotalPriceInRouble();
 
-    public double? Tax { get;  }
+        return totalPriceInRouble / stackObjectsCount;
+    }
+
+    public double GetTotalPriceInRouble()
+    {
+        if (CurrencyCourse.HasValue)
+            return Price * CurrencyCourse.Value;
+
+        return Price;
+    }
 }

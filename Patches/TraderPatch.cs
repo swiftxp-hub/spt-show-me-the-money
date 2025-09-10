@@ -1,9 +1,8 @@
 using System.Reflection;
 using HarmonyLib;
 using SPT.Reflection.Patching;
-using SwiftXP.SPT.Common.Loggers;
 
-namespace SwiftXP.ShowMeTheMoney.Patches;
+namespace SwiftXP.SPT.ShowMeTheMoney.Patches;
 
 public class TraderPatch : ModulePatch
 {

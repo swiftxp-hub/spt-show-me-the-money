@@ -54,26 +54,28 @@ Please use the BepInEx configurator to configure features of the mod (usually ac
 
 (Default configuration with freshly installed mod)
 
-As you can see, you can also manually trigger the plugin to retrieve the current flea market prices from your SPT server (this can be useful if you use [DrakiaXYZ's SPT-LiveFleaPrices](https://github.com/DrakiaXYZ/SPT-LiveFleaPrices) - however, the flea market prices are retrieved from the SPT-server every time the game is started). Just for clarifcation: This does not trigger DrakiaXYZ's SPT-LiveFleaPrices to query the latest flea prices, but my mod queries the latest flea prices from your SPT server (which are set by SPT-LiveFleaPrices if you use this mod).
+As you can see, you can also manually trigger the plugin to retrieve the current flea market prices from your SPT server (this can be useful if you use [DrakiaXYZ's SPT-LiveFleaPrices](https://github.com/DrakiaXYZ/SPT-LiveFleaPrices) - however, the flea market prices are retrieved from the SPT-server every time the game is started). 
+
+Just for clarifcation: This does not trigger DrakiaXYZ's SPT-LiveFleaPrices to query the latest flea prices, but my mod queries the latest flea prices from your SPT server (which are set by SPT-LiveFleaPrices if you use this mod).
 
 ## Remarks
 
 - Changes on the Trader Price Markups (e.g. editable via SVM) are taken into account by this mod.
+- The currency conversion feature is still relatively new. Please let me know in the comments if you are satisfied with this feature.
 
 ## Known compatibility
 
 - [SPT-LiveFleaPrices](https://github.com/DrakiaXYZ/SPT-LiveFleaPrices) v1.5.2 by DrakiaXYZ
+- [More Checkmarks](https://github.com/TommySoucy/MoreCheckmarks) v1.5.17 by TommySoucy
 
 ## Known problems
-- **Peacekeeper / USD:**<br />Currently, the mod only calculates in rubles. Unfortunately, this also means that items that could be sold to Peacekeeper with the highest profit (in USD) are not always correctly identified.
-
 - **Flea market prices:**<br />The display of flea market prices should always be viewed with a degree of caution. The calculations are only theoretical in nature and may give the impression that the actual flea market offers have different prices. In particular, when flea market taxes are included (experimental feature), differences may theoretically arise, especially when presets and packs are put up for sale, as these are not currently taken fully into account in the calculation (I may integrate this in future versions). For more information on the calculations see the "[For nerds](#for-nerds)" section in this readme.
 
 ## Problems that may occur
 
 - I developed and tested the mod exclusively with the English version of EFT. It is therefore possible that the mod may not work properly with other translations of EFT.
 
-- Sales price information for traders added by other mods may or may not work.
+- Sales price information for traders added by other mods may or may not work. E.g. [Couturier](https://hub.sp-tarkov.com/files/file/2943-couturier-gear-and-clothing-pack/) v1.2.0 by turbodestroyer seems to work fine.
 
 ## Tested environment
 

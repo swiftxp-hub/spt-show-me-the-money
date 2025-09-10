@@ -5,16 +5,16 @@
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
 
-    <AssemblyName>SwiftXP.ShowMeTheMoney</AssemblyName>
+    <AssemblyName>SwiftXP.SPT.ShowMeTheMoney</AssemblyName>
     <Product>Show Me The Money</Product>
-    <Version>1.2.4</Version>
+    <Version>1.3.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <RestoreAdditionalProjectSources>
       https://api.nuget.org/v3/index.json;
       https://nuget.bepinex.dev/v3/index.json;
       https://nuget.samboy.dev/v3/index.json
     </RestoreAdditionalProjectSources>
-    <RootNamespace>SwiftXP.ShowMeTheMoney</RootNamespace>
+    <RootNamespace>SwiftXP.SPT.ShowMeTheMoney</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

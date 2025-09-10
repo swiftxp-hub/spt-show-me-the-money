@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace SwiftXP.ShowMeTheMoney.Models;
+namespace SwiftXP.SPT.ShowMeTheMoney.Models;
 
 public class PriceRanges
 {

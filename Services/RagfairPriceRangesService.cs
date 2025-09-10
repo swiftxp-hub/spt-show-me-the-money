@@ -1,19 +1,18 @@
 using System;
 using Newtonsoft.Json;
 using SPT.Common.Http;
-using SwiftXP.SPT.Common.Loggers;
 
-namespace SwiftXP.ShowMeTheMoney.Models;
+namespace SwiftXP.SPT.ShowMeTheMoney.Models;
 
-public class RagfairPriceRanges
+public class RagfairPriceRangesService
 {
-    public static RagfairPriceRanges Instance => instance.Value;
+    public static RagfairPriceRangesService Instance => instance.Value;
 
-    private static readonly Lazy<RagfairPriceRanges> instance = new(() => new RagfairPriceRanges());
+    private static readonly Lazy<RagfairPriceRangesService> instance = new(() => new RagfairPriceRangesService());
 
     public PriceRanges? Ranges { get; private set; }
 
-    private RagfairPriceRanges() { }
+    private RagfairPriceRangesService() { }
 
     public void GetPriceRanges()
     {
@@ -33,7 +32,7 @@ public class RagfairPriceRanges
         }
         else
         {
-            Plugin.SimpleSptLogger.LogInfo("ragfair price ranges could not be queried!");
+            Plugin.SimpleSptLogger.LogInfo("Ragfair price ranges could not be queried!");
         }
     }
 }
