@@ -1,14 +1,14 @@
 using EFT.InventoryLogic;
 using EFT.UI;
 using SPT.Reflection.Patching;
-using SwiftXP.ShowMeTheMoney.Loggers;
 using SwiftXP.ShowMeTheMoney.Models;
 using System.Reflection;
 using UnityEngine;
 using System;
 using System.Text;
-using SwiftXP.ShowMeTheMoney.Sessions;
 using HarmonyLib;
+using SwiftXP.SPT.Common.Loggers;
+using SwiftXP.SPT.Common.Sessions;
 
 namespace SwiftXP.ShowMeTheMoney.Patches;
 
@@ -20,7 +20,7 @@ public class SimpleTooltipPatch : ModulePatch
     [PatchPrefix]
     public static void PatchPrefix(SimpleTooltip __instance, ref string text, Vector2? offset, ref float delay, float? maxWidth)
     {
-        SimpleStaticLogger.Instance.LogDebug($"SimpleTooltipPatch.PatchPrefix - Item: {Plugin.HoveredItem?.TemplateId}");
+        Plugin.SimpleSptLogger.LogDebug($"SimpleTooltipPatch.PatchPrefix - Item: {Plugin.HoveredItem?.TemplateId}");
 
         if (IsTemporaryDisabled() || IsInsuredByTooltip(text) || IsCheckmarkTooltip(text))
             return;
@@ -63,7 +63,7 @@ public class SimpleTooltipPatch : ModulePatch
         }
         catch (Exception exception)
         {
-            SimpleStaticLogger.Instance.LogError($"An unexpected error occured. Message: {exception.Message}");
+            Plugin.SimpleSptLogger.LogError($"An unexpected error occured. Message: {exception.Message}");
         }
     }
 

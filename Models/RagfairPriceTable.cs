@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using SPT.Common.Http;
-using SwiftXP.ShowMeTheMoney.Loggers;
+using SwiftXP.SPT.Common.Loggers;
 
 namespace SwiftXP.ShowMeTheMoney.Models;
 
@@ -20,7 +20,7 @@ public class RagfairPriceTable
 
     public bool UpdatePrices()
     {
-        SimpleStaticLogger.Instance.LogInfo("Trying to query ragfair price table from remote...");
+        Plugin.SimpleSptLogger.LogInfo("Trying to query ragfair price table from remote...");
 
         Dictionary<string, double>? queriedPrices = null;
         string pricesJson = RequestHandler.GetJson(Plugin.RemotePathToGetPriceTable);
@@ -30,7 +30,7 @@ public class RagfairPriceTable
 
         if (queriedPrices is not null)
         {
-            SimpleStaticLogger.Instance.LogInfo($"Ragfair price table was queried! Got {queriedPrices.Count} prices from remote...");
+            Plugin.SimpleSptLogger.LogInfo($"Ragfair price table was queried! Got {queriedPrices.Count} prices from remote...");
 
             LastQuery = DateTime.UtcNow;
             Prices = queriedPrices;
@@ -39,7 +39,7 @@ public class RagfairPriceTable
         }
         else
         {
-            SimpleStaticLogger.Instance.LogInfo("Ragfair price table could not be queried!");
+            Plugin.SimpleSptLogger.LogInfo("Ragfair price table could not be queried!");
         }
 
         return false;

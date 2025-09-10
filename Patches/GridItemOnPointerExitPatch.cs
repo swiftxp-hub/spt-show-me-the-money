@@ -1,7 +1,7 @@
 using EFT.UI.DragAndDrop;
 using HarmonyLib;
 using SPT.Reflection.Patching;
-using SwiftXP.ShowMeTheMoney.Loggers;
+using SwiftXP.SPT.Common.Loggers;
 using System.Reflection;
 using UnityEngine.EventSystems;
 
@@ -15,7 +15,7 @@ public class GridItemOnPointerExitPatch : ModulePatch
     [PatchPrefix]
     static void PatchPrefix(GridItemView __instance, PointerEventData eventData)
     {
-        SimpleStaticLogger.Instance.LogDebug($"GridItemOnPointerExitPatch.PatchPrefix");
+        Plugin.SimpleSptLogger.LogDebug($"GridItemOnPointerExitPatch.PatchPrefix");
 
         Plugin.HoveredItem = null;
     }

@@ -1,7 +1,7 @@
 using System.Reflection;
 using HarmonyLib;
 using SPT.Reflection.Patching;
-using SwiftXP.ShowMeTheMoney.Loggers;
+using SwiftXP.SPT.Common.Loggers;
 
 namespace SwiftXP.ShowMeTheMoney.Patches;
 
@@ -12,7 +12,7 @@ public class TraderPatch : ModulePatch
     [PatchPostfix]
     public static void PatchPostfix(TraderClass __instance)
     {
-        SimpleStaticLogger.Instance.LogDebug($"TraderPatch.PatchPostfix");
+        Plugin.SimpleSptLogger.LogDebug($"TraderPatch.PatchPostfix");
         
         __instance.UpdateSupplyData();
     }

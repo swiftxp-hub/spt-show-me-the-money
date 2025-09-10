@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 using SPT.Common.Http;
-using SwiftXP.ShowMeTheMoney.Loggers;
+using SwiftXP.SPT.Common.Loggers;
 
 namespace SwiftXP.ShowMeTheMoney.Models;
 
@@ -17,7 +17,7 @@ public class RagfairPriceRanges
 
     public void GetPriceRanges()
     {
-        SimpleStaticLogger.Instance.LogInfo("Trying to query ragfair price ranges from remote...");
+        Plugin.SimpleSptLogger.LogInfo("Trying to query ragfair price ranges from remote...");
 
         PriceRanges? priceRanges = null;
         string priceRangesJson = RequestHandler.GetJson(Plugin.RemotePathToGetRagfairConfigPriceRanges);
@@ -27,13 +27,13 @@ public class RagfairPriceRanges
 
         if (priceRanges is not null)
         {
-            SimpleStaticLogger.Instance.LogInfo($"Ragfair price ranges was queried!");
+            Plugin.SimpleSptLogger.LogInfo($"Ragfair price ranges was queried!");
 
             Ranges = priceRanges;
         }
         else
         {
-            SimpleStaticLogger.Instance.LogInfo("ragfair price ranges could not be queried!");
+            Plugin.SimpleSptLogger.LogInfo("ragfair price ranges could not be queried!");
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using BepInEx;
 using EFT.InventoryLogic;
 using SwiftXP.ShowMeTheMoney.Configuration;
-using SwiftXP.ShowMeTheMoney.Loggers;
 using SwiftXP.ShowMeTheMoney.Models;
 using SwiftXP.ShowMeTheMoney.Patches;
+using SwiftXP.SPT.Common.Loggers;
 
 namespace SwiftXP.ShowMeTheMoney;
 
@@ -16,6 +16,8 @@ public class Plugin : BaseUnityPlugin
     public const string RemotePathToGetPriceTable = "/showMeTheMoney/getPriceTable";
 
     public const string HighlightColorCode = "#dd831a";
+
+    public static SimpleSptLogger SimpleSptLogger = new(MyPluginInfo.PLUGIN_GUID);
 
     public static PluginConfiguration? Configuration;
 
@@ -32,14 +34,14 @@ public class Plugin : BaseUnityPlugin
 
     private void BindBepInExConfiguration()
     {
-        SimpleStaticLogger.Instance.LogInfo("Bind configuration...");
+        SimpleSptLogger.LogInfo("Bind configuration...");
 
         Configuration = new PluginConfiguration(Config);
     }
 
     private void InitPriceRangesAndTable()
     {
-        SimpleStaticLogger.Instance.LogInfo("Initializing price ranges and table...");
+        SimpleSptLogger.LogInfo("Initializing price ranges and table...");
 
         RagfairPriceRanges.Instance.GetPriceRanges();
         RagfairPriceTable.Instance.UpdatePrices();
@@ -47,7 +49,7 @@ public class Plugin : BaseUnityPlugin
 
     private void EnablePatches()
     {
-        SimpleStaticLogger.Instance.LogInfo("Enable patches...");
+        SimpleSptLogger.LogInfo("Enable patches...");
 
         new TraderPatch().Enable();
 

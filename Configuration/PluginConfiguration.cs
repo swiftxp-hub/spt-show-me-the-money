@@ -1,9 +1,8 @@
 using BepInEx.Configuration;
-using EFT.Communications;
 using SwiftXP.SPT.Common.ConfigurationManager;
-using SwiftXP.ShowMeTheMoney.Loggers;
 using SwiftXP.ShowMeTheMoney.Models;
-using SwiftXP.ShowMeTheMoney.Notifications;
+using SwiftXP.SPT.Common.Loggers;
+using SwiftXP.SPT.Common.Notifications;
 
 namespace SwiftXP.ShowMeTheMoney.Configuration;
 
@@ -40,7 +39,7 @@ public class PluginConfiguration
             "Pulls the current flea prices from your SPT server instance.",
             () =>
             {
-                SimpleStaticLogger.Instance.LogInfo("Updating flea prices...");
+                Plugin.SimpleSptLogger.LogInfo("Updating flea prices...");
                 bool pricesUpdated = RagfairPriceTable.Instance.UpdatePrices();
 
                 if (pricesUpdated)
