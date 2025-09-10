@@ -73,7 +73,7 @@ As you can see, you can also manually trigger the plugin to retrieve the current
 
 - I developed and tested the mod exclusively with the English version of EFT. It is therefore possible that the mod may not work properly with other translations of EFT.
 
--Sales price information for traders added by other mods may or may not work.
+- Sales price information for traders added by other mods may or may not work.
 
 ## Tested environment
 
