@@ -91,6 +91,14 @@ Just for clarifcation: This does not trigger DrakiaXYZ's SPT-LiveFleaPrices to q
 
 Please note that I maintain all my mods in my spare time. Therefore, I can only invest a limited amount of time, especially when it comes to support requests. The following principle always applies to support requests: No logs, no support. [Please follow this link to the SPT FAQ to find your logs](https://hub.sp-tarkov.com/faq-question/64-where-can-i-find-my-log-files/).
 
+## Features that may come in the future
+
+- Being able to select which flea market value should be displayed: e.g., Lowest, 1/3, Average, Highest
+- ​More appearence options
+- ​Color-coding
+- Quick-sell (as a seperate companion-mod)
+- What-ever comes to my mind or by feature-requests in the comments/SPT-discord
+
 ## For nerds
 
 Please note that all of the following information may be incomplete or misinterpreted on my part, especially my knowledge or interpretation of how SPT simulates the flea market.
