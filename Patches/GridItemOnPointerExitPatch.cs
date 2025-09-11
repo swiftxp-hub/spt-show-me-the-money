@@ -14,8 +14,7 @@ public class GridItemOnPointerExitPatch : ModulePatch
     [PatchPrefix]
     static void PatchPrefix(GridItemView __instance, PointerEventData eventData)
     {
-        Plugin.SimpleSptLogger.LogDebug($"GridItemOnPointerExitPatch.PatchPrefix");
-
         Plugin.HoveredItem = null;
+        SimpleTooltipShowPatch.OnClose();
     }
 }

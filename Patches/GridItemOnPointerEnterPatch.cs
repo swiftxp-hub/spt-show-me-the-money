@@ -14,8 +14,6 @@ public class GridItemOnPointerEnterPatch : ModulePatch
     [PatchPrefix]
     static void PatchPrefix(GridItemView __instance, PointerEventData eventData)
     {
-        Plugin.SimpleSptLogger.LogDebug($"GridItemOnPointerEnterPatch.PatchPrefix - Item: {__instance?.Item?.TemplateId}");
-
         Plugin.HoveredItem = __instance?.Item;
     }
 }

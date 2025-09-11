@@ -4,6 +4,7 @@ using SwiftXP.SPT.ShowMeTheMoney.Configuration;
 using SwiftXP.SPT.ShowMeTheMoney.Models;
 using SwiftXP.SPT.ShowMeTheMoney.Patches;
 using SwiftXP.SPT.Common.Loggers;
+using SPT.Reflection.Patching;
 
 namespace SwiftXP.SPT.ShowMeTheMoney;
 
@@ -17,8 +18,6 @@ public class Plugin : BaseUnityPlugin
 
     public const string RemotePathToGetRagfairConfigPriceRanges = "/showMeTheMoney/getRagfairConfigPriceRanges";
 
-    public const string HighlightColorCode = "#dd831a";
-
     public static SimpleSptLogger SimpleSptLogger = new(MyPluginInfo.PLUGIN_GUID);
 
     public static PluginConfiguration? Configuration;
@@ -26,6 +25,18 @@ public class Plugin : BaseUnityPlugin
     public static Item? HoveredItem { get; set; }
 
     public static bool DisableTemporary { get; set; }
+
+    private static ModulePatch? tooltipUpdatePatch;
+
+    public static void EnableTooltipUpdatePatch()
+    {
+        tooltipUpdatePatch!.Enable();
+    }
+
+    public static void DisableTooltipUpdatePatch()
+    {
+        tooltipUpdatePatch!.Disable();
+    }
 
     private void Awake()
     {
@@ -54,13 +65,18 @@ public class Plugin : BaseUnityPlugin
     {
         SimpleSptLogger.LogInfo("Enable patches...");
 
-        new TraderPatch().Enable();
+        new TraderClassPatch().Enable();
 
         new EditBuildScreenShowPatch().Enable();
         new EditBuildScreenClosePatch().Enable();
 
         new GridItemOnPointerEnterPatch().Enable();
         new GridItemOnPointerExitPatch().Enable();
-        new SimpleTooltipPatch().Enable();
+        new SimpleTooltipShowPatch().Enable();
+
+        tooltipUpdatePatch = new TooltipUpdatePatch();
+
+        if (Configuration?.FleaTaxToggleMode.Value ?? false)
+            EnableTooltipUpdatePatch();
     }
 }

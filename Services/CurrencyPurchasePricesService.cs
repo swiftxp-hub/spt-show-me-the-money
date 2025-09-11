@@ -29,8 +29,6 @@ public class CurrencyPurchasePricesService
             Plugin.SimpleSptLogger.LogInfo($"Currency purchase prices were queried!");
 
             CurrencyPurchasePrices = currencyPurchasePrises;
-
-            Plugin.SimpleSptLogger.LogDebug($"EUR: {currencyPurchasePrises.EUR} / USD: {currencyPurchasePrises.USD}");
         }
         else
         {

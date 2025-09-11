@@ -17,7 +17,6 @@ public static class TraderClassExtensions
     {
         if (SupplyDataField.GetValue(trader) is null)
         {
-            Plugin.SimpleSptLogger.LogDebug($"TraderClassExtensions.UpdateSupplyData for Trader: {trader.LocalizedName}");
 
             Result<SupplyData> result = await SptSession.Session.GetSupplyData(trader.Id);
             if (result.Failed)

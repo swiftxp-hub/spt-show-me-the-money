@@ -10,62 +10,101 @@ using HarmonyLib;
 using SwiftXP.SPT.Common.Sessions;
 using EFT;
 using SwiftXP.SPT.ShowMeTheMoney.Enums;
+using TMPro;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Patches;
 
-public class SimpleTooltipPatch : ModulePatch
+public class SimpleTooltipShowPatch : ModulePatch
 {
     protected override MethodBase GetTargetMethod() =>
         AccessTools.FirstMethod(typeof(SimpleTooltip), x => x.Name == "Show" && x.GetParameters()[0].Name == "text");
 
+    public static bool IsActive = false;
+
+    private static SimpleTooltip? Instance;
+
+    private static string? PatchText;
+
+    private static bool FleaTaxIsToggled = false;
+
     [PatchPrefix]
     public static void PatchPrefix(SimpleTooltip __instance, ref string text, Vector2? offset, ref float delay, float? maxWidth)
     {
-        Plugin.SimpleSptLogger.LogDebug($"SimpleTooltipPatch.PatchPrefix - Item: {Plugin.HoveredItem?.Id} / {Plugin.HoveredItem?.TemplateId}");
+        Instance = __instance;
+        IsActive = false;
 
-        if (IsTemporaryDisabled() || IsInsuredByTooltip(text) || IsCheckmarkTooltip(text))
+        if (!IsPluginEnabled() || IsTemporaryDisabled() || IsInsuredByTooltip(text) || IsCheckmarkTooltip(text))
             return;
 
         try
         {
-            StringBuilder textToAddToTooltip = new();
-
-            if (!IsPluginEnabled())
-                return;
-
             SetToolTipDelay(ref delay);
+            string textToAddToTooltip = CompileText(
+                (!IsFleaTaxToggleModeEnabled() || IsFleaTaxToggleKeyPressed()) && IncludeFleaTax(),
+                (!IsFleaTaxToggleModeEnabled() || IsFleaTaxToggleKeyPressed()) && ShowTax());
 
-            Item? item = Plugin.HoveredItem;
-            if (item is not null && ItemMeetsRequirements(item))
-            {
-                TradeItem tradeItem = CreateTradeItem(item);
+            if (IsFleaTaxToggleKeyPressed())
+                FleaTaxIsToggled = true;
 
-                bool hasTraderPrice = false;
-                bool hasFleaPrice = false;
+            PatchText = textToAddToTooltip;
+            text += PatchText;
 
-                if (IsShowTraderPricesEnabled())
-                    hasTraderPrice = GetBestTraderPrice(tradeItem);
-
-                if (IsShowFleaPricesEnabled())
-                    hasFleaPrice = GetFleaPrice(tradeItem);
-
-                if (hasTraderPrice && tradeItem.TraderPrice!.GetTotalPriceInRouble() > 0d)
-                {
-                    ShowPrice(tradeItem, tradeItem.TraderPrice!, tradeItem.FleaPrice, textToAddToTooltip);
-                }
-
-                if (hasFleaPrice && tradeItem.FleaPrice!.GetTotalPriceInRouble() > 0d)
-                {
-                    ShowPrice(tradeItem, tradeItem.FleaPrice!, tradeItem.TraderPrice, textToAddToTooltip);
-                }
-            }
-
-            text += textToAddToTooltip.ToString();
+            IsActive = true;
         }
         catch (Exception exception)
         {
             Plugin.SimpleSptLogger.LogError($"An unexpected error occured. Message: {exception.Message}");
         }
+    }
+
+    public static void OnClose()
+    {
+        Instance = null;
+        PatchText = null;
+        FleaTaxIsToggled = false;
+
+        IsActive = false;
+    }
+
+    public static void EnableFleaTax()
+    {
+        if (Instance is not null && !FleaTaxIsToggled)
+        {
+            string? instanceText = GetTextOfInstance();
+            if (instanceText is not null)
+            {
+                string newTextForTooltip = CompileText(IncludeFleaTax(), ShowTax());
+                string newText = instanceText.Replace(PatchText, newTextForTooltip);
+
+                PatchText = newTextForTooltip;
+                Instance.SetText(newText);
+
+                FleaTaxIsToggled = true;
+            }
+        }
+    }
+
+    public static void DisableFleaTax()
+    {
+        if (Instance is not null && FleaTaxIsToggled)
+        {
+            string? instanceText = GetTextOfInstance();
+            if (instanceText is not null)
+            {
+                string newTextForTooltip = CompileText(false, false);
+                string newText = instanceText.Replace(PatchText, newTextForTooltip);
+
+                PatchText = newTextForTooltip;
+                Instance.SetText(newText);
+
+                FleaTaxIsToggled = false;
+            }
+        }
+    }
+
+    private static bool IsPluginEnabled()
+    {
+        return Plugin.Configuration?.EnablePlugin?.Value ?? true;
     }
 
     private static bool IsTemporaryDisabled()
@@ -92,9 +131,42 @@ public class SimpleTooltipPatch : ModulePatch
         return false;
     }
 
-    private static bool IsPluginEnabled()
+    private static string CompileText(bool includeFleaTax, bool showTax)
     {
-        return Plugin.Configuration?.EnablePlugin?.Value ?? true;
+        StringBuilder textToAddToTooltip = new();
+
+        if (IsRenderInItalicsEnabled())
+            textToAddToTooltip.Append("<i>");
+
+        Item? item = Plugin.HoveredItem;
+        if (item is not null && ItemMeetsRequirements(item))
+        {
+            TradeItem tradeItem = CreateTradeItem(item);
+
+            bool hasTraderPrice = false;
+            bool hasFleaPrice = false;
+
+            if (IsShowTraderPricesEnabled())
+                hasTraderPrice = GetBestTraderPrice(tradeItem);
+
+            if (IsShowFleaPricesEnabled())
+                hasFleaPrice = GetFleaPrice(tradeItem, includeFleaTax, showTax);
+
+            if (hasTraderPrice && tradeItem.TraderPrice!.GetTotalPriceInRouble() > 0d)
+            {
+                ShowPrice(tradeItem, tradeItem.TraderPrice!, tradeItem.FleaPrice, textToAddToTooltip, showTax);
+            }
+
+            if (hasFleaPrice && tradeItem.FleaPrice!.GetTotalPriceInRouble() > 0d)
+            {
+                ShowPrice(tradeItem, tradeItem.FleaPrice!, tradeItem.TraderPrice, textToAddToTooltip, showTax);
+            }
+        }
+
+        if (IsRenderInItalicsEnabled())
+            textToAddToTooltip.Append("</i>");
+
+        return textToAddToTooltip.ToString();
     }
 
     private static void SetToolTipDelay(ref float delay)
@@ -105,11 +177,26 @@ public class SimpleTooltipPatch : ModulePatch
             delay = 0;
     }
 
+    private static bool IsRenderInItalicsEnabled()
+    {
+        return Plugin.Configuration?.RenderInItalics.Value ?? false;
+    }
+
     private static bool ItemMeetsRequirements(Item item)
     {
         return SptSession.Session.Profile.Examined(item)
             && (!item.IsContainer || (item.IsContainer && item.IsEmpty()))
             && !(item.Owner.OwnerType != EOwnerType.Profile && item.Owner.GetType() == typeof(TraderControllerClass));
+    }
+
+    private static string? GetTextOfInstance()
+    {
+        FieldInfo? fieldInfo = typeof(SimpleTooltip)
+            .GetField("_label", BindingFlags.NonPublic | BindingFlags.Instance);
+
+        TextMeshProUGUI? textMesh = fieldInfo?.GetValue(Instance) as TextMeshProUGUI;
+
+        return textMesh?.text ?? null;
     }
 
     private static TradeItem CreateTradeItem(Item item)
@@ -161,8 +248,6 @@ public class SimpleTooltipPatch : ModulePatch
                             currencyId
                         );
 
-                    Plugin.SimpleSptLogger.LogDebug($"Trader: {traderPrice.TraderName} - CurrencyId: {traderPrice.CurrencyId} - Currency: {traderPrice.CurrencySymbol} - Course: {traderPrice.CurrencyCourse} - Price: {traderPrice.Price}");
-
                     if (highestTraderPrice == null || traderPrice.GetSlotPriceInRouble(tradeItem.ItemSlotCount) > highestTraderPrice.GetSlotPriceInRouble(tradeItem.ItemSlotCount))
                         highestTraderPrice = traderPrice;
                 }
@@ -209,7 +294,7 @@ public class SimpleTooltipPatch : ModulePatch
         return result ?? 1;
     }
 
-    private static bool GetFleaPrice(TradeItem tradeItem)
+    private static bool GetFleaPrice(TradeItem tradeItem, bool includeFleaTax, bool showTax)
     {
         if (RagfairPriceTableService.Instance.Prices is not null)
         {
@@ -218,13 +303,13 @@ public class SimpleTooltipPatch : ModulePatch
                 double minFleaPrice = fleaPrice * GetPriceRangeMin();
                 double? taxPrice = null;
 
-                if (IncludeFleaTax() || ShowTax())
+                if (includeFleaTax || showTax)
                 {
                     Item item = new(string.Empty, tradeItem.Item.Template);
 
                     taxPrice = FleaTaxCalculatorAbstractClass.CalculateTaxPrice(item, 1, minFleaPrice, false);
 
-                    if (IncludeFleaTax())
+                    if (includeFleaTax)
                         minFleaPrice -= taxPrice.Value;
                 }
 
@@ -251,6 +336,16 @@ public class SimpleTooltipPatch : ModulePatch
         return RagfairPriceRangesService.Instance.Ranges?.Default?.Min ?? 0.8d;
     }
 
+    private static bool IsFleaTaxToggleModeEnabled()
+    {
+        return Plugin.Configuration?.FleaTaxToggleMode.Value ?? false;
+    }
+
+    private static bool IsFleaTaxToggleKeyPressed()
+    {
+        return IsFleaTaxToggleModeEnabled() && (Plugin.Configuration?.FleaTaxToggleKey.Value.IsPressed() ?? false);
+    }
+
     private static bool IncludeFleaTax()
     {
         return Plugin.Configuration?.IncludeFleaTax?.Value ?? true;
@@ -271,20 +366,20 @@ public class SimpleTooltipPatch : ModulePatch
         return traderPrice;
     }
 
-    private static void ShowPrice(TradeItem tradeItem, TradePrice tradePriceA, TradePrice? tradePriceB, StringBuilder text)
+    private static void ShowPrice(TradeItem tradeItem, TradePrice tradePriceA, TradePrice? tradePriceB, StringBuilder text, bool showTax)
     {
         text.Append("<br>");
 
         if (tradePriceB is not null)
         {
             if (tradePriceA.GetSlotPriceInRouble(tradeItem.ItemSlotCount) > tradePriceB.GetSlotPriceInRouble(tradeItem.ItemSlotCount))
-                text.Append($"<color={Plugin.HighlightColorCode}>{tradePriceA.TraderName}</color>: ");
+                text.Append($"<color=#{GetBestTradeColor()}>{tradePriceA.TraderName}</color>: ");
             else
                 text.Append($"{tradePriceA.TraderName}: ");
         }
         else
         {
-            text.Append($"<color={Plugin.HighlightColorCode}>{tradePriceA.TraderName}</color>: ");
+            text.Append($"<color=#{GetBestTradeColor()}>{tradePriceA.TraderName}</color>: ");
         }
 
         if (tradeItem.ItemSlotCount > 1 || tradeItem.Item.StackObjectsCount > 1)
@@ -297,8 +392,16 @@ public class SimpleTooltipPatch : ModulePatch
             text.Append($"{FormatPrice(tradePriceA.Price, tradePriceA.CurrencySymbol)}");
         }
 
-        if (ShowTax() && tradePriceA.Tax is not null)
+        if (showTax && tradePriceA.Tax is not null)
             text.Append($" Tax: {FormatPrice(tradePriceA.Tax.Value)}");
+    }
+
+    private static string GetBestTradeColor()
+    {
+        if (Plugin.Configuration?.BestTradeColor.Value is not null)
+            return ColorUtility.ToHtmlStringRGB(Plugin.Configuration.BestTradeColor.Value);
+        else
+            return "dd831a";
     }
 
     private static bool ShowTax()
