@@ -58,7 +58,7 @@ Please use the BepInEx configurator to configure features of the mod (usually ac
 
 As you can see, you can also manually trigger the plugin to retrieve the current flea market prices from your SPT server (this can be useful if you use [DrakiaXYZ's SPT-LiveFleaPrices](https://github.com/DrakiaXYZ/SPT-LiveFleaPrices) - however, the flea market prices are retrieved from the SPT-server every time the game is started). 
 
-Just for clarifcation: This does not trigger DrakiaXYZ's SPT-LiveFleaPrices to query the latest flea prices, but my mod queries the latest flea prices from your SPT server (which are set by SPT-LiveFleaPrices if you use this mod).
+Just for clarifcation: This does not trigger DrakiaXYZ's SPT-LiveFleaPrices to query the latest flea prices, but my mod queries the latest flea prices from your SPT server (which are set by SPT-LiveFleaPrices).
 
 Please see the "[For nerds](#for-nerds)" section in this readme if you want to learn more about the "Currency conversion method".
 
