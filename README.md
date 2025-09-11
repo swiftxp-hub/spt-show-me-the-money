@@ -60,6 +60,8 @@ As you can see, you can also manually trigger the plugin to retrieve the current
 
 Just for clarifcation: This does not trigger DrakiaXYZ's SPT-LiveFleaPrices to query the latest flea prices, but my mod queries the latest flea prices from your SPT server (which are set by SPT-LiveFleaPrices if you use this mod).
 
+Please see the "[For nerds](#for-nerds)" section in this readme if you want to learn more about the "Currency conversion method".
+
 ## Remarks
 
 - Changes on the Trader Price Markups (e.g. editable via SVM) are taken into account by this mod.
@@ -97,6 +99,7 @@ Please note that I maintain all my mods in my spare time. Therefore, I can only 
 - ​More appearence options
 - ​Color-coding
 - Quick-sell (as a seperate companion-mod)
+- Explicit support for more languages​
 - What-ever comes to my mind or by feature-requests in the comments/SPT-discord
 
 ## For nerds
@@ -117,6 +120,17 @@ The "Include flea tax" option then deducts the estimated fee for listing the ite
 However, you can also disable the "Include flea tax" option and only enable "Show flea tax." Then the fee will not be deducted in the tooltip, but you will see what you would likely pay in flea tax. However, the orange highlighting, which indicates which sales option yields more profit, may then be incorrect. 
 
 For items consisting of several parts, i.e., armor or weapons, the mod currently only displays the flea price of the base item. Therefore, if the weapon is heavily modded, this has no effect on the flea price display in the tooltip, as the calculation for this would be quite complex (I may integrate this in future versions). Armor cannot be sold anyway if there are still plates in it.
+
+### What is the difference between "Handbook" and "Traders"?​
+
+The short answer is (when your SPT-server uses standard settings [v3.11.x]):
+
+    ​Handbook uses $1 = ₽​​125 and €1 = ₽133 for currency conversions
+    Traders uses $1 = ₽​​139 and €1 = P153 for currency conversions
+
+The long answer is... when you ask the SPT-server for currency courses then one will get the values from the "handbook.json" in the SPT-database. To be honest, I have no idea where they are used, but I'm sure there's a good reason for them. That's also why I set them as default settings. They are also used as a fallback if, for some reason, the mod is unable to retrieve the USD or EUR prices from Peacekeeper and Skier when using the “Traders” setting in my mod.
+
+When you use the "Traders" option then the mod tries retrieve the actual prices you have to pay at Peacekeeper and Skier for USD/EUR. As mentioned before, the "Handbook" prices are used as a fallback if, for some reason, the mod is unable to retrieve the USD or EUR prices from Peacekeeper and Skier.
 
 ## Motivation behind this mod
 
