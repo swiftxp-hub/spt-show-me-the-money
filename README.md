@@ -63,7 +63,8 @@ Just for clarifcation: This does not trigger DrakiaXYZ's SPT-LiveFleaPrices to q
 ## Remarks
 
 - Changes on the Trader Price Markups (e.g. editable via SVM) are taken into account by this mod.
-- The currency conversion feature is still relatively new. Please let me know in the comments if you are satisfied with this feature.
+- The currency conversion feature is relatively new. Please let me know in the comments if you are satisfied with this feature.
+- The toggle-mode for flea tax(es) is relatively new. Please let me know in the comments if you are satisfied with this feature.
 
 ## Known compatibility
 
@@ -78,6 +79,8 @@ Just for clarifcation: This does not trigger DrakiaXYZ's SPT-LiveFleaPrices to q
 - I developed and tested the mod exclusively with the English version of EFT. It is therefore possible that the mod may not work properly with other translations of EFT.
 
 - Sales price information for traders added by other mods may or may not work. E.g. [Couturier](https://hub.sp-tarkov.com/files/file/2943-couturier-gear-and-clothing-pack/) v1.2.0 by turbodestroyer seems to work fine.
+
+- The "Toggle-mode for flea tax"-feature is implemented in such a way that other mods that modify the tooltip should still work, but still... I can't test every mod out there before releasing new features. If you encounter problems please let me know in the comments.
 
 ## Tested environment
 
