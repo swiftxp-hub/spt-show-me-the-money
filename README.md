@@ -82,7 +82,7 @@ Please see the "[For nerds](#for-nerds)" section in this readme, if you want to 
 
 - Sales price information for traders added by other mods may or may not work. E.g. [Couturier](https://hub.sp-tarkov.com/files/file/2943-couturier-gear-and-clothing-pack/) v1.2.0 by turbodestroyer seems to work fine.
 
-- The "Toggle-mode for flea tax"-feature is implemented in such a way that other mods that modify the tooltip should still work, but still... I can't test every mod out there before releasing new features. If you encounter problems please let me know in the comments.
+- The "Toggle-mode for flea tax"-feature is implemented in such a way that other mods that modify the tooltip should still work, but still... I can't test every mod out there before releasing new features. If you encounter problems, please let me know in the comments.
 
 ## Tested environment
 
