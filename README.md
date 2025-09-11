@@ -44,7 +44,7 @@ You should end up having the following files copied...
 
 ### If you use the Fika headless client
 
-There is no need to install anything to your Fika headless client for this mod to work properly. I would actually recommend to NOT install my mod on your Fika headless client. This also means that I recommend to add my mod to your Exclusions.json if you use [Corter's Mod Sync](https://github.com/c-orter/ModSync). [Please see his FAQ on how to add sync-exclusions](https://github.com/c-orter/ModSync/wiki/Configuration#exclusions).
+There is no need to install anything to your Fika headless client for this mod to work properly. I would actually recommend to NOT install my mod on your Fika headless client. This also means that I recommend to add my mod to your Exclusions.json, if you use [Corter's Mod Sync](https://github.com/c-orter/ModSync). [Please see his FAQ on how to add sync-exclusions](https://github.com/c-orter/ModSync/wiki/Configuration#exclusions).
 
 ## Configuration
 
@@ -56,17 +56,17 @@ Please use the BepInEx configurator to configure features of the mod (usually ac
 ![Demonstration of toggle-mode for flea tax](https://raw.githubusercontent.com/swiftxp-hub/spt-show-me-the-money/refs/heads/main/Assets/toggle-tax-sample.gif)<br />
 *(Demonstration of toggle-mode for flea tax)*
 
-As you can see, you can also manually trigger the plugin to retrieve the current flea market prices from your SPT server (this can be useful if you use [DrakiaXYZ's SPT-LiveFleaPrices](https://github.com/DrakiaXYZ/SPT-LiveFleaPrices) - however, the flea market prices are retrieved from the SPT-server every time the game is started). 
+As you can see, you can also manually trigger the plugin to retrieve the current flea market prices from your SPT server (this can be useful when you installed [DrakiaXYZ's SPT-LiveFleaPrices](https://github.com/DrakiaXYZ/SPT-LiveFleaPrices) - however, the flea market prices are retrieved from the SPT-server every time the game is started). 
 
 Just for clarifcation: This does not trigger DrakiaXYZ's SPT-LiveFleaPrices to query the latest flea prices, but my mod queries the latest flea prices from your SPT server (which are set by SPT-LiveFleaPrices).
 
-Please see the "[For nerds](#for-nerds)" section in this readme if you want to learn more about the "Currency conversion method".
+Please see the "[For nerds](#for-nerds)" section in this readme, if you want to learn more about the "Currency conversion method".
 
 ## Remarks
 
 - Changes on the Trader Price Markups (e.g. editable via SVM) are taken into account by this mod.
-- The currency conversion feature is relatively new. Please let me know in the comments if you are satisfied with this feature.
-- The toggle-mode for flea tax(es) is relatively new. Please let me know in the comments if you are satisfied with this feature.
+- The currency conversion feature is relatively new. Please let me know in the comments, if you are satisfied with this feature.
+- The toggle-mode for flea tax(es) is relatively new. Please let me know in the comments, if you are satisfied with this feature.
 
 ## Known compatibility
 
@@ -119,7 +119,7 @@ The "Include flea tax" option then deducts the estimated fee for listing the ite
 
 However, you can also disable the "Include flea tax" option and only enable "Show flea tax." Then the fee will not be deducted in the tooltip, but you will see what you would likely pay in flea tax. However, the orange highlighting, which indicates which sales option yields more profit, may then be incorrect. 
 
-For items consisting of several parts, i.e., armor or weapons, the mod currently only displays the flea price of the base item. Therefore, if the weapon is heavily modded, this has no effect on the flea price display in the tooltip, as the calculation for this would be quite complex (I may integrate this in future versions). Armor cannot be sold anyway if there are still plates in it.
+For items consisting of several parts, i.e., armor or weapons, the mod currently only displays the flea price of the base item. Therefore, if the weapon is heavily modded, this has no effect on the flea price display in the tooltip, as the calculation for this would be quite complex (I may integrate this in future versions). Armor cannot be sold anyway when there are still plates installed.
 
 ### What is the difference between "Handbook" and "Traders"?​
 
@@ -128,9 +128,9 @@ The short answer is (when your SPT-server uses standard settings [v3.11.x]):
     ​Handbook uses $1 = ₽​​125 and €1 = ₽133 for currency conversions
     Traders uses $1 = ₽​​139 and €1 = P153 for currency conversions
 
-The long answer is... when you ask the SPT-server for currency courses then one will get the values from the "handbook.json" in the SPT-database. To be honest, I have no idea where they are used, but I'm sure there's a good reason for them. That's also why I set them as default settings. They are also used as a fallback if, for some reason, the mod is unable to retrieve the USD or EUR prices from Peacekeeper and Skier when using the “Traders” setting in my mod.
+The long answer is... when you ask the SPT-server for currency courses then one will get the values from the "handbook.json" in the SPT-database. To be honest, I have no idea where they are used, but I'm sure there's a good reason for them. That's also why I set them as default settings. They are also used as a fallback, if, for some reason, the mod is unable to retrieve the USD or EUR prices from Peacekeeper and Skier when using the “Traders” setting in my mod.
 
-When you use the "Traders" option then the mod tries retrieve the actual prices you have to pay at Peacekeeper and Skier for USD/EUR. As mentioned before, the "Handbook" prices are used as a fallback if, for some reason, the mod is unable to retrieve the USD or EUR prices from Peacekeeper and Skier.
+When you use the "Traders" option then the mod tries retrieve the actual prices you have to pay at Peacekeeper and Skier for USD/EUR. As mentioned before, the "Handbook" prices are used as a fallback, if, for some reason, the mod is unable to retrieve the USD or EUR prices from Peacekeeper and Skier.
 
 ## Motivation behind this mod
 
