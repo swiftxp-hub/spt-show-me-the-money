@@ -51,8 +51,10 @@ There is no need to install anything to your Fika headless client for this mod t
 Please use the BepInEx configurator to configure features of the mod (usually accessible by pressing F12 or F1 when you are in-game):
 
 ![BepInEx Plugin Configuration](https://raw.githubusercontent.com/swiftxp-hub/spt-show-me-the-money/refs/heads/main/Assets/plugin-configuration.png)
+*(Default configuration with freshly installed mod)*
 
-(Default configuration with freshly installed mod)
+![Demonstration of toggle-mode for flea tax](https://raw.githubusercontent.com/swiftxp-hub/spt-show-me-the-money/refs/heads/main/Assets/toggle-tax-sample.gif)
+*(Demonstration of toggle-mode for flea tax)*
 
 As you can see, you can also manually trigger the plugin to retrieve the current flea market prices from your SPT server (this can be useful if you use [DrakiaXYZ's SPT-LiveFleaPrices](https://github.com/DrakiaXYZ/SPT-LiveFleaPrices) - however, the flea market prices are retrieved from the SPT-server every time the game is started). 
 
