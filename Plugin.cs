@@ -5,6 +5,7 @@ using SwiftXP.SPT.ShowMeTheMoney.Models;
 using SwiftXP.SPT.ShowMeTheMoney.Patches;
 using SwiftXP.SPT.Common.Loggers;
 using SPT.Reflection.Patching;
+using SwiftXP.SPT.Common.ConfigurationManager;
 
 namespace SwiftXP.SPT.ShowMeTheMoney;
 
@@ -12,30 +13,16 @@ namespace SwiftXP.SPT.ShowMeTheMoney;
 [BepInProcess("EscapeFromTarkov.exe")]
 public class Plugin : BaseUnityPlugin
 {
-    public const string RemotePathToGetCurrencyPurchasePrices = "/showMeTheMoney/getCurrencyPurchasePrices";
-
-    public const string RemotePathToGetPriceTable = "/showMeTheMoney/getPriceTable";
-
-    public const string RemotePathToGetRagfairConfigPriceRanges = "/showMeTheMoney/getRagfairConfigPriceRanges";
-
-    public static SimpleSptLogger SimpleSptLogger = new(MyPluginInfo.PLUGIN_GUID);
-
-    public static PluginConfiguration? Configuration;
-
-    public static Item? HoveredItem { get; set; }
-
-    public static bool DisableTemporary { get; set; }
-
-    private static ModulePatch? tooltipUpdatePatch;
+    private static ModulePatch? TooltipUpdatePatch;
 
     public static void EnableTooltipUpdatePatch()
     {
-        tooltipUpdatePatch!.Enable();
+        TooltipUpdatePatch!.Enable();
     }
 
     public static void DisableTooltipUpdatePatch()
     {
-        tooltipUpdatePatch!.Disable();
+        TooltipUpdatePatch!.Disable();
     }
 
     private void Awake()
@@ -74,9 +61,17 @@ public class Plugin : BaseUnityPlugin
         new GridItemOnPointerExitPatch().Enable();
         new SimpleTooltipShowPatch().Enable();
 
-        tooltipUpdatePatch = new TooltipUpdatePatch();
+        TooltipUpdatePatch = new TooltipUpdatePatch();
 
-        if (Configuration?.FleaTaxToggleMode.Value ?? false)
+        if (Configuration!.FleaTaxToggleMode.IsEnabled())
             EnableTooltipUpdatePatch();
     }
+
+    public static SimpleSptLogger SimpleSptLogger = new(MyPluginInfo.PLUGIN_GUID);
+
+    public static PluginConfiguration? Configuration;
+
+    public static Item? HoveredItem { get; set; }
+
+    public static bool DisableTemporary { get; set; }
 }

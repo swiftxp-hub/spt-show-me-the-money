@@ -6,11 +6,9 @@ namespace SwiftXP.SPT.ShowMeTheMoney.Models;
 
 public class CurrencyPurchasePricesService
 {
-    public static CurrencyPurchasePricesService Instance => instance.Value;
+    private const string RemotePathToGetCurrencyPurchasePrices = "/showMeTheMoney/getCurrencyPurchasePrices";
 
     private static readonly Lazy<CurrencyPurchasePricesService> instance = new(() => new CurrencyPurchasePricesService());
-
-    public CurrencyPurchasePrices? CurrencyPurchasePrices { get; private set; }
 
     private CurrencyPurchasePricesService() { }
 
@@ -19,7 +17,7 @@ public class CurrencyPurchasePricesService
         Plugin.SimpleSptLogger.LogInfo("Trying to query currency purchase prices from remote...");
 
         CurrencyPurchasePrices? currencyPurchasePrises = null;
-        string json = RequestHandler.GetJson(Plugin.RemotePathToGetCurrencyPurchasePrices);
+        string json = RequestHandler.GetJson(RemotePathToGetCurrencyPurchasePrices);
 
         if (!string.IsNullOrWhiteSpace(json))
             currencyPurchasePrises = JsonConvert.DeserializeObject<CurrencyPurchasePrices>(json);
@@ -28,11 +26,15 @@ public class CurrencyPurchasePricesService
         {
             Plugin.SimpleSptLogger.LogInfo($"Currency purchase prices were queried!");
 
-            CurrencyPurchasePrices = currencyPurchasePrises;
+            this.CurrencyPurchasePrices = currencyPurchasePrises;
         }
         else
         {
             Plugin.SimpleSptLogger.LogInfo("Currency purchase prices could not be queried!");
         }
     }
+
+    public static CurrencyPurchasePricesService Instance => instance.Value;
+
+    public CurrencyPurchasePrices? CurrencyPurchasePrices { get; private set; }
 }

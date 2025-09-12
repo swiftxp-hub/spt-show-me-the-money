@@ -12,12 +12,11 @@ public static class TraderClassExtensions
 
     public static SupplyData? GetSupplyData(this TraderClass trader) =>
         SupplyDataField?.GetValue(trader) as SupplyData;
-        
+
     public static async void UpdateSupplyData(this TraderClass trader)
     {
         if (SupplyDataField.GetValue(trader) is null)
         {
-
             Result<SupplyData> result = await SptSession.Session.GetSupplyData(trader.Id);
             if (result.Failed)
             {

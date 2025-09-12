@@ -6,11 +6,9 @@ namespace SwiftXP.SPT.ShowMeTheMoney.Models;
 
 public class RagfairPriceRangesService
 {
-    public static RagfairPriceRangesService Instance => instance.Value;
+    private const string RemotePathToGetRagfairConfigPriceRanges = "/showMeTheMoney/getRagfairConfigPriceRanges";
 
     private static readonly Lazy<RagfairPriceRangesService> instance = new(() => new RagfairPriceRangesService());
-
-    public PriceRanges? Ranges { get; private set; }
 
     private RagfairPriceRangesService() { }
 
@@ -19,7 +17,7 @@ public class RagfairPriceRangesService
         Plugin.SimpleSptLogger.LogInfo("Trying to query ragfair price ranges from remote...");
 
         PriceRanges? priceRanges = null;
-        string priceRangesJson = RequestHandler.GetJson(Plugin.RemotePathToGetRagfairConfigPriceRanges);
+        string priceRangesJson = RequestHandler.GetJson(RemotePathToGetRagfairConfigPriceRanges);
 
         if (!string.IsNullOrWhiteSpace(priceRangesJson))
             priceRanges = JsonConvert.DeserializeObject<PriceRanges>(priceRangesJson);
@@ -28,11 +26,15 @@ public class RagfairPriceRangesService
         {
             Plugin.SimpleSptLogger.LogInfo($"Ragfair price ranges was queried!");
 
-            Ranges = priceRanges;
+            this.Ranges = priceRanges;
         }
         else
         {
             Plugin.SimpleSptLogger.LogInfo("Ragfair price ranges could not be queried!");
         }
     }
+
+    public static RagfairPriceRangesService Instance => instance.Value;
+
+    public PriceRanges? Ranges { get; private set; }
 }

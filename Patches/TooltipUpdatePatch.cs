@@ -2,6 +2,7 @@ using EFT.UI;
 using SPT.Reflection.Patching;
 using System.Reflection;
 using HarmonyLib;
+using SwiftXP.SPT.Common.ConfigurationManager;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Patches;
 
@@ -14,17 +15,10 @@ public class TooltipUpdatePatch : ModulePatch
     public static void PatchPrefix(Tooltip __instance)
     {
         if (SimpleTooltipShowPatch.IsActive
-            && (Plugin.Configuration?.FleaTaxToggleMode.Value ?? false)
-            && (Plugin.Configuration?.FleaTaxToggleKey.Value.IsDown() ?? false))
+            && Plugin.Configuration!.FleaTaxToggleMode.IsEnabled()
+            && (Plugin.Configuration!.FleaTaxToggleKey.GetValue().IsDown() || Plugin.Configuration!.FleaTaxToggleKey.GetValue().IsUp()))
         {
-            SimpleTooltipShowPatch.EnableFleaTax();
-        }
-
-        else if (SimpleTooltipShowPatch.IsActive
-            && (Plugin.Configuration?.FleaTaxToggleMode.Value ?? false)
-            && (Plugin.Configuration?.FleaTaxToggleKey.Value.IsUp() ?? false))
-        {
-            SimpleTooltipShowPatch.DisableFleaTax();
+            SimpleTooltipShowPatch.Update();
         }
     }
 }

@@ -6,25 +6,25 @@ public class TradeItem
 {
     public TradeItem(Item item, int itemSlotCount, TradePrice? traderPrice = null, TradePrice? fleaPrice = null)
     {
-        Item = item;
-        ItemSlotCount = itemSlotCount;
-        TraderPrice = traderPrice;
-        FleaPrice = fleaPrice;
+        this.Item = item;
+        this.ItemSlotCount = itemSlotCount;
+        this.TraderPrice = traderPrice;
+        this.FleaPrice = fleaPrice;
     }
 
-    public Item Item { get; }
+    public TradePrice? FleaPrice { get; set; }
 
-    public int ItemSlotCount { get; }
+    public Item Item { get; }
 
     public int ItemObjectCount
     {
         get
         {
-            return Item.StackObjectsCount;
+            return this.Item.StackObjectsCount;
         }
     }
 
-    public TradePrice? TraderPrice { get; set; }
+    public int ItemSlotCount { get; }
 
-    public TradePrice? FleaPrice { get; set; }
+    public TradePrice? TraderPrice { get; set; }
 }
