@@ -33,14 +33,45 @@ public class PluginConfiguration
         this.BestTradeColor = configFile.BindConfiguration("3. Appearance", "Best trade color", new Color(0.867f, 0.514f, 0.102f), "Defines the color used to highlight the best trade, trader or flea (Default: R 221, G 131, B 26).", 1);
         this.RenderInItalics = configFile.BindConfiguration("3. Appearance", "Italics", false, "Renders the price(s) in italics (Default: Disabled).", 0);
 
-        this.EnableColorCoding = configFile.BindConfiguration("4. Color coding", "Enable color coding", true, "Uses color coding to give an quick and easy indicator how valueable an item is (Default: Enabled).", 12);
+        this.EnableColorCoding = configFile.BindConfiguration("4. Color coding", "Enable color coding", true, "Uses color coding to give an quick and easy indicator how valueable an item is (Default: Enabled).", 13);
 
-        this.PoorValue = configFile.BindConfiguration("4. Color coding", "Poor value", 5000m, "(Default: 5000).", 11);
-        this.CommonValue = configFile.BindConfiguration("4. Color coding", "Common value", 7500m, "(Default: 7500).", 10);
-        this.UncommonValue = configFile.BindConfiguration("4. Color coding", "Uncommon value", 10000m, "(Default: 10000).", 9);
-        this.RareValue = configFile.BindConfiguration("4. Color coding", "Rare value", 15000m, "(Default: 15000).", 8);
-        this.EpicValue = configFile.BindConfiguration("4. Color coding", "Epic value", 20000m, "(Default: 20000).", 7);
-        this.LegendaryValue = configFile.BindConfiguration("4. Color coding", "Legendary value", 20000m, "(Default: 20000).", 6);
+        this.PoorValue = configFile.BindConfiguration("4. Color coding", "Poor value (smaller than)", 2500m, "(Default: 2500).", 12);
+        this.CommonValue = configFile.BindConfiguration("4. Color coding", "Common value (smaller than)", 20000m, "(Default: 20000).", 11);
+        this.UncommonValue = configFile.BindConfiguration("4. Color coding", "Uncommon value (smaller than)", 40000m, "(Default: 40000).", 10);
+        this.RareValue = configFile.BindConfiguration("4. Color coding", "Rare value (smaller than)", 70000m, "(Default: 70000).", 9);
+        this.EpicValue = configFile.BindConfiguration("4. Color coding", "Epic value (smaller than) - (Legendary greater than or equal to)", 150000m, "(Default: 150000).", 8);
+
+        configFile.CreateButton(
+            "4. Color coding",
+            "Set default values with only dealer prices in mind",
+            "Set",
+            "",
+            () =>
+            {
+                this.PoorValue.Value = 5000m;
+                this.CommonValue.Value = 7500m;
+                this.UncommonValue.Value = 10000m;
+                this.RareValue.Value = 15000m;
+                this.EpicValue.Value = 20000m;
+            },
+            7
+        );
+
+        configFile.CreateButton(
+            "4. Color coding",
+            "Set default values with flea market prices in mind",
+            "Set",
+            "",
+            () =>
+            {
+                this.PoorValue.Value = 2500m;
+                this.CommonValue.Value = 20000m;
+                this.UncommonValue.Value = 40000m;
+                this.RareValue.Value = 70000m;
+                this.EpicValue.Value = 150000m;
+            },
+            6
+        );
 
         this.PoorColor = configFile.BindConfiguration("4. Color coding", "Poor color", new Color(0.62f, 0.62f, 0.62f), "(Default: R 157, G 157, B 157).", 5);
         this.CommonColor = configFile.BindConfiguration("4. Color coding", "Common color", new Color(1f, 1f, 1f), "(Default: R 255, G 255, B 255).", 4);
@@ -120,8 +151,6 @@ public class PluginConfiguration
     public ConfigEntry<decimal> RareValue { get; private set; }
 
     public ConfigEntry<decimal> EpicValue { get; private set; }
-
-    public ConfigEntry<decimal> LegendaryValue { get; private set; }
 
     public ConfigEntry<Color> PoorColor { get; private set; }
 

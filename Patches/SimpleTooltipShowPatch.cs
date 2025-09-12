@@ -13,6 +13,7 @@ using SwiftXP.SPT.ShowMeTheMoney.Enums;
 using TMPro;
 using SwiftXP.SPT.Common.ConfigurationManager;
 using SwiftXP.SPT.Common.Constants;
+using System.Linq;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Patches;
 
@@ -40,6 +41,8 @@ public class SimpleTooltipShowPatch : ModulePatch
             bool success = TryShowPriceInformations(out string? priceInformationText, out double? highestPrice);
             if (success)
             {
+                SetColorCoding(ref text, highestPrice);
+
                 patchText = priceInformationText;
                 text += patchText;
                 IsActive = true;
@@ -95,10 +98,10 @@ public class SimpleTooltipShowPatch : ModulePatch
 
     private static bool IsCheckmarkTooltip(in string text)
     {
-        if (text.Contains("Stash".Localized(null), StringComparison.InvariantCultureIgnoreCase))
+        if (text.Contains("STASH".Localized(null), StringComparison.InvariantCultureIgnoreCase))
             return true;
 
-        if (text.Contains("Found in raid".Localized(null), StringComparison.InvariantCultureIgnoreCase))
+        if (text.Contains("FoundInRaid".Localized(null), StringComparison.InvariantCultureIgnoreCase))
             return true;
 
         return false;
@@ -137,7 +140,7 @@ public class SimpleTooltipShowPatch : ModulePatch
             {
                 ShowPrice(tradeItem, tradeItem.FleaPrice!, tradeItem.TraderPrice, textToAppendToTooltip);
 
-                if (highestPrice is null || tradeItem.FleaPrice!.GetComparePriceInRouble() > tradeItem.TraderPrice!.GetComparePriceInRouble())
+                if (highestPrice is null || tradeItem.FleaPrice!.GetTotalPriceInRouble() > tradeItem.TraderPrice!.GetTotalPriceInRouble())
                     highestPrice = tradeItem.FleaPrice!.GetTotalPriceInRouble();
             }
         }
@@ -148,6 +151,45 @@ public class SimpleTooltipShowPatch : ModulePatch
         priceInformationText = textToAppendToTooltip.ToString();
 
         return highestPrice is not null;
+    }
+
+    private static void SetColorCoding(ref string text, double? highestPrice)
+    {
+        if (highestPrice is not null && Plugin.Configuration!.EnableColorCoding.IsEnabled())
+        {
+            string itemName = Plugin.HoveredItem.LocalizedName();
+            string? colorCoding = null;
+
+            switch (highestPrice)
+            {
+                case var _ when highestPrice < (double)Plugin.Configuration!.PoorValue.GetValue():
+                    colorCoding = Plugin.Configuration!.PoorColor.GetRGBHexCode();
+                    break;
+
+                case var _ when highestPrice < (double)Plugin.Configuration!.CommonValue.GetValue():
+                    colorCoding = Plugin.Configuration!.CommonColor.GetRGBHexCode();
+                    break;
+
+                case var _ when highestPrice < (double)Plugin.Configuration!.UncommonValue.GetValue():
+                    colorCoding = Plugin.Configuration!.UncommonColor.GetRGBHexCode();
+                    break;
+
+                case var _ when highestPrice < (double)Plugin.Configuration!.RareValue.GetValue():
+                    colorCoding = Plugin.Configuration!.RareColor.GetRGBHexCode();
+                    break;
+
+                case var _ when highestPrice < (double)Plugin.Configuration!.EpicValue.GetValue():
+                    colorCoding = Plugin.Configuration!.EpicColor.GetRGBHexCode();
+                    break;
+
+                case var _ when highestPrice >= (double)Plugin.Configuration!.EpicValue.GetValue():
+                    colorCoding = Plugin.Configuration!.LegendaryColor.GetRGBHexCode();
+                    break;
+            }
+
+            if (colorCoding is not null)
+                text = text.Replace(itemName, $"<color=#{colorCoding}>{itemName}</color>");
+        }
     }
 
     private static void SetToolTipDelay(ref float delay)
@@ -287,7 +329,7 @@ public class SimpleTooltipShowPatch : ModulePatch
                 TradePrice tradePrice =
                     CreateTradePrice(
                         tradeItem,
-                        "Flea".Localized(null),
+                        GetFleaMarketName(),
 
                         minFleaPrice,
                         null,
@@ -313,10 +355,17 @@ public class SimpleTooltipShowPatch : ModulePatch
         return RagfairPriceRangesService.Instance.Ranges?.Default?.Min ?? 0.8d;
     }
 
-    private static bool IsFleaTaxToggleKeyPressed()
+    private static string GetFleaMarketName()
     {
-        return Plugin.Configuration!.FleaTaxToggleMode.IsEnabled()
-            && Plugin.Configuration!.FleaTaxToggleKey.GetValue().IsPressed();
+        try
+        {
+            string fleaMarketName = "RAG FAIR".Localized(null);
+            return fleaMarketName.First().ToString().ToUpperInvariant()
+                + fleaMarketName.ToLowerInvariant().Substring(1);
+        }
+        catch (Exception) { }
+
+        return "Flea";
     }
 
     private static TradePrice CreateTradePrice(TradeItem tradeItem, string traderName, double singleObjectPrice, double? totalPrice,
@@ -360,16 +409,23 @@ public class SimpleTooltipShowPatch : ModulePatch
 
         if (tradeItem.ItemSlotCount > 1 || tradeItem.Item.StackObjectsCount > 1)
         {
-            text.Append($"{FormatPrice(tradePriceA.GetComparePrice(), tradePriceA.CurrencySymbol)}");
-            text.Append($" Total: {FormatPrice(tradePriceA.GetTotalPrice(), tradePriceA.CurrencySymbol)}");
+            text.Append($"{FormatPrice(tradePriceA.GetComparePrice(), tradePriceA.CurrencySymbol)} {"Total".Localized(null)}: ");
+        }
+
+        if (tradePriceB is not null)
+        {
+            if (tradePriceA.GetComparePriceInRouble() > tradePriceB.GetComparePriceInRouble())
+                text.Append($"<b>{FormatPrice(tradePriceA.GetTotalPrice(), tradePriceA.CurrencySymbol)}</b>");
+            else
+                text.Append($"{FormatPrice(tradePriceA.GetTotalPrice(), tradePriceA.CurrencySymbol)}");
         }
         else
         {
-            text.Append($"{FormatPrice(tradePriceA.GetTotalPrice(), tradePriceA.CurrencySymbol)}");
+            text.Append($"<b>{FormatPrice(tradePriceA.GetTotalPrice(), tradePriceA.CurrencySymbol)}</b>");
         }
 
         if (Plugin.Configuration!.ShowFleaTax && tradePriceA.HasTax())
-            text.Append($" Tax: {FormatPrice(tradePriceA.GetTotalTax())}");
+            text.Append($" {"ragfair/Fee".Localized(null)}: {FormatPrice(tradePriceA.GetTotalTax())}");
     }
 
     private static string GetBestTradeColor()
