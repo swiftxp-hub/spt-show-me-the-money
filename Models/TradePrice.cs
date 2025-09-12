@@ -5,15 +5,23 @@ namespace SwiftXP.SPT.ShowMeTheMoney.Models;
 
 public class TradePrice
 {
-    public string TraderName { get; }
+    private TradeItem _tradeItem;
 
-    public double Price { get; set; }
+    private double _singleObjectPrice;
+
+    private double? _totalPrice;
+
+    private double? _singleObjectTax;
+
+    private double? _totalTax;
+
+    private bool _includeTaxInPrices;
+
+    public string TraderName { get; }
 
     public double? CurrencyCourse { get; set; }
 
     public MongoID? CurrencyId { get; set; }
-
-    public double? Tax { get; set; }
 
     public string CurrencySymbol
     {
@@ -26,39 +34,90 @@ public class TradePrice
         }
     }
 
-    public TradePrice(string traderName, double price, double? currencyCourse = null, MongoID? currencyId = null, double? tax = null)
+    public TradePrice(TradeItem tradeItem, string traderName, double singleObjectPrice, double? totalPrice = null,
+        double? currencyCourse = null, MongoID? currencyId = null, double? singleObjectTax = null, double? totalTax = null,
+        bool includeTaxInPrices = false)
     {
+        _tradeItem = tradeItem;
+        _singleObjectPrice = singleObjectPrice;
+        _totalPrice = totalPrice;
+
         TraderName = traderName;
-        Price = price;
         CurrencyCourse = currencyCourse;
         CurrencyId = currencyId;
-        Tax = tax;
+
+        _singleObjectTax = singleObjectTax;
+        _totalTax = totalTax;
+
+        _includeTaxInPrices = includeTaxInPrices;
     }
 
-    public double GetSlotPrice(int itemSlotCount)
+    public double GetComparePrice()
     {
-        return Price / itemSlotCount;
+        double price = _singleObjectPrice / _tradeItem.ItemSlotCount;
+
+        if (_includeTaxInPrices)
+        {
+            if (_singleObjectTax is not null)
+                price -= _singleObjectTax.Value / _tradeItem.ItemSlotCount;
+
+            else if (_totalTax is not null)
+                price -= _totalTax.Value / _tradeItem.Item.StackObjectsCount / _tradeItem.ItemSlotCount;
+        }
+
+        return price;
     }
 
-    public double GetSlotPriceInRouble(int itemSlotCount)
+    public double GetComparePriceInRouble()
     {
-        double totalPriceInRouble = GetTotalPriceInRouble();
+        double price = _singleObjectPrice / _tradeItem.ItemSlotCount;
 
-        return totalPriceInRouble / itemSlotCount;
-    }
-
-    public double GetObjectPriceInRouble(int stackObjectsCount)
-    {
-        double totalPriceInRouble = GetTotalPriceInRouble();
-
-        return totalPriceInRouble / stackObjectsCount;
-    }
-
-    public double GetTotalPriceInRouble()
-    {
         if (CurrencyCourse.HasValue)
-            return Price * CurrencyCourse.Value;
+            price = price * CurrencyCourse.Value;
 
-        return Price;
+        if (_includeTaxInPrices)
+        {
+            if (_singleObjectTax is not null)
+                price -= _singleObjectTax.Value / _tradeItem.ItemSlotCount;
+
+            else if (_totalTax is not null)
+                price -= _totalTax.Value / _tradeItem.Item.StackObjectsCount / _tradeItem.ItemSlotCount;
+        }
+
+        return price;
+    }
+
+    public double GetTotalPrice()
+    {
+        double? price = _totalPrice;
+
+        if (_totalPrice is null)
+            price = _singleObjectPrice * _tradeItem.Item.StackObjectsCount;
+
+        if (_includeTaxInPrices)
+        {
+            if (_totalTax is not null)
+                price -= _totalTax.Value;
+
+            else if (_singleObjectTax is not null)
+                price -= _singleObjectTax.Value * _tradeItem.Item.StackObjectsCount;
+        }
+
+        return price!.Value;
+    }
+
+    public double GetTotalTax()
+    {
+        double? tax = _totalTax;
+
+        if (_totalTax is null)
+            tax = _singleObjectTax * _tradeItem.Item.StackObjectsCount;
+
+        return tax!.Value;
+    }
+
+    public bool HasTax()
+    {
+        return this._singleObjectTax.HasValue || this._totalTax.HasValue;
     }
 }

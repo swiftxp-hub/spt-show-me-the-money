@@ -152,12 +152,12 @@ public class SimpleTooltipShowPatch : ModulePatch
             if (IsShowFleaPricesEnabled())
                 hasFleaPrice = GetFleaPrice(tradeItem, includeFleaTax, showTax);
 
-            if (hasTraderPrice && tradeItem.TraderPrice!.GetTotalPriceInRouble() > 0d)
+            if (hasTraderPrice)
             {
                 ShowPrice(tradeItem, tradeItem.TraderPrice!, tradeItem.FleaPrice, textToAddToTooltip, showTax);
             }
 
-            if (hasFleaPrice && tradeItem.FleaPrice!.GetTotalPriceInRouble() > 0d)
+            if (hasFleaPrice)
             {
                 ShowPrice(tradeItem, tradeItem.FleaPrice!, tradeItem.TraderPrice, textToAddToTooltip, showTax);
             }
@@ -229,26 +229,29 @@ public class SimpleTooltipShowPatch : ModulePatch
         {
             if (IsTraderAvailable(trader))
             {
-                Item item = tradeItem.Item.CloneItem();
-                item.StackObjectsCount = 1;
+                TraderClass.GStruct264? singleObjectPrice = null;
+                TraderClass.GStruct264? totalPrice = null;
 
-                TraderClass.GStruct264? userItemPrice = trader.GetUserItemPrice(item);
-                if (userItemPrice.HasValue && (!IsRoublesOnlyEnabled() || userItemPrice.Value.CurrencyId.ToString() == "5449016a4bdc2d6f028b456f"))
+                bool hasPrice = GetTraderUserItemPrice(trader, tradeItem, out singleObjectPrice, out totalPrice);
+                if (hasPrice && (!IsRoublesOnlyEnabled() || singleObjectPrice!.Value.CurrencyId.ToString() == "5449016a4bdc2d6f028b456f"))
                 {
-                    MongoID? currencyId = userItemPrice.Value.CurrencyId;
+                    MongoID? currencyId = singleObjectPrice!.Value.CurrencyId;
                     double? currencyCourse = GetCurrencyCourse(trader, currencyId);
-                    double itemPrice = userItemPrice.Value.Amount;
+                    double itemPrice = singleObjectPrice.Value.Amount;
+
+                    double? totalItemPrice = totalPrice != null ? totalPrice.Value.Amount : null;
 
                     TradePrice traderPrice =
                         CreateTradePrice(
+                            tradeItem,
                             trader.LocalizedName,
-
-                            itemPrice,
+                            singleObjectPrice.Value.Amount,
+                            totalItemPrice,
                             currencyCourse,
                             currencyId
                         );
 
-                    if (highestTraderPrice == null || traderPrice.GetSlotPriceInRouble(tradeItem.ItemSlotCount) > highestTraderPrice.GetSlotPriceInRouble(tradeItem.ItemSlotCount))
+                    if (highestTraderPrice == null || traderPrice.GetComparePriceInRouble() > highestTraderPrice.GetComparePriceInRouble())
                         highestTraderPrice = traderPrice;
                 }
             }
@@ -262,6 +265,18 @@ public class SimpleTooltipShowPatch : ModulePatch
     private static bool IsTraderAvailable(TraderClass trader)
     {
         return trader.Info.Available && !trader.Info.Disabled && trader.Info.Unlocked;
+    }
+
+    private static bool GetTraderUserItemPrice(TraderClass trader, TradeItem tradeItem,
+        out TraderClass.GStruct264? singleObjectPrice, out TraderClass.GStruct264? totalPrice)
+    {
+        Item singleItem = tradeItem.Item.CloneItem();
+        singleItem.StackObjectsCount = 1;
+        singleObjectPrice = trader.GetUserItemPrice(singleItem);
+
+        totalPrice = trader.GetUserItemPrice(tradeItem.Item);
+
+        return singleObjectPrice is not null;
     }
 
     private static bool IsRoublesOnlyEnabled()
@@ -298,30 +313,34 @@ public class SimpleTooltipShowPatch : ModulePatch
     {
         if (RagfairPriceTableService.Instance.Prices is not null)
         {
-            if (RagfairPriceTableService.Instance.Prices!.TryGetValue(tradeItem.Item.TemplateId, out double fleaPrice))
+            if (RagfairPriceTableService.Instance.Prices!.TryGetValue(tradeItem.Item.TemplateId, out double fleaSingleObjectPrice))
             {
-                double minFleaPrice = fleaPrice * GetPriceRangeMin();
-                double? taxPrice = null;
+                double minFleaPrice = fleaSingleObjectPrice * GetPriceRangeMin();
+
+                double? singleObjectTaxPrice = null;
+                double? totalTaxPrice = null;
 
                 if (includeFleaTax || showTax)
                 {
-                    Item item = new(string.Empty, tradeItem.Item.Template);
-
-                    taxPrice = FleaTaxCalculatorAbstractClass.CalculateTaxPrice(item, 1, minFleaPrice, false);
-
-                    if (includeFleaTax)
-                        minFleaPrice -= taxPrice.Value;
+                    singleObjectTaxPrice = FleaTaxCalculatorAbstractClass.CalculateTaxPrice(tradeItem.Item, 1, minFleaPrice, false);
+                    totalTaxPrice = FleaTaxCalculatorAbstractClass.CalculateTaxPrice(tradeItem.Item, tradeItem.ItemObjectCount, minFleaPrice, false);
                 }
 
                 TradePrice tradePrice =
                     CreateTradePrice(
+                        tradeItem,
                         "Flea".Localized(null),
 
                         minFleaPrice,
                         null,
+
+                        null,
                         null,
 
-                        taxPrice
+                        singleObjectTaxPrice,
+                        totalTaxPrice,
+
+                        includeFleaTax
                     );
 
                 tradeItem.FleaPrice = tradePrice;
@@ -351,16 +370,24 @@ public class SimpleTooltipShowPatch : ModulePatch
         return Plugin.Configuration?.IncludeFleaTax?.Value ?? true;
     }
 
-    private static TradePrice CreateTradePrice(string traderName, double price,
-        double? currencyCourse, MongoID? currencyId, double? tax = null)
+    private static TradePrice CreateTradePrice(TradeItem tradeItem, string traderName, double singleObjectPrice, double? totalPrice,
+        double? currencyCourse, MongoID? currencyId, double? singleObjectTax = null, double? totalTax = null, bool includeFleaTax = false)
     {
         TradePrice traderPrice = new
         (
+            tradeItem,
             traderName,
-            price,
+
+            singleObjectPrice,
+            totalPrice,
+
             currencyCourse,
             currencyId,
-            tax
+
+            singleObjectTax,
+            totalTax,
+            
+            includeFleaTax
         );
 
         return traderPrice;
@@ -372,7 +399,7 @@ public class SimpleTooltipShowPatch : ModulePatch
 
         if (tradePriceB is not null)
         {
-            if (tradePriceA.GetSlotPriceInRouble(tradeItem.ItemSlotCount) > tradePriceB.GetSlotPriceInRouble(tradeItem.ItemSlotCount))
+            if (tradePriceA.GetComparePriceInRouble() > tradePriceB.GetComparePriceInRouble())
                 text.Append($"<color=#{GetBestTradeColor()}>{tradePriceA.TraderName}</color>: ");
             else
                 text.Append($"{tradePriceA.TraderName}: ");
@@ -384,16 +411,16 @@ public class SimpleTooltipShowPatch : ModulePatch
 
         if (tradeItem.ItemSlotCount > 1 || tradeItem.Item.StackObjectsCount > 1)
         {
-            text.Append($"{FormatPrice(tradePriceA.GetSlotPrice(tradeItem.ItemSlotCount), tradePriceA.CurrencySymbol)}");
-            text.Append($" Total: {FormatPrice(tradePriceA.Price, tradePriceA.CurrencySymbol)}");
+            text.Append($"{FormatPrice(tradePriceA.GetComparePrice(), tradePriceA.CurrencySymbol)}");
+            text.Append($" Total: {FormatPrice(tradePriceA.GetTotalPrice(), tradePriceA.CurrencySymbol)}");
         }
         else
         {
-            text.Append($"{FormatPrice(tradePriceA.Price, tradePriceA.CurrencySymbol)}");
+            text.Append($"{FormatPrice(tradePriceA.GetTotalPrice(), tradePriceA.CurrencySymbol)}");
         }
 
-        if (showTax && tradePriceA.Tax is not null)
-            text.Append($" Tax: {FormatPrice(tradePriceA.Tax.Value)}");
+        if (showTax && tradePriceA.HasTax())
+            text.Append($" Tax: {FormatPrice(tradePriceA.GetTotalTax())}");
     }
 
     private static string GetBestTradeColor()

@@ -7,7 +7,7 @@
 
     <AssemblyName>SwiftXP.SPT.ShowMeTheMoney</AssemblyName>
     <Product>Show Me The Money</Product>
-    <Version>1.4.0</Version>
+    <Version>1.4.1</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <RestoreAdditionalProjectSources>
       https://api.nuget.org/v3/index.json;

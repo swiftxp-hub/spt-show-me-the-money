@@ -16,6 +16,14 @@ public class TradeItem
 
     public int ItemSlotCount { get; }
 
+    public int ItemObjectCount
+    {
+        get
+        {
+            return Item.StackObjectsCount;
+        }
+    }
+
     public TradePrice? TraderPrice { get; set; }
 
     public TradePrice? FleaPrice { get; set; }
