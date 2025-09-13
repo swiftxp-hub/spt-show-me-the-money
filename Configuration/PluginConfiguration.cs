@@ -18,9 +18,10 @@ public class PluginConfiguration
         configFile.SaveOnConfigSet = true;
 
         // --- 1. Main settings
-        this.EnablePlugin = configFile.BindConfiguration("1. Main settings", "Enable plug-in", true, "Enable or disable the plug-in (Default: Enabled).", 3);
-        this.ShowTraderPrices = configFile.BindConfiguration("1. Main settings", "Show trader price(s)", true, "Show the trader price(s) in the tool-tip (Default: Enabled).", 2);
-        this.ShowFleaPrices = configFile.BindConfiguration("1. Main settings", "Show flea price(s)", true, "Show the flea price(s) in the tool-tip (Default: Enabled).", 1);
+        this.EnablePlugin = configFile.BindConfiguration("1. Main settings", "Enable plug-in", true, "Enable or disable the plug-in (Default: Enabled).", 4);
+        this.ShowTraderPrices = configFile.BindConfiguration("1. Main settings", "Show trader price(s)", true, "Show the trader price(s) in the tool-tip (Default: Enabled).", 3);
+        this.ShowFleaPrices = configFile.BindConfiguration("1. Main settings", "Show flea price(s)", true, "Show the flea price(s) in the tool-tip (Default: Enabled).", 2);
+        this.HidePricePerSlot = configFile.BindConfiguration("1. Main settings", "Hide price-per-slot", false, "Hides the price-per-slot in the tool-tip. The mod continues to calculate in the background using price-per-slot, so only the display is deactivated. (Default: Disabled).", 1);
         this.ToolTipDelay = configFile.BindConfiguration("1. Main settings", "Tool-Tip delay", 0.0m, "Delays the tool-tip for x seconds. (Plug-In Default: 0, EFT Default: 0.6).", 0);
 
         // --- 2. Currency conversion
@@ -37,13 +38,13 @@ public class PluginConfiguration
         this.RenderInItalics = configFile.BindConfiguration("3. Appearance", "Italics", false, "Renders the price(s) in italics (Default: Disabled).", 0);
 
         // --- 4. Color coding
-        this.EnableColorCoding = configFile.BindConfiguration("4. Color coding", "Enable color coding (always based on value per slot)", true, "Uses color coding to give an quick and easy indicator how valueable an item is. Always based on value per slot (Default: Enabled).", 12);
+        this.EnableColorCoding = configFile.BindConfiguration("4. Color coding", "Enable color coding (always based on price-per-slot)", true, "Uses color coding to give an quick and easy indicator how valueable an item is. Always based on value per slot. Default colors are from WoW (Default: Enabled).", 12);
 
         this.PoorValue = configFile.BindConfiguration("4. Color coding", "Poor value (smaller than)", 850m, "(Default: 850).", 11);
         this.CommonValue = configFile.BindConfiguration("4. Color coding", "Common value (smaller than)", 12850m, "(Default: 12850).", 10);
         this.UncommonValue = configFile.BindConfiguration("4. Color coding", "Uncommon value (smaller than)", 23250m, "(Default: 23250).", 9);
         this.RareValue = configFile.BindConfiguration("4. Color coding", "Rare value (smaller than)", 38500m, "(Default: 38500).", 8);
-        this.EpicValue = configFile.BindConfiguration("4. Color coding", "Epic value (smaller than) - (is also legendary value, but greater than or equal to)", 90000m, "(Default: 90000).", 7);
+        this.EpicValue = configFile.BindConfiguration("4. Color coding", "Epic value (smaller than) - everything above that is considered legendary", 90000m, "(Default: 90000).", 7);
 
         this.UseCaliberPenetrationPower = configFile.BindConfiguration("4. Color coding", "Use penetration power instead of price value for ammunition", true, "Uses the caliber penetration power value instead of the price value for ammunition for color coding. Color coding values for ammunition are hard-coded currently (Default: Enabled).", 6);
 
@@ -91,6 +92,8 @@ public class PluginConfiguration
     public ConfigEntry<bool> ShowTraderPrices { get; private set; }
 
     public ConfigEntry<bool> ShowFleaPrices { get; private set; }
+
+    public ConfigEntry<bool> HidePricePerSlot { get; private set; }
 
     public ConfigEntry<decimal> ToolTipDelay { get; private set; }
     #endregion

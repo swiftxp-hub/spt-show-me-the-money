@@ -16,7 +16,9 @@ public class TooltipUpdatePatch : ModulePatch
     {
         if (SimpleTooltipShowPatch.IsActive
             && Plugin.Configuration!.FleaTaxToggleMode.IsEnabled()
-            && (Plugin.Configuration!.FleaTaxToggleKey.GetValue().IsDown() || Plugin.Configuration!.FleaTaxToggleKey.GetValue().IsUp()))
+            && (Plugin.Configuration!.FleaTaxToggleKey.GetValue().IsDown()
+                || Plugin.Configuration!.FleaTaxToggleKey.GetValue().IsUp()
+                || Plugin.Configuration!.FleaTaxToggleKey.GetValue().IsPressed()))
         {
             SimpleTooltipShowPatch.Update();
         }

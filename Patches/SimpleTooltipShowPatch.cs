@@ -487,7 +487,7 @@ public class SimpleTooltipShowPatch : ModulePatch
             text.Append($"<color=#{GetBestTradeColor()}>{tradePriceA.TraderName}</color>: ");
         }
 
-        if (tradeItem.ItemSlotCount > 1 || tradeItem.Item.StackObjectsCount > 1)
+        if ((tradeItem.ItemSlotCount > 1 || tradeItem.Item.StackObjectsCount > 1) && !Plugin.Configuration!.HidePricePerSlot.IsEnabled())
         {
             text.Append($"{FormatPrice(tradePriceA.GetComparePrice(), tradePriceA.CurrencySymbol)} {"Total".Localized(null)}: ");
         }
