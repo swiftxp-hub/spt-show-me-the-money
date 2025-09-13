@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using Comfort.Common;
 using EFT;
@@ -15,17 +16,24 @@ public static class TraderClassExtensions
 
     public static async void UpdateSupplyData(this TraderClass trader)
     {
-        if (SupplyDataField.GetValue(trader) is null)
+        try
         {
-            Result<SupplyData> result = await SptSession.Session.GetSupplyData(trader.Id);
-            if (result.Failed)
+            if (SupplyDataField.GetValue(trader) is null)
             {
-                Plugin.SimpleSptLogger.LogError("Unable to update supply data for trader(s)! Plug-in will not work properly without that data.");
+                Result<SupplyData> result = await SptSession.Session.GetSupplyData(trader.Id);
+                if (result.Failed)
+                {
+                    Plugin.SimpleSptLogger.LogError("Unable to update supply data for trader(s)! Plug-in will not work properly without that data");
 
-                return;
+                    return;
+                }
+
+                SupplyDataField.SetValue(trader, result.Value);
             }
-
-            SupplyDataField.SetValue(trader, result.Value);
+        }
+        catch (Exception exception)
+        {
+            Plugin.SimpleSptLogger.LogException(exception);
         }
     }
 }

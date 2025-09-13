@@ -17,61 +17,35 @@ public class PluginConfiguration
     {
         configFile.SaveOnConfigSet = true;
 
+        // --- 1. Main settings
         this.EnablePlugin = configFile.BindConfiguration("1. Main settings", "Enable plug-in", true, "Enable or disable the plug-in (Default: Enabled).", 3);
         this.ShowTraderPrices = configFile.BindConfiguration("1. Main settings", "Show trader price(s)", true, "Show the trader price(s) in the tool-tip (Default: Enabled).", 2);
         this.ShowFleaPrices = configFile.BindConfiguration("1. Main settings", "Show flea price(s)", true, "Show the flea price(s) in the tool-tip (Default: Enabled).", 1);
         this.ToolTipDelay = configFile.BindConfiguration("1. Main settings", "Tool-Tip delay", 0.0m, "Delays the tool-tip for x seconds. (Plug-In Default: 0, EFT Default: 0.6).", 0);
 
+        // --- 2. Currency conversion
         this.CurrencyConversionMode = configFile.BindConfiguration("2. Currency conversion", "Currency conversion method", CurrencyConversion.Handbook,
             "Determines which source is used for currency conversion in the tooltip to determine the best trader offer. "
             + "'Handbook' is the value SPT defines in the handbook.json for each currency (by default $1 = ₽125, €1 = ₽133). "
             + "'Trader' takes the price you have to actually pay to get dollars/euros at Peacekeeper/Skier (by default $1 = ₽139, €1 = ₽153) "
             + "(Default: Handbook).", 1);
 
-        this.RoublesOnly = configFile.BindConfiguration("2. Currency conversion", "Roubles only", false, "Only sale prices in roubles will be considered. Basically disables the currency conversion (Default: Disabled).", 0);
+        this.RoublesOnly = configFile.BindConfiguration("2. Currency conversion", "Roubles only", false, "Only sale prices in roubles will be considered. Basically no longer displays trades from traders who do not buy in rubles. (Default: Disabled).", 0);
 
+        // --- 3. Appearance
         this.BestTradeColor = configFile.BindConfiguration("3. Appearance", "Best trade color", new Color(0.867f, 0.514f, 0.102f), "Defines the color used to highlight the best trade, trader or flea (Default: R 221, G 131, B 26).", 1);
         this.RenderInItalics = configFile.BindConfiguration("3. Appearance", "Italics", false, "Renders the price(s) in italics (Default: Disabled).", 0);
 
-        this.EnableColorCoding = configFile.BindConfiguration("4. Color coding", "Enable color coding", true, "Uses color coding to give an quick and easy indicator how valueable an item is (Default: Enabled).", 13);
+        // --- 4. Color coding
+        this.EnableColorCoding = configFile.BindConfiguration("4. Color coding", "Enable color coding (always based on value per slot)", true, "Uses color coding to give an quick and easy indicator how valueable an item is. Always based on value per slot (Default: Enabled).", 12);
 
-        this.PoorValue = configFile.BindConfiguration("4. Color coding", "Poor value (smaller than)", 2500m, "(Default: 2500).", 12);
-        this.CommonValue = configFile.BindConfiguration("4. Color coding", "Common value (smaller than)", 20000m, "(Default: 20000).", 11);
-        this.UncommonValue = configFile.BindConfiguration("4. Color coding", "Uncommon value (smaller than)", 40000m, "(Default: 40000).", 10);
-        this.RareValue = configFile.BindConfiguration("4. Color coding", "Rare value (smaller than)", 70000m, "(Default: 70000).", 9);
-        this.EpicValue = configFile.BindConfiguration("4. Color coding", "Epic value (smaller than) - (Legendary greater than or equal to)", 150000m, "(Default: 150000).", 8);
+        this.PoorValue = configFile.BindConfiguration("4. Color coding", "Poor value (smaller than)", 850m, "(Default: 850).", 11);
+        this.CommonValue = configFile.BindConfiguration("4. Color coding", "Common value (smaller than)", 12850m, "(Default: 12850).", 10);
+        this.UncommonValue = configFile.BindConfiguration("4. Color coding", "Uncommon value (smaller than)", 23250m, "(Default: 23250).", 9);
+        this.RareValue = configFile.BindConfiguration("4. Color coding", "Rare value (smaller than)", 38500m, "(Default: 38500).", 8);
+        this.EpicValue = configFile.BindConfiguration("4. Color coding", "Epic value (smaller than) - (is also legendary value, but greater than or equal to)", 90000m, "(Default: 90000).", 7);
 
-        configFile.CreateButton(
-            "4. Color coding",
-            "Set default values with only dealer prices in mind",
-            "Set",
-            "",
-            () =>
-            {
-                this.PoorValue.Value = 5000m;
-                this.CommonValue.Value = 7500m;
-                this.UncommonValue.Value = 10000m;
-                this.RareValue.Value = 15000m;
-                this.EpicValue.Value = 20000m;
-            },
-            7
-        );
-
-        configFile.CreateButton(
-            "4. Color coding",
-            "Set default values with flea market prices in mind",
-            "Set",
-            "",
-            () =>
-            {
-                this.PoorValue.Value = 2500m;
-                this.CommonValue.Value = 20000m;
-                this.UncommonValue.Value = 40000m;
-                this.RareValue.Value = 70000m;
-                this.EpicValue.Value = 150000m;
-            },
-            6
-        );
+        this.UseCaliberPenetrationPower = configFile.BindConfiguration("4. Color coding", "Use penetration power instead of price value for ammunition", true, "Uses the caliber penetration power value instead of the price value for ammunition for color coding. Color coding values for ammunition are hard-coded currently (Default: Enabled).", 6);
 
         this.PoorColor = configFile.BindConfiguration("4. Color coding", "Poor color", new Color(0.62f, 0.62f, 0.62f), "(Default: R 157, G 157, B 157).", 5);
         this.CommonColor = configFile.BindConfiguration("4. Color coding", "Common color", new Color(1f, 1f, 1f), "(Default: R 255, G 255, B 255).", 4);
@@ -80,6 +54,7 @@ public class PluginConfiguration
         this.EpicColor = configFile.BindConfiguration("4. Color coding", "Epic color", new Color(0.64f, 0.21f, 0.93f), "(Default: R 163, G 53, B 238).", 1);
         this.LegendaryColor = configFile.BindConfiguration("4. Color coding", "Legendary color", new Color(1f, 0.5f, 0f), "(Default: R 255, G 128, B 0).", 0);
 
+        // --- 5. Experimental settings
         this.includeFleaTaxConfigEntry = configFile.BindConfiguration("5. Experimental settings", "Include flea tax", true, "Determines whether taxes for the flea market are included in the flea price (Default: Enabled).", 3);
         this.showFleaTaxConfigEntry = configFile.BindConfiguration("5. Experimental settings", "Show flea tax", false, "Show the flea tax in the tool-tip (Default: Disabled).", 2);
         this.FleaTaxToggleMode = configFile.BindConfiguration("5. Experimental settings", "Toggle-mode for flea tax", false, "When toggle mode is activated, the flea tax is only displayed when the specified key or key combination is pressed (Default: Disabled).", 1);
@@ -104,14 +79,7 @@ public class PluginConfiguration
                 bool pricesUpdated = RagfairPriceTableService.Instance.UpdatePrices();
 
                 if (pricesUpdated)
-                {
                     NotificationsService.Instance.SendLongNotice("Flea prices updated successfully.");
-
-                }
-                else
-                {
-                    NotificationsService.Instance.SendLongAlert("Flea prices could not be updated.");
-                }
             },
             0
         );
@@ -151,6 +119,8 @@ public class PluginConfiguration
     public ConfigEntry<decimal> RareValue { get; private set; }
 
     public ConfigEntry<decimal> EpicValue { get; private set; }
+
+    public ConfigEntry<bool> UseCaliberPenetrationPower { get; private set; }
 
     public ConfigEntry<Color> PoorColor { get; private set; }
 

@@ -67,7 +67,7 @@ public class Plugin : BaseUnityPlugin
             EnableTooltipUpdatePatch();
     }
 
-    public static SimpleSptLogger SimpleSptLogger = new(MyPluginInfo.PLUGIN_GUID);
+    public static SimpleSptLogger SimpleSptLogger = new(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_VERSION);
 
     public static PluginConfiguration? Configuration;
 

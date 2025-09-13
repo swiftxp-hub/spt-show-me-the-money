@@ -29,19 +29,19 @@ public class SimpleTooltipShowPatch : ModulePatch
     [PatchPrefix]
     public static void PatchPrefix(SimpleTooltip __instance, ref string text, Vector2? offset, ref float delay, float? maxWidth)
     {
-        if (!AreTooltipRequirementsMeet(text))
-            return;
-
-        instance = __instance;
-
         try
         {
+            if (!AreTooltipRequirementsMeet(text))
+                return;
+
+            instance = __instance;
+
             SetToolTipDelay(ref delay);
 
-            bool success = TryShowPriceInformations(out string? priceInformationText, out double? highestPrice);
+            bool success = TryShowPriceInformations(out string? priceInformationText, out double? highestComparePrice);
             if (success)
             {
-                SetColorCoding(ref text, highestPrice);
+                SetColorCoding(ref text, highestComparePrice);
 
                 patchText = priceInformationText;
                 text += patchText;
@@ -50,26 +50,33 @@ public class SimpleTooltipShowPatch : ModulePatch
         }
         catch (Exception exception)
         {
-            Plugin.SimpleSptLogger.LogError($"An unexpected error occured. Message: {exception.Message}");
+            Plugin.SimpleSptLogger.LogException(exception);
         }
     }
 
     public static void Update()
     {
-        if (instance is not null && IsActive)
+        try
         {
-            string? instanceText = GetTextOfInstance();
-            if (instanceText is not null)
+            if (instance is not null && IsActive)
             {
-                bool success = TryShowPriceInformations(out string? priceInformationText, out double? highestPrice);
-                if (success)
+                string? instanceText = GetTextOfInstance();
+                if (instanceText is not null)
                 {
-                    string newTooltipText = instanceText.Replace(patchText, priceInformationText);
+                    bool success = TryShowPriceInformations(out string? priceInformationText, out double? _);
+                    if (success)
+                    {
+                        string newTooltipText = instanceText.Replace(patchText, priceInformationText);
 
-                    patchText = priceInformationText;
-                    instance.SetText(newTooltipText);
+                        patchText = priceInformationText;
+                        instance.SetText(newTooltipText);
+                    }
                 }
             }
+        }
+        catch (Exception exception)
+        {
+            Plugin.SimpleSptLogger.LogException(exception);
         }
     }
 
@@ -107,9 +114,9 @@ public class SimpleTooltipShowPatch : ModulePatch
         return false;
     }
 
-    private static bool TryShowPriceInformations(out string? priceInformationText, out double? highestPrice)
+    private static bool TryShowPriceInformations(out string? priceInformationText, out double? highestComparePrice)
     {
-        highestPrice = null;
+        highestComparePrice = null;
 
         StringBuilder textToAppendToTooltip = new();
 
@@ -133,15 +140,15 @@ public class SimpleTooltipShowPatch : ModulePatch
             if (hasTraderPrice)
             {
                 ShowPrice(tradeItem, tradeItem.TraderPrice!, tradeItem.FleaPrice, textToAppendToTooltip);
-                highestPrice = tradeItem.TraderPrice!.GetTotalPriceInRouble();
+                highestComparePrice = tradeItem.TraderPrice!.GetComparePriceInRouble();
             }
 
             if (hasFleaPrice)
             {
                 ShowPrice(tradeItem, tradeItem.FleaPrice!, tradeItem.TraderPrice, textToAppendToTooltip);
 
-                if (highestPrice is null || tradeItem.FleaPrice!.GetTotalPriceInRouble() > tradeItem.TraderPrice!.GetTotalPriceInRouble())
-                    highestPrice = tradeItem.FleaPrice!.GetTotalPriceInRouble();
+                if (highestComparePrice is null || tradeItem.FleaPrice!.GetComparePriceInRouble() > tradeItem.TraderPrice!.GetComparePriceInRouble())
+                    highestComparePrice = tradeItem.FleaPrice!.GetComparePriceInRouble();
             }
         }
 
@@ -150,46 +157,119 @@ public class SimpleTooltipShowPatch : ModulePatch
 
         priceInformationText = textToAppendToTooltip.ToString();
 
-        return highestPrice is not null;
+        return highestComparePrice is not null;
     }
 
-    private static void SetColorCoding(ref string text, double? highestPrice)
+    private static void SetColorCoding(ref string text, double? highestComparePrice)
     {
-        if (highestPrice is not null && Plugin.Configuration!.EnableColorCoding.IsEnabled())
+        if (highestComparePrice is not null && Plugin.Configuration!.EnableColorCoding.IsEnabled())
         {
-            string itemName = Plugin.HoveredItem.LocalizedName();
-            string? colorCoding = null;
+            Item item = Plugin.HoveredItem!;
+            string templateName = item.Template._name;
 
-            switch (highestPrice)
+            switch (templateName)
             {
-                case var _ when highestPrice < (double)Plugin.Configuration!.PoorValue.GetValue():
+                case var _ when Plugin.Configuration.UseCaliberPenetrationPower.IsEnabled() && templateName.StartsWith("item_patron_", StringComparison.InvariantCultureIgnoreCase):
+                case var _ when Plugin.Configuration.UseCaliberPenetrationPower.IsEnabled() && templateName.StartsWith("patron_", StringComparison.InvariantCultureIgnoreCase):
+                case var _ when Plugin.Configuration.UseCaliberPenetrationPower.IsEnabled() && templateName.StartsWith("item_ammo_box_", StringComparison.InvariantCultureIgnoreCase):
+                case var _ when Plugin.Configuration.UseCaliberPenetrationPower.IsEnabled() && templateName.StartsWith("ammo_", StringComparison.InvariantCultureIgnoreCase):
+
+                    SetColorCodingForAmmunition(item, ref text, highestComparePrice);
+
+                    break;
+
+                default:
+                    SetColorCodingForItem(item, ref text, highestComparePrice);
+
+                    break;
+            }
+        }
+    }
+
+    private static void SetColorCodingForAmmunition(Item item, ref string text, double? highestComparePrice)
+    {
+        string itemName = item.LocalizedName();
+        string? colorCoding = null;
+
+        int? penetrationPower = null;
+        if (item is AmmoBox ammoBox)
+        {
+            AmmoItemClass? ammoItemClass = ammoBox.Cartridges.Items.First() as AmmoItemClass;
+            penetrationPower = ammoItemClass?.PenetrationPower;
+        }
+        else if (item is AmmoItemClass ammoItemClass)
+        {
+            penetrationPower = ammoItemClass?.PenetrationPower;
+        }
+
+        if (penetrationPower is not null)
+        {
+            switch (penetrationPower)
+            {
+                case var _ when penetrationPower < 15:
                     colorCoding = Plugin.Configuration!.PoorColor.GetRGBHexCode();
                     break;
 
-                case var _ when highestPrice < (double)Plugin.Configuration!.CommonValue.GetValue():
+                case var _ when penetrationPower < 25:
                     colorCoding = Plugin.Configuration!.CommonColor.GetRGBHexCode();
                     break;
 
-                case var _ when highestPrice < (double)Plugin.Configuration!.UncommonValue.GetValue():
+                case var _ when penetrationPower < 34:
                     colorCoding = Plugin.Configuration!.UncommonColor.GetRGBHexCode();
                     break;
 
-                case var _ when highestPrice < (double)Plugin.Configuration!.RareValue.GetValue():
+                case var _ when penetrationPower < 43:
                     colorCoding = Plugin.Configuration!.RareColor.GetRGBHexCode();
                     break;
 
-                case var _ when highestPrice < (double)Plugin.Configuration!.EpicValue.GetValue():
+                case var _ when penetrationPower < 55:
                     colorCoding = Plugin.Configuration!.EpicColor.GetRGBHexCode();
                     break;
 
-                case var _ when highestPrice >= (double)Plugin.Configuration!.EpicValue.GetValue():
+                case var _ when penetrationPower >= 55:
                     colorCoding = Plugin.Configuration!.LegendaryColor.GetRGBHexCode();
                     break;
             }
-
-            if (colorCoding is not null)
-                text = text.Replace(itemName, $"<color=#{colorCoding}>{itemName}</color>");
         }
+
+        if (colorCoding is not null)
+            text = text.Replace(itemName, $"<color=#{colorCoding}>{itemName}</color>");
+    }
+
+    private static void SetColorCodingForItem(Item item, ref string text, double? highestComparePrice)
+    {
+        string itemName = item.LocalizedName();
+        string? colorCoding = null;
+
+        switch (highestComparePrice)
+        {
+            case var _ when highestComparePrice < (double)Plugin.Configuration!.PoorValue.GetValue():
+                colorCoding = Plugin.Configuration!.PoorColor.GetRGBHexCode();
+                break;
+
+            case var _ when highestComparePrice < (double)Plugin.Configuration!.CommonValue.GetValue():
+                colorCoding = Plugin.Configuration!.CommonColor.GetRGBHexCode();
+                break;
+
+            case var _ when highestComparePrice < (double)Plugin.Configuration!.UncommonValue.GetValue():
+                colorCoding = Plugin.Configuration!.UncommonColor.GetRGBHexCode();
+                break;
+
+            case var _ when highestComparePrice < (double)Plugin.Configuration!.RareValue.GetValue():
+                colorCoding = Plugin.Configuration!.RareColor.GetRGBHexCode();
+                break;
+
+            case var _ when highestComparePrice < (double)Plugin.Configuration!.EpicValue.GetValue():
+                colorCoding = Plugin.Configuration!.EpicColor.GetRGBHexCode();
+                break;
+
+            case var _ when highestComparePrice >= (double)Plugin.Configuration!.EpicValue.GetValue():
+                colorCoding = Plugin.Configuration!.LegendaryColor.GetRGBHexCode();
+                break;
+        }
+
+        if (colorCoding is not null)
+            text = text.Replace(itemName, $"<color=#{colorCoding}>{itemName}</color>");
     }
 
     private static void SetToolTipDelay(ref float delay)
