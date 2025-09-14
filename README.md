@@ -80,6 +80,8 @@ Please see the "[For nerds](#for-nerds)" section in this readme, if you want to 
 
 - **Flea market prices:**<br />The display of flea market prices should always be viewed with a degree of caution. The calculations are only theoretical in nature and may give the impression that the actual flea market offers have different prices. In particular, when flea market taxes are included (experimental feature), differences may theoretically arise, especially when presets and packs are put up for sale, as these are not currently taken fully into account in the calculation (I may integrate this in future versions). For more information on the calculations see the "[For nerds](#for-nerds)" section in this readme.
 - The damage report/health condition screen may rarely show the price information tooltip. I'm almost tempted not to fix it. It's too funny.
+- A buddy of mine has a minor problem with the "Toggle-mode for flea tax" where the tooltip sometimes gets "stuck"—meaning the display doesn't jump back when he releases Left-Alt. I haven't been able to figure out what's causing the problem yet. But he also told me that he doesn't think it's a big deal.
+- Some weapons have suffixes in their names, such as "Carbine." These are not always colored by the color coding feature.
 
 ## Problems that may occur
 
