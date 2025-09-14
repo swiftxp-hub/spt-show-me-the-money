@@ -68,7 +68,7 @@ Please see the "[For nerds](#for-nerds)" section in this readme, if you want to 
 - The color coding feature is relatively new. Please let me know in the comments, if you are satisfied with this feature.
 - The currency conversion feature is relatively new. Please let me know in the comments, if you are satisfied with this feature.
 - The toggle-mode for flea tax(es) is relatively new. Please let me know in the comments, if you are satisfied with this feature.
-- I have tried to support multiple languages, but if you notice any problems, please let me know in the comments.
+- I have tried to support multiple languages, but if you notice any problems, please let me know in the comments. Disabling the color coding feature may help in the meantime.
 
 ## Known compatibility
 
