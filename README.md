@@ -79,6 +79,7 @@ Please see the "[For nerds](#for-nerds)" section in this readme, if you want to 
 ## Known problems
 
 - **Flea market prices:**<br />The display of flea market prices should always be viewed with a degree of caution. The calculations are only theoretical in nature and may give the impression that the actual flea market offers have different prices. In particular, when flea market taxes are included (experimental feature), differences may theoretically arise, especially when presets and packs are put up for sale, as these are not currently taken fully into account in the calculation (I may integrate this in future versions). For more information on the calculations see the "[For nerds](#for-nerds)" section in this readme.
+- The damage report/health condition screen may rarely show the price information tooltip. I'm almost tempted not to fix it. It's too funny.
 
 ## Problems that may occur
 
