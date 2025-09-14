@@ -120,6 +120,10 @@ public class SimpleTooltipShowPatch : ModulePatch
 
         StringBuilder textToAppendToTooltip = new();
 
+        TooltipFontSizeEnum fontSize = Plugin.Configuration!.FontSize.GetValue();
+        if (fontSize != TooltipFontSizeEnum.Normal)
+            textToAppendToTooltip.Append($"<size={(int)fontSize}%>");
+
         if (Plugin.Configuration!.RenderInItalics.IsEnabled())
             textToAppendToTooltip.Append("<i>");
 
@@ -154,6 +158,9 @@ public class SimpleTooltipShowPatch : ModulePatch
 
         if (Plugin.Configuration!.RenderInItalics.IsEnabled())
             textToAppendToTooltip.Append("</i>");
+
+        if (fontSize != TooltipFontSizeEnum.Normal)
+            textToAppendToTooltip.Append("</size>");
 
         priceInformationText = textToAppendToTooltip.ToString();
 
@@ -317,7 +324,7 @@ public class SimpleTooltipShowPatch : ModulePatch
                 TraderClass.GStruct264? singleObjectPrice = null;
                 TraderClass.GStruct264? totalPrice = null;
 
-                bool hasPrice = GetTraderUserItemPrice(trader, tradeItem, out singleObjectPrice, out totalPrice);
+                bool hasPrice = TryGetTraderUserItemPrice(trader, tradeItem, out singleObjectPrice, out totalPrice);
                 if (hasPrice && (!Plugin.Configuration!.RoublesOnly.IsEnabled() || singleObjectPrice!.Value.CurrencyId.ToString() == SptConstants.CurrencyIds.Roubles))
                 {
                     MongoID? currencyId = singleObjectPrice!.Value.CurrencyId;
@@ -352,14 +359,24 @@ public class SimpleTooltipShowPatch : ModulePatch
         return trader.Info.Available && !trader.Info.Disabled && trader.Info.Unlocked;
     }
 
-    private static bool GetTraderUserItemPrice(TraderClass trader, TradeItem tradeItem,
+    private static bool TryGetTraderUserItemPrice(TraderClass trader, TradeItem tradeItem,
         out TraderClass.GStruct264? singleObjectPrice, out TraderClass.GStruct264? totalPrice)
     {
-        Item singleItem = tradeItem.Item.CloneItem();
-        singleItem.StackObjectsCount = 1;
-        singleObjectPrice = trader.GetUserItemPrice(singleItem);
+        singleObjectPrice = null;
+        totalPrice = null;
 
-        totalPrice = trader.GetUserItemPrice(tradeItem.Item);
+        try
+        {
+            Item singleItem = tradeItem.Item.CloneItem();
+            singleItem.StackObjectsCount = 1;
+            singleObjectPrice = trader.GetUserItemPrice(singleItem);
+
+            totalPrice = trader.GetUserItemPrice(tradeItem.Item);
+        }
+        catch (Exception)
+        {
+            Plugin.SimpleSptLogger.LogDebug($"Could not get price from trader: {trader.LocalizedName}");
+        }
 
         return singleObjectPrice is not null;
     }
@@ -371,9 +388,9 @@ public class SimpleTooltipShowPatch : ModulePatch
 
         double? result = null;
 
-        switch (Plugin.Configuration?.CurrencyConversionMode?.Value ?? CurrencyConversion.Handbook)
+        switch (Plugin.Configuration?.CurrencyConversionMode?.Value ?? CurrencyConversionEnum.Handbook)
         {
-            case CurrencyConversion.Traders:
+            case CurrencyConversionEnum.Traders:
                 if (currencyId.ToString() == SptConstants.CurrencyIds.Euros)
                     result = CurrencyPurchasePricesService.Instance.CurrencyPurchasePrices?.EUR;
 

@@ -25,7 +25,7 @@ public class PluginConfiguration
         this.ToolTipDelay = configFile.BindConfiguration("1. Main settings", "Tool-Tip delay", 0.0m, "Delays the tool-tip for x seconds. (Plug-In Default: 0, EFT Default: 0.6).", 0);
 
         // --- 2. Currency conversion
-        this.CurrencyConversionMode = configFile.BindConfiguration("2. Currency conversion", "Currency conversion method", CurrencyConversion.Handbook,
+        this.CurrencyConversionMode = configFile.BindConfiguration("2. Currency conversion", "Currency conversion method", CurrencyConversionEnum.Handbook,
             "Determines which source is used for currency conversion in the tooltip to determine the best trader offer. "
             + "'Handbook' is the value SPT defines in the handbook.json for each currency (by default $1 = ₽125, €1 = ₽133). "
             + "'Trader' takes the price you have to actually pay to get dollars/euros at Peacekeeper/Skier (by default $1 = ₽139, €1 = ₽153) "
@@ -34,7 +34,8 @@ public class PluginConfiguration
         this.RoublesOnly = configFile.BindConfiguration("2. Currency conversion", "Roubles only", false, "Only sale prices in roubles will be considered. Basically no longer displays trades from traders who do not buy in rubles. (Default: Disabled).", 0);
 
         // --- 3. Appearance
-        this.BestTradeColor = configFile.BindConfiguration("3. Appearance", "Best trade color", new Color(0.867f, 0.514f, 0.102f), "Defines the color used to highlight the best trade, trader or flea (Default: R 221, G 131, B 26).", 1);
+        this.BestTradeColor = configFile.BindConfiguration("3. Appearance", "Best trade color", new Color(0.867f, 0.514f, 0.102f), "Defines the color used to highlight the best trade, trader or flea (Default: R 221, G 131, B 26).", 2);
+        this.FontSize = configFile.BindConfiguration("3. Appearance", "Font size", TooltipFontSizeEnum.Normal, "Changes the font size of the price(s) (Default: Normal).", 1);
         this.RenderInItalics = configFile.BindConfiguration("3. Appearance", "Italics", false, "Renders the price(s) in italics (Default: Disabled).", 0);
 
         // --- 4. Color coding
@@ -99,13 +100,15 @@ public class PluginConfiguration
     #endregion
 
     #region Currency conversion
-    public ConfigEntry<CurrencyConversion> CurrencyConversionMode { get; private set; }
+    public ConfigEntry<CurrencyConversionEnum> CurrencyConversionMode { get; private set; }
 
     public ConfigEntry<bool> RoublesOnly { get; private set; }
     #endregion
 
     #region Appearance
     public ConfigEntry<Color> BestTradeColor { get; private set; }
+
+    public ConfigEntry<TooltipFontSizeEnum> FontSize { get; private set; }
 
     public ConfigEntry<bool> RenderInItalics { get; private set; }
     #endregion

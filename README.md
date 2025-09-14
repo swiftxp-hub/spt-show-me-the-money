@@ -6,13 +6,13 @@ A BepInEx plugin and an accompanying server mod for SPT (Single Player Tarkov).
 
 ## What does it do?
 
-The BepInEx plugin modifies the in-game tooltip of items to display price informations (in stash and in raid). The dealer who would buy the item for the best price and a flea market selling price is displayed. The display is divided into "Price per slot" and "Total"-price. The best sales offer is highlighted. The flea markt price is always the lowest expected profit (please see the "[For nerds](#for-nerds)" section for more details on this). Also flea market taxes can be included (experimental function).
+The BepInEx plugin modifies the in-game tooltip of items to display price information (in stash and in raid). The dealer who would buy the item for the best price and a flea market selling price is displayed. The display is divided into "price-per-slot" and "total"-price. The best offer is highlighted. The flea markt price is always the lowest expected profit (please see the "[For nerds](#for-nerds)" section for more details on this). Also flea market taxes can be included (experimental function). Version 1.5.0 also adds a color coding feature (by default the color scheme familiar from WoW, ranging from poor to legendary).
 
 The accompanying server mod provides three endpoints for the BepInEx plugin, which are used to retrieve the trader prices for EUR and USD, the flea market prices and the price ranges set for the SPT-server's flea market.
 
 Several configuration options are offered via the BepInEx configurator.
 
-The mod is written in such a way that the load on the SPT-server is as low as possible. Only when the game is started are the average flea market prices and ranges retrieved from the SPT-server. After that, all calculations are performed on the client, so that the item tooltip should not have any noticeable delay.
+The mod is written in such a way that the load on the SPT-server is as low as possible. Only when the game is started are the trader prices for EUR and USD, average flea market prices and ranges retrieved from the SPT-server. After that, all calculations are performed on the client, so that the item tooltip should not have any noticeable delay.
 
 ## Requirements
 
@@ -65,29 +65,30 @@ Please see the "[For nerds](#for-nerds)" section in this readme, if you want to 
 ## Remarks
 
 - Changes on the Trader Price Markups (e.g. editable via SVM) are taken into account by this mod.
+- The color coding feature is relatively new. Please let me know in the comments, if you are satisfied with this feature.
 - The currency conversion feature is relatively new. Please let me know in the comments, if you are satisfied with this feature.
 - The toggle-mode for flea tax(es) is relatively new. Please let me know in the comments, if you are satisfied with this feature.
+- I have tried to support multiple languages, but if you notice any problems, please let me know in the comments.
 
 ## Known compatibility
 
 - [SPT-LiveFleaPrices](https://github.com/DrakiaXYZ/SPT-LiveFleaPrices) v1.5.2 by DrakiaXYZ
 - [More Checkmarks](https://github.com/TommySoucy/MoreCheckmarks) v1.5.17 by TommySoucy
+- [UIFixes](https://github.com/tyfon7/UIFixes) v4.2.2 by Tyfon
 
 ## Known problems
+
 - **Flea market prices:**<br />The display of flea market prices should always be viewed with a degree of caution. The calculations are only theoretical in nature and may give the impression that the actual flea market offers have different prices. In particular, when flea market taxes are included (experimental feature), differences may theoretically arise, especially when presets and packs are put up for sale, as these are not currently taken fully into account in the calculation (I may integrate this in future versions). For more information on the calculations see the "[For nerds](#for-nerds)" section in this readme.
 
 ## Problems that may occur
 
-- I developed and tested the mod exclusively with the English version of EFT. It is therefore possible that the mod may not work properly with other translations of EFT.
-
-- Sales price information for traders added by other mods may or may not work. E.g. [Couturier](https://hub.sp-tarkov.com/files/file/2943-couturier-gear-and-clothing-pack/) v1.2.0 by turbodestroyer seems to work fine.
-
+- Price information for traders added by other mods may or may not work. E.g. [Couturier](https://hub.sp-tarkov.com/files/file/2943-couturier-gear-and-clothing-pack/) v1.2.0 by turbodestroyer seems to work fine.
 - The "Toggle-mode for flea tax"-feature is implemented in such a way that other mods that modify the tooltip should still work, but still... I can't test every mod out there before releasing new features. If you encounter problems, please let me know in the comments.
 
 ## Tested environment
 
 - SPT 3.11.4 (this mod should work with every SPT 3.11 release, but it's not tested except for version 3.11.4)
-- EFT 16.1.3.35392 (English version)
+- EFT 16.1.3.35392
 
 ## Support and feature requests
 
@@ -97,9 +98,7 @@ Please note that I maintain all my mods in my spare time. Therefore, I can only 
 
 - Being able to select which flea market value should be displayed: e.g., Lowest, 1/3, Average, Highest
 - ​More appearence options
-- ​Color-coding
 - Quick-sell (as a seperate companion-mod)
-- Explicit support for more languages​
 - What-ever comes to my mind or by feature-requests in the comments/SPT-discord
 
 ## For nerds
