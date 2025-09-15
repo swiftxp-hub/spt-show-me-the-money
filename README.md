@@ -25,7 +25,7 @@ Basically none.
 Extract the contents of the .zip file into your SPT directory. 
 
 You should end up having the following files copied to your SPT directory:
-- C:\yourSPTfolder\BepInEx\plugins\SwiftXP.ShowMeTheMoney.dll
+- C:\yourSPTfolder\BepInEx\plugins\SwiftXP.SPT.ShowMeTheMoney.dll
 - C:\yourSPTfolder\user\mods\swiftxp-showmethemoney\package.json
 - C:\yourSPTfolder\user\mods\swiftxp-showmethemoney\src\mod.ts
 
@@ -36,7 +36,7 @@ Extract the "BepInEx" folder from the .zip to your client and extract the "user"
 You should end up having the following files copied...
 
 ... on your client:
-- C:\yourSPTclient\BepInEx\plugins\SwiftXP.ShowMeTheMoney.dll
+- C:\yourSPTclient\BepInEx\plugins\SwiftXP.SPT.ShowMeTheMoney.dll
 
 ... on your server:
 - C:\yourSPTserver\user\mods\swiftxp-showmethemoney\package.json
