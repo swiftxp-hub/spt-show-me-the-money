@@ -99,7 +99,6 @@ Please note that I maintain all my mods in my spare time. Therefore, I can only 
 
 ## Features that may come in the future
 
-- Being able to configure the caliber penetration values for the color coding in the configurator (hard-coded for now)
 - Being able to select which flea market value should be displayed: e.g., Lowest, 1/3, Average, Highest
 - Quick-sell (as a seperate companion-mod)
 - ​More appearence options
