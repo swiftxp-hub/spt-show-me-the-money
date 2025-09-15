@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <Nullable>enable</Nullable>
@@ -7,12 +6,10 @@
 
     <AssemblyName>SwiftXP.SPT.ShowMeTheMoney</AssemblyName>
     <Product>Show Me The Money</Product>
-    <Version>1.5.0</Version>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Version>1.5.1</Version>
     <RestoreAdditionalProjectSources>
       https://api.nuget.org/v3/index.json;
-      https://nuget.bepinex.dev/v3/index.json;
-      https://nuget.samboy.dev/v3/index.json
+      https://nuget.bepinex.dev/v3/index.json
     </RestoreAdditionalProjectSources>
     <RootNamespace>SwiftXP.SPT.ShowMeTheMoney</RootNamespace>
   </PropertyGroup>

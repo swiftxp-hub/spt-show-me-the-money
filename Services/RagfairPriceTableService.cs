@@ -20,7 +20,6 @@ public class RagfairPriceTableService
 
             RagfairPriceTable? queriedPrices = null;
             string pricesJson = RequestHandler.GetJson(RemotePathToGetPriceTable);
-            Plugin.SimpleSptLogger.LogDebug($"JSON: {pricesJson}");
 
             if (!string.IsNullOrWhiteSpace(pricesJson))
                 queriedPrices = JsonConvert.DeserializeObject<RagfairPriceTable>(pricesJson);
