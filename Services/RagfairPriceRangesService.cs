@@ -20,6 +20,7 @@ public class RagfairPriceRangesService
 
             PriceRanges? priceRanges = null;
             string priceRangesJson = RequestHandler.GetJson(RemotePathToGetRagfairConfigPriceRanges);
+            Plugin.SimpleSptLogger.LogDebug($"JSON: {priceRangesJson}");
 
             if (!string.IsNullOrWhiteSpace(priceRangesJson))
                 priceRanges = JsonConvert.DeserializeObject<PriceRanges>(priceRangesJson);

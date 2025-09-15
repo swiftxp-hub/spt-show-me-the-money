@@ -31,7 +31,7 @@ public class PluginConfiguration
             + "'Trader' takes the price you have to actually pay to get dollars/euros at Peacekeeper/Skier (by default $1 = ₽139, €1 = ₽153) "
             + "(Default: Handbook).", 1);
 
-        this.RoublesOnly = configFile.BindConfiguration("2. Currency conversion", "Roubles only", false, "Only sale prices in roubles will be considered. Basically no longer displays trades from traders who do not buy in rubles. (Default: Disabled).", 0);
+        this.RoublesOnly = configFile.BindConfiguration("2. Currency conversion", "Roubles only", false, "Only sales prices in roubles will be considered. Basically no longer displays trades from traders who do not buy in rubles. (Default: Disabled).", 0);
 
         // --- 3. Appearance
         this.BestTradeColor = configFile.BindConfiguration("3. Appearance", "Best trade color", new Color(0.867f, 0.514f, 0.102f), "Defines the color used to highlight the best trade, trader or flea (Default: R 221, G 131, B 26).", 2);
@@ -39,15 +39,21 @@ public class PluginConfiguration
         this.RenderInItalics = configFile.BindConfiguration("3. Appearance", "Italics", false, "Renders the price(s) in italics (Default: Disabled).", 0);
 
         // --- 4. Color coding
-        this.EnableColorCoding = configFile.BindConfiguration("4. Color coding", "Enable color coding (based on price-per-slot)", true, "Uses color coding to give an quick and easy indicator how valueable an item is. Always based on price-per-slot, except for ammunition, if you activate the respective feature. Default colors are from WoW (Default: Enabled).", 12);
+        this.EnableColorCoding = configFile.BindConfiguration("4. Color coding", "Enable color coding (based on price-per-slot)", true, "Uses color coding to give an quick and easy indicator how valueable an item is. Always based on price-per-slot, except for ammunition, if you activate the respective feature. Default colors are from WoW (Default: Enabled).", 17);
 
-        this.PoorValue = configFile.BindConfiguration("4. Color coding", "Poor value (smaller than)", 850m, "(Default: 850).", 11);
-        this.CommonValue = configFile.BindConfiguration("4. Color coding", "Common value (smaller than)", 12850m, "(Default: 12850).", 10);
-        this.UncommonValue = configFile.BindConfiguration("4. Color coding", "Uncommon value (smaller than)", 23250m, "(Default: 23250).", 9);
-        this.RareValue = configFile.BindConfiguration("4. Color coding", "Rare value (smaller than)", 38500m, "(Default: 38500).", 8);
-        this.EpicValue = configFile.BindConfiguration("4. Color coding", "Epic value (smaller than) - everything above that is considered legendary", 90000m, "(Default: 90000).", 7);
+        this.PoorValue = configFile.BindConfiguration("4. Color coding", "Poor value (smaller than)", 850m, "(Default: 850).", 16);
+        this.CommonValue = configFile.BindConfiguration("4. Color coding", "Common value (smaller than)", 12850m, "(Default: 12850).", 15);
+        this.UncommonValue = configFile.BindConfiguration("4. Color coding", "Uncommon value (smaller than)", 23250m, "(Default: 23250).", 14);
+        this.RareValue = configFile.BindConfiguration("4. Color coding", "Rare value (smaller than)", 38500m, "(Default: 38500).", 13);
+        this.EpicValue = configFile.BindConfiguration("4. Color coding", "Epic value (smaller than) - everything above that is considered legendary", 90000m, "(Default: 90000).", 12);
 
-        this.UseCaliberPenetrationPower = configFile.BindConfiguration("4. Color coding", "Use penetration power instead of price value for color coding of ammunition", true, "Uses the caliber penetration power value instead of the price value for color coding of ammunition. Color coding values for ammunition are hard-coded currently (Poor < 15, Common < 25, Uncommon < 34, Rare < 43, Epic < 55, Legendary >= 55) (Default: Enabled).", 6);
+        this.UseCaliberPenetrationPower = configFile.BindConfiguration("4. Color coding", "Use penetration power instead of price value for color coding of ammunition", true, "Uses the caliber penetration power value instead of the price value for color coding of ammunition (Default: Enabled).", 11);
+
+        this.PoorPenetrationValue = configFile.BindConfiguration("4. Color coding", "Poor penetration value (smaller than)", 15m, "(Default: 15).", 10);
+        this.CommonPenetrationValue = configFile.BindConfiguration("4. Color coding", "Common penetration value (smaller than)", 25m, "(Default: 25).", 9);
+        this.UncommonPenetrationValue = configFile.BindConfiguration("4. Color coding", "Uncommon penetration value (smaller than)", 34m, "(Default: 34).", 8);
+        this.RarePenetrationValue = configFile.BindConfiguration("4. Color coding", "Rare penetration value (smaller than)", 43m, "(Default: 43).", 7);
+        this.EpicPenetrationValue = configFile.BindConfiguration("4. Color coding", "Epic penetration value (smaller than) - everything above that is considered legendary", 55m, "(Default: 55).", 6);
 
         this.PoorColor = configFile.BindConfiguration("4. Color coding", "Poor color", new Color(0.62f, 0.62f, 0.62f), "(Default: R 157, G 157, B 157).", 5);
         this.CommonColor = configFile.BindConfiguration("4. Color coding", "Common color", new Color(1f, 1f, 1f), "(Default: R 255, G 255, B 255).", 4);
@@ -127,6 +133,16 @@ public class PluginConfiguration
     public ConfigEntry<decimal> EpicValue { get; private set; }
 
     public ConfigEntry<bool> UseCaliberPenetrationPower { get; private set; }
+
+    public ConfigEntry<decimal> PoorPenetrationValue { get; private set; }
+
+    public ConfigEntry<decimal> CommonPenetrationValue { get; private set; }
+
+    public ConfigEntry<decimal> UncommonPenetrationValue { get; private set; }
+
+    public ConfigEntry<decimal> RarePenetrationValue { get; private set; }
+
+    public ConfigEntry<decimal> EpicPenetrationValue { get; private set; }
 
     public ConfigEntry<Color> PoorColor { get; private set; }
 

@@ -20,6 +20,7 @@ public class CurrencyPurchasePricesService
         {
             CurrencyPurchasePrices? currencyPurchasePrises = null;
             string json = RequestHandler.GetJson(RemotePathToGetCurrencyPurchasePrices);
+            Plugin.SimpleSptLogger.LogDebug($"JSON: {json}");
 
             if (!string.IsNullOrWhiteSpace(json))
                 currencyPurchasePrises = JsonConvert.DeserializeObject<CurrencyPurchasePrices>(json);

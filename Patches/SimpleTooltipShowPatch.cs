@@ -213,27 +213,27 @@ public class SimpleTooltipShowPatch : ModulePatch
         {
             switch (penetrationPower)
             {
-                case var _ when penetrationPower < 15:
+                case var _ when penetrationPower < (double)Plugin.Configuration!.PoorPenetrationValue.GetValue():
                     colorCoding = Plugin.Configuration!.PoorColor.GetRGBHexCode();
                     break;
 
-                case var _ when penetrationPower < 25:
+                case var _ when penetrationPower < (double)Plugin.Configuration!.CommonPenetrationValue.GetValue():
                     colorCoding = Plugin.Configuration!.CommonColor.GetRGBHexCode();
                     break;
 
-                case var _ when penetrationPower < 34:
+                case var _ when penetrationPower < (double)Plugin.Configuration!.UncommonPenetrationValue.GetValue():
                     colorCoding = Plugin.Configuration!.UncommonColor.GetRGBHexCode();
                     break;
 
-                case var _ when penetrationPower < 43:
+                case var _ when penetrationPower < (double)Plugin.Configuration!.RarePenetrationValue.GetValue():
                     colorCoding = Plugin.Configuration!.RareColor.GetRGBHexCode();
                     break;
 
-                case var _ when penetrationPower < 55:
+                case var _ when penetrationPower < (double)Plugin.Configuration!.EpicPenetrationValue.GetValue():
                     colorCoding = Plugin.Configuration!.EpicColor.GetRGBHexCode();
                     break;
 
-                case var _ when penetrationPower >= 55:
+                case var _ when penetrationPower >= (double)Plugin.Configuration!.EpicPenetrationValue.GetValue():
                     colorCoding = Plugin.Configuration!.LegendaryColor.GetRGBHexCode();
                     break;
             }
