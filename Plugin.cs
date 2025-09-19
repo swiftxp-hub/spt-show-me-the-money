@@ -61,6 +61,7 @@ public class Plugin : BaseUnityPlugin
         new GridItemOnPointerExitPatch().Enable();
         new SimpleTooltipShowPatch().Enable();
 
+        new TooltipClosePatch().Enable();
         TooltipUpdatePatch = new TooltipUpdatePatch();
 
         if (Configuration!.FleaTaxToggleMode.IsEnabled())
