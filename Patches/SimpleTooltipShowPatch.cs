@@ -135,10 +135,10 @@ public class SimpleTooltipShowPatch : ModulePatch
             bool hasTraderPrice = false;
             bool hasFleaPrice = false;
 
-            if (Plugin.Configuration!.ShowTraderPrices.IsEnabled())
+            if (Plugin.Configuration!.EnableTraderPrices.IsEnabled())
                 hasTraderPrice = GetBestTraderPrice(tradeItem);
 
-            if (Plugin.Configuration!.ShowFleaPrices.IsEnabled())
+            if (Plugin.Configuration!.EnableFleaPrices.IsEnabled())
                 hasFleaPrice = GetFleaPrice(tradeItem);
 
             if (hasTraderPrice)
@@ -412,7 +412,7 @@ public class SimpleTooltipShowPatch : ModulePatch
         {
             if (RagfairPriceTableService.Instance.Prices!.TryGetValue(tradeItem.Item.TemplateId, out double fleaSingleObjectPrice))
             {
-                double minFleaPrice = fleaSingleObjectPrice * GetPriceRangeMin();
+                double minFleaPrice = fleaSingleObjectPrice * GetPriceRangeMin() * (double)Plugin.Configuration!.FleaPriceMultiplier.GetValue();
 
                 double? singleObjectTaxPrice = null;
                 double? totalTaxPrice = null;

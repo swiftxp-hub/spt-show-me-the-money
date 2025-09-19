@@ -4,6 +4,8 @@ using SwiftXP.SPT.ShowMeTheMoney.Models;
 using SwiftXP.SPT.Common.Notifications;
 using SwiftXP.SPT.ShowMeTheMoney.Enums;
 using UnityEngine;
+using System;
+using SwiftXP.SPT.ShowMeTheMoney.Configuration.Migrations;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Configuration;
 
@@ -15,69 +17,60 @@ public class PluginConfiguration
 
     public PluginConfiguration(ConfigFile configFile)
     {
-        configFile.SaveOnConfigSet = true;
-
         // --- 1. Main settings
-        this.EnablePlugin = configFile.BindConfiguration("1. Main settings", "Enable plug-in", true, "Enable or disable the plug-in (Default: Enabled).", 4);
-        this.ShowTraderPrices = configFile.BindConfiguration("1. Main settings", "Show trader price(s)", true, "Show the trader price(s) in the tool-tip (Default: Enabled).", 3);
-        this.ShowFleaPrices = configFile.BindConfiguration("1. Main settings", "Show flea price(s)", true, "Show the flea price(s) in the tool-tip (Default: Enabled).", 2);
-        this.ShowPricePerSlot = configFile.BindConfiguration("1. Main settings", "Show price-per-slot", true, "Show the price-per-slot in the tool-tip. The mod continues to calculate in the background using price-per-slot, even if the display is deactivated (Default: Disabled).", 1);
-        this.ToolTipDelay = configFile.BindConfiguration("1. Main settings", "Tool-Tip delay", 0.0m, "Delays the tool-tip for x seconds. (Plug-In Default: 0, EFT Default: 0.6).", 0);
+        this.EnablePlugin = configFile.BindConfiguration("1. Main settings", "Enable plug-in", true, $"Enable or disable the plug-in.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 4);
+        this.EnableTraderPrices = configFile.BindConfiguration("1. Main settings", "Enable trader price(s)", true, $"Enable the trader price(s) in the tool-tip.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 3);
+        this.EnableFleaPrices = configFile.BindConfiguration("1. Main settings", "Enable flea price(s)", true, $"Enable the flea price(s) in the tool-tip.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 2);
+        this.ShowPricePerSlot = configFile.BindConfiguration("1. Main settings", "Show price-per-slot", true, $"Show the price-per-slot in the tool-tip. The mod continues to calculate in the background using price-per-slot, even if the display is deactivated.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 1);
+        this.ToolTipDelay = configFile.BindConfiguration("1. Main settings", "Tool-Tip delay", 0.0m, $"Delays the tool-tip for x seconds.{Environment.NewLine}{Environment.NewLine}(Plug-In Default: 0, EFT Default: 0.6)", 0);
 
         // --- 2. Currency conversion
         this.CurrencyConversionMode = configFile.BindConfiguration("2. Currency conversion", "Currency conversion method", CurrencyConversionEnum.Handbook,
             "Determines which source is used for currency conversion in the tooltip to determine the best trader offer. "
             + "'Handbook' is the value SPT defines in the handbook.json for each currency (by default $1 = ₽125, €1 = ₽133). "
-            + "'Trader' takes the price you have to actually pay to get dollars/euros at Peacekeeper/Skier (by default $1 = ₽139, €1 = ₽153) "
-            + "(Default: Handbook).", 1);
+            + $"'Trader' takes the price you have to actually pay to get dollars/euros at Peacekeeper/Skier (by default $1 = ₽139, €1 = ₽153).{Environment.NewLine}{Environment.NewLine}"
+            + "(Default: Handbook)", 1);
 
-        this.RoublesOnly = configFile.BindConfiguration("2. Currency conversion", "Roubles only", false, "Only sales prices in roubles will be considered. Basically no longer displays trades from traders who do not buy in rubles. (Default: Disabled).", 0);
+        this.RoublesOnly = configFile.BindConfiguration("2. Currency conversion", "Roubles only", false, $"Only sales prices in roubles will be considered. Basically no longer displays trades from traders who do not buy in rubles.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 0);
 
         // --- 3. Appearance
-        this.BestTradeColor = configFile.BindConfiguration("3. Appearance", "Best trade color", new Color(0.867f, 0.514f, 0.102f), "Defines the color used to highlight the best trade, trader or flea (Default: R 221, G 131, B 26).", 2);
-        this.FontSize = configFile.BindConfiguration("3. Appearance", "Font size", TooltipFontSizeEnum.Normal, "Changes the font size of the price(s) (Default: Normal).", 1);
-        this.RenderInItalics = configFile.BindConfiguration("3. Appearance", "Italics", false, "Renders the price(s) in italics (Default: Disabled).", 0);
+        this.BestTradeColor = configFile.BindConfiguration("3. Appearance", "Best trade color", new Color(0.867f, 0.514f, 0.102f), $"Defines the color used to highlight the best trade, trader or flea.{Environment.NewLine}{Environment.NewLine}(Default: R 221, G 131, B 26)", 2);
+        this.FontSize = configFile.BindConfiguration("3. Appearance", "Font size", TooltipFontSizeEnum.Normal, $"Changes the font size of the price(s).{Environment.NewLine}{Environment.NewLine}(Default: Normal)", 1);
+        this.RenderInItalics = configFile.BindConfiguration("3. Appearance", "Italics", false, $"Renders the price(s) in italics.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 0);
 
         // --- 4. Color coding
-        this.EnableColorCoding = configFile.BindConfiguration("4. Color coding", "Enable color coding (based on price-per-slot)", true, "Uses color coding to give an quick and easy indicator how valueable an item is. Always based on price-per-slot, except for ammunition, if you activate the respective feature. Default colors are from WoW (Default: Enabled).", 17);
+        this.EnableColorCoding = configFile.BindConfiguration("4. Color coding", "Enable color coding (based on price-per-slot)", true, $"Uses color coding to give an quick and easy indicator how valueable an item is. Always based on price-per-slot, except for ammunition, if you activate the respective feature. Default colors are from WoW.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 17);
 
-        this.PoorValue = configFile.BindConfiguration("4. Color coding", "Poor value (smaller than)", 850m, "(Default: 850).", 16);
-        this.CommonValue = configFile.BindConfiguration("4. Color coding", "Common value (smaller than)", 12850m, "(Default: 12850).", 15);
-        this.UncommonValue = configFile.BindConfiguration("4. Color coding", "Uncommon value (smaller than)", 23250m, "(Default: 23250).", 14);
-        this.RareValue = configFile.BindConfiguration("4. Color coding", "Rare value (smaller than)", 38500m, "(Default: 38500).", 13);
-        this.EpicValue = configFile.BindConfiguration("4. Color coding", "Epic value (smaller than) - everything above that is considered legendary", 90000m, "(Default: 90000).", 12);
+        this.PoorValue = configFile.BindConfiguration("4. Color coding", "Poor value (smaller than)", 770m, "(Default: 770)", 16);
+        this.CommonValue = configFile.BindConfiguration("4. Color coding", "Common value (smaller than)", 7600m, "(Default: 7600)", 15);
+        this.UncommonValue = configFile.BindConfiguration("4. Color coding", "Uncommon value (smaller than)", 14900m, "(Default: 14900)", 14);
+        this.RareValue = configFile.BindConfiguration("4. Color coding", "Rare value (smaller than)", 23800m, "(Default: 23800)", 13);
+        this.EpicValue = configFile.BindConfiguration("4. Color coding", "Epic value (smaller than) - everything above that is considered legendary", 54000m, "(Default: 54000)", 12);
 
-        this.UseCaliberPenetrationPower = configFile.BindConfiguration("4. Color coding", "Use penetration power instead of price value for color coding of ammunition", true, "Uses the caliber penetration power value instead of the price value for color coding of ammunition (Default: Enabled).", 11);
+        this.UseCaliberPenetrationPower = configFile.BindConfiguration("4. Color coding", "Use penetration power instead of price value for color coding of ammunition", true, $"Uses the caliber penetration power value instead of the price value for color coding of ammunition.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 11);
 
-        this.PoorPenetrationValue = configFile.BindConfiguration("4. Color coding", "Poor penetration value (smaller than)", 15m, "(Default: 15).", 10);
-        this.CommonPenetrationValue = configFile.BindConfiguration("4. Color coding", "Common penetration value (smaller than)", 25m, "(Default: 25).", 9);
-        this.UncommonPenetrationValue = configFile.BindConfiguration("4. Color coding", "Uncommon penetration value (smaller than)", 34m, "(Default: 34).", 8);
-        this.RarePenetrationValue = configFile.BindConfiguration("4. Color coding", "Rare penetration value (smaller than)", 43m, "(Default: 43).", 7);
-        this.EpicPenetrationValue = configFile.BindConfiguration("4. Color coding", "Epic penetration value (smaller than) - everything above that is considered legendary", 55m, "(Default: 55).", 6);
+        this.PoorPenetrationValue = configFile.BindConfiguration("4. Color coding", "Poor penetration value (smaller than)", 15m, "(Default: 15)", 10);
+        this.CommonPenetrationValue = configFile.BindConfiguration("4. Color coding", "Common penetration value (smaller than)", 25m, "(Default: 25)", 9);
+        this.UncommonPenetrationValue = configFile.BindConfiguration("4. Color coding", "Uncommon penetration value (smaller than)", 34m, "(Default: 34)", 8);
+        this.RarePenetrationValue = configFile.BindConfiguration("4. Color coding", "Rare penetration value (smaller than)", 43m, "(Default: 43)", 7);
+        this.EpicPenetrationValue = configFile.BindConfiguration("4. Color coding", "Epic penetration value (smaller than) - everything above that is considered legendary", 55m, "(Default: 55)", 6);
 
-        this.PoorColor = configFile.BindConfiguration("4. Color coding", "Poor color", new Color(0.62f, 0.62f, 0.62f), "(Default: R 157, G 157, B 157).", 5);
-        this.CommonColor = configFile.BindConfiguration("4. Color coding", "Common color", new Color(1f, 1f, 1f), "(Default: R 255, G 255, B 255).", 4);
-        this.UncommonColor = configFile.BindConfiguration("4. Color coding", "Uncommon color", new Color(0.12f, 1f, 0f), "(Default: R 30, G 255, B 0).", 3);
-        this.RareColor = configFile.BindConfiguration("4. Color coding", "Rare color", new Color(0f, 0.44f, 0.87f), "(Default: R 0, G 112, B 221).", 2);
-        this.EpicColor = configFile.BindConfiguration("4. Color coding", "Epic color", new Color(0.64f, 0.21f, 0.93f), "(Default: R 163, G 53, B 238).", 1);
-        this.LegendaryColor = configFile.BindConfiguration("4. Color coding", "Legendary color", new Color(1f, 0.5f, 0f), "(Default: R 255, G 128, B 0).", 0);
+        this.PoorColor = configFile.BindConfiguration("4. Color coding", "Poor color", new Color(0.62f, 0.62f, 0.62f), "(Default: R 157, G 157, B 157)", 5);
+        this.CommonColor = configFile.BindConfiguration("4. Color coding", "Common color", new Color(1f, 1f, 1f), "(Default: R 255, G 255, B 255)", 4);
+        this.UncommonColor = configFile.BindConfiguration("4. Color coding", "Uncommon color", new Color(0.12f, 1f, 0f), "(Default: R 30, G 255, B 0)", 3);
+        this.RareColor = configFile.BindConfiguration("4. Color coding", "Rare color", new Color(0f, 0.44f, 0.87f), "(Default: R 0, G 112, B 221)", 2);
+        this.EpicColor = configFile.BindConfiguration("4. Color coding", "Epic color", new Color(0.64f, 0.21f, 0.93f), "(Default: R 163, G 53, B 238)", 1);
+        this.LegendaryColor = configFile.BindConfiguration("4. Color coding", "Legendary color", new Color(1f, 0.5f, 0f), "(Default: R 255, G 128, B 0)", 0);
 
-        // --- 5. Experimental settings
-        this.includeFleaTaxConfigEntry = configFile.BindConfiguration("5. Experimental settings", "Include flea tax", true, "Determines whether taxes for the flea market are included in the flea price (Default: Enabled).", 3);
-        this.showFleaTaxConfigEntry = configFile.BindConfiguration("5. Experimental settings", "Show flea tax", false, "Show the flea tax in the tool-tip (Default: Disabled).", 2);
-        this.FleaTaxToggleMode = configFile.BindConfiguration("5. Experimental settings", "Toggle-mode for flea tax", false, "When toggle mode is activated, the flea tax is only displayed when the specified key or key combination is pressed (Default: Disabled).", 1);
-        this.FleaTaxToggleKey = configFile.BindConfiguration("5. Experimental settings", "Toggle-mode key", new KeyboardShortcut(KeyCode.LeftAlt), "Defines which key or key combination needs to be pressed to display the flea tax (Default: LeftAlt).", 0);
-
-        this.FleaTaxToggleMode.SettingChanged += (_, _) =>
-        {
-            if (this.FleaTaxToggleMode.IsEnabled())
-                Plugin.EnableTooltipUpdatePatch();
-            else
-                Plugin.DisableTooltipUpdatePatch();
-        };
+        // --- 5. Flea market
+        this.FleaPriceMultiplier = configFile.BindConfiguration("5. Flea market", "Flea price multiplier", 1.0m, $"Sets the multiplier by which the displayed flea market price is multiplied. The following calculation is performed:{Environment.NewLine}{Environment.NewLine}Average flea market price of the item * Minimum flea price range * Flea price multiplier{Environment.NewLine}{Environment.NewLine}For example, if all settings are at default:{Environment.NewLine}{Environment.NewLine}Average flea market price of the item * 0.8 * 1.0{Environment.NewLine}{Environment.NewLine}(Default: 1.0)", 5);
+        this.includeFleaTaxConfigEntry = configFile.BindConfiguration("5. Flea market", "Include flea tax", false, $"Determines whether taxes for the flea market are included in the flea price.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 4);
+        this.showFleaTaxConfigEntry = configFile.BindConfiguration("5. Flea market", "Show flea tax", false, $"Show the flea tax in the tool-tip.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 3);
+        this.FleaTaxToggleMode = configFile.BindConfiguration("5. Flea market", "Toggle-mode for flea tax", false, $"When toggle mode is activated, the flea tax is only displayed when the specified key or key combination is pressed.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 2);
+        this.FleaTaxToggleKey = configFile.BindConfiguration("5. Flea market", "Toggle-mode key", new KeyboardShortcut(KeyCode.LeftAlt), $"Defines which key or key combination needs to be pressed to display the flea tax.{Environment.NewLine}{Environment.NewLine}(Default: LeftAlt)", 1);
 
         configFile.CreateButton(
-            "5. Manual update",
+            "5. Flea market",
             "Update flea prices",
             "Update now",
             "Pulls the current flea prices from your SPT server instance.",
@@ -91,73 +84,96 @@ public class PluginConfiguration
             },
             0
         );
+
+        this.ApplyMigrations(configFile);
+
+        this.FleaTaxToggleMode.SettingChanged += (_, _) =>
+        {
+            if (this.FleaTaxToggleMode.IsEnabled())
+                Plugin.EnableTooltipUpdatePatch();
+            else
+                Plugin.DisableTooltipUpdatePatch();
+        };
+
+        configFile.SaveOnConfigSet = true;
+    }
+
+    private void ApplyMigrations(ConfigFile configFile)
+    {
+        RenamedBindingsMigration renamedBindingsMigration = new();
+        if (renamedBindingsMigration.IsApplicable(configFile))
+        {
+            renamedBindingsMigration.Migrate(this, configFile);
+        }
     }
 
     #region Main settings 
-    public ConfigEntry<bool> EnablePlugin { get; private set; }
+    public ConfigEntry<bool> EnablePlugin { get; set; }
 
-    public ConfigEntry<bool> ShowTraderPrices { get; private set; }
+    public ConfigEntry<bool> EnableTraderPrices { get; set; }
 
-    public ConfigEntry<bool> ShowFleaPrices { get; private set; }
+    public ConfigEntry<bool> EnableFleaPrices { get; set; }
 
-    public ConfigEntry<bool> ShowPricePerSlot { get; private set; }
+    public ConfigEntry<bool> ShowPricePerSlot { get; set; }
 
-    public ConfigEntry<decimal> ToolTipDelay { get; private set; }
+    public ConfigEntry<decimal> ToolTipDelay { get; set; }
     #endregion
 
     #region Currency conversion
-    public ConfigEntry<CurrencyConversionEnum> CurrencyConversionMode { get; private set; }
+    public ConfigEntry<CurrencyConversionEnum> CurrencyConversionMode { get; set; }
 
-    public ConfigEntry<bool> RoublesOnly { get; private set; }
+    public ConfigEntry<bool> RoublesOnly { get; set; }
     #endregion
 
     #region Appearance
-    public ConfigEntry<Color> BestTradeColor { get; private set; }
+    public ConfigEntry<Color> BestTradeColor { get; set; }
 
-    public ConfigEntry<TooltipFontSizeEnum> FontSize { get; private set; }
+    public ConfigEntry<TooltipFontSizeEnum> FontSize { get; set; }
 
-    public ConfigEntry<bool> RenderInItalics { get; private set; }
+    public ConfigEntry<bool> RenderInItalics { get; set; }
     #endregion
 
     #region Color coding
-    public ConfigEntry<bool> EnableColorCoding { get; private set; }
+    public ConfigEntry<bool> EnableColorCoding { get; set; }
 
-    public ConfigEntry<decimal> PoorValue { get; private set; }
+    public ConfigEntry<decimal> PoorValue { get; set; }
 
-    public ConfigEntry<decimal> CommonValue { get; private set; }
+    public ConfigEntry<decimal> CommonValue { get; set; }
 
-    public ConfigEntry<decimal> UncommonValue { get; private set; }
+    public ConfigEntry<decimal> UncommonValue { get; set; }
 
-    public ConfigEntry<decimal> RareValue { get; private set; }
+    public ConfigEntry<decimal> RareValue { get; set; }
 
-    public ConfigEntry<decimal> EpicValue { get; private set; }
+    public ConfigEntry<decimal> EpicValue { get; set; }
 
-    public ConfigEntry<bool> UseCaliberPenetrationPower { get; private set; }
+    public ConfigEntry<bool> UseCaliberPenetrationPower { get; set; }
 
-    public ConfigEntry<decimal> PoorPenetrationValue { get; private set; }
+    public ConfigEntry<decimal> PoorPenetrationValue { get; set; }
 
-    public ConfigEntry<decimal> CommonPenetrationValue { get; private set; }
+    public ConfigEntry<decimal> CommonPenetrationValue { get; set; }
 
-    public ConfigEntry<decimal> UncommonPenetrationValue { get; private set; }
+    public ConfigEntry<decimal> UncommonPenetrationValue { get; set; }
 
-    public ConfigEntry<decimal> RarePenetrationValue { get; private set; }
+    public ConfigEntry<decimal> RarePenetrationValue { get; set; }
 
-    public ConfigEntry<decimal> EpicPenetrationValue { get; private set; }
+    public ConfigEntry<decimal> EpicPenetrationValue { get; set; }
 
-    public ConfigEntry<Color> PoorColor { get; private set; }
+    public ConfigEntry<Color> PoorColor { get; set; }
 
-    public ConfigEntry<Color> CommonColor { get; private set; }
+    public ConfigEntry<Color> CommonColor { get; set; }
 
-    public ConfigEntry<Color> UncommonColor { get; private set; }
+    public ConfigEntry<Color> UncommonColor { get; set; }
 
-    public ConfigEntry<Color> RareColor { get; private set; }
+    public ConfigEntry<Color> RareColor { get; set; }
 
-    public ConfigEntry<Color> EpicColor { get; private set; }
+    public ConfigEntry<Color> EpicColor { get; set; }
 
-    public ConfigEntry<Color> LegendaryColor { get; private set; }
+    public ConfigEntry<Color> LegendaryColor { get; set; }
     #endregion
 
-    #region Experimental settings
+    #region Flea market
+    public ConfigEntry<decimal> FleaPriceMultiplier { get; set; }
+
     public bool IncludeFleaTax
     {
         get
@@ -169,6 +185,10 @@ public class PluginConfiguration
             }
 
             return this.includeFleaTaxConfigEntry.IsEnabled();
+        }
+        set
+        {
+            this.includeFleaTaxConfigEntry.Value = value;
         }
     }
 
@@ -184,10 +204,14 @@ public class PluginConfiguration
 
             return this.showFleaTaxConfigEntry.IsEnabled();
         }
+        set
+        {
+            this.showFleaTaxConfigEntry.Value = value;
+        }
     }
 
-    public ConfigEntry<bool> FleaTaxToggleMode { get; private set; }
+    public ConfigEntry<bool> FleaTaxToggleMode { get; set; }
 
-    public ConfigEntry<KeyboardShortcut> FleaTaxToggleKey { get; private set; }
+    public ConfigEntry<KeyboardShortcut> FleaTaxToggleKey { get; set; }
     #endregion
 }
