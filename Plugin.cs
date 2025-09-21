@@ -27,21 +27,27 @@ public class Plugin : BaseUnityPlugin
 
     private void Awake()
     {
+        InitLogger();
         BindBepInExConfiguration();
         InitPriceRangesAndTable();
         EnablePatches();
     }
 
+    private void InitLogger()
+    {
+        SimpleSptLogger.Instance.Init(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_VERSION);
+    }
+
     private void BindBepInExConfiguration()
     {
-        SimpleSptLogger.LogInfo("Bind configuration...");
+        SimpleSptLogger.Instance.LogInfo("Bind configuration...");
 
         Configuration = new PluginConfiguration(Config);
     }
 
     private void InitPriceRangesAndTable()
     {
-        SimpleSptLogger.LogInfo("Initializing currency purchase prices, price ranges and price table...");
+        SimpleSptLogger.Instance.LogInfo("Initializing currency purchase prices, price ranges and price table...");
 
         CurrencyPurchasePricesService.Instance.GetCurrencyPurchasePrices();
         RagfairPriceRangesService.Instance.GetPriceRanges();
@@ -50,7 +56,7 @@ public class Plugin : BaseUnityPlugin
 
     private void EnablePatches()
     {
-        SimpleSptLogger.LogInfo("Enable patches...");
+        SimpleSptLogger.Instance.LogInfo("Enable patches...");
 
         new TraderClassPatch().Enable();
 
@@ -67,8 +73,6 @@ public class Plugin : BaseUnityPlugin
         if (Configuration!.FleaTaxToggleMode.IsEnabled())
             EnableTooltipUpdatePatch();
     }
-
-    public static SimpleSptLogger SimpleSptLogger = new(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_VERSION);
 
     public static PluginConfiguration? Configuration;
 

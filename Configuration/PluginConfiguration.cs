@@ -6,6 +6,7 @@ using SwiftXP.SPT.ShowMeTheMoney.Enums;
 using UnityEngine;
 using System;
 using SwiftXP.SPT.ShowMeTheMoney.Configuration.Migrations;
+using SwiftXP.SPT.Common.Loggers;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Configuration;
 
@@ -76,7 +77,7 @@ public class PluginConfiguration
             "Pulls the current flea prices from your SPT server instance.",
             () =>
             {
-                Plugin.SimpleSptLogger.LogInfo("Updating flea prices...");
+                SimpleSptLogger.Instance.LogInfo("Updating flea prices...");
                 bool pricesUpdated = RagfairPriceTableService.Instance.UpdatePrices();
 
                 if (pricesUpdated)

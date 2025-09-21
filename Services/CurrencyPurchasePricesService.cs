@@ -1,6 +1,7 @@
 using System;
 using Newtonsoft.Json;
 using SPT.Common.Http;
+using SwiftXP.SPT.Common.Loggers;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Models;
 
@@ -14,7 +15,7 @@ public class CurrencyPurchasePricesService
 
     public void GetCurrencyPurchasePrices()
     {
-        Plugin.SimpleSptLogger.LogInfo("Trying to query currency purchase prices from remote...");
+        SimpleSptLogger.Instance.LogInfo("Trying to query currency purchase prices from remote...");
 
         try
         {
@@ -26,18 +27,18 @@ public class CurrencyPurchasePricesService
 
             if (currencyPurchasePrises is not null)
             {
-                Plugin.SimpleSptLogger.LogInfo($"Currency purchase prices were queried!");
+                SimpleSptLogger.Instance.LogInfo($"Currency purchase prices were queried!");
 
                 this.CurrencyPurchasePrices = currencyPurchasePrises;
             }
             else
             {
-                Plugin.SimpleSptLogger.LogError("Currency purchase prices could not be queried! Is the server-mod missing? Using 'Handbook' as a fallback.");
+                SimpleSptLogger.Instance.LogError("Currency purchase prices could not be queried! Is the server-mod missing? Using 'Handbook' as a fallback.");
             }
         }
         catch (Exception exception)
         {
-            Plugin.SimpleSptLogger.LogException(exception);
+            SimpleSptLogger.Instance.LogException(exception);
         }
     }
 

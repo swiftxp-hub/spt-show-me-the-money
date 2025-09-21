@@ -1,4 +1,5 @@
 using BepInEx.Configuration;
+using SwiftXP.SPT.Common.Loggers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +37,7 @@ public class RenamedBindingsMigration
 
     public void Migrate(PluginConfiguration pluginConfiguration, ConfigFile configFile)
     {
-        Plugin.SimpleSptLogger.LogInfo("Found old plug-in settings. Migrating 1.x.x to 1.5.2...");
+        SimpleSptLogger.Instance.LogInfo("Found old plug-in settings. Migrating 1.x.x to 1.5.2...");
 
         try
         {
@@ -65,7 +66,7 @@ public class RenamedBindingsMigration
         }
         catch (Exception exception)
         {
-            Plugin.SimpleSptLogger.LogException(exception);
+            SimpleSptLogger.Instance.LogException(exception);
         }
     }
 

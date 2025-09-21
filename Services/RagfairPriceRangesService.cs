@@ -1,6 +1,7 @@
 using System;
 using Newtonsoft.Json;
 using SPT.Common.Http;
+using SwiftXP.SPT.Common.Loggers;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Models;
 
@@ -16,7 +17,7 @@ public class RagfairPriceRangesService
     {
         try
         {
-            Plugin.SimpleSptLogger.LogInfo("Trying to query ragfair price ranges from remote...");
+            SimpleSptLogger.Instance.LogInfo("Trying to query ragfair price ranges from remote...");
 
             PriceRanges? priceRanges = null;
             string priceRangesJson = RequestHandler.GetJson(RemotePathToGetRagfairConfigPriceRanges);
@@ -26,18 +27,18 @@ public class RagfairPriceRangesService
 
             if (priceRanges is not null)
             {
-                Plugin.SimpleSptLogger.LogInfo($"Ragfair price ranges was queried!");
+                SimpleSptLogger.Instance.LogInfo($"Ragfair price ranges was queried!");
 
                 this.Ranges = priceRanges;
             }
             else
             {
-                Plugin.SimpleSptLogger.LogError("Ragfair price ranges could not be queried! Is the server-mod missing? Using SPT-defaults as a fallback.");
+                SimpleSptLogger.Instance.LogError("Ragfair price ranges could not be queried! Is the server-mod missing? Using SPT-defaults as a fallback.");
             }
         }
         catch (Exception exception)
         {
-            Plugin.SimpleSptLogger.LogException(exception);
+            SimpleSptLogger.Instance.LogException(exception);
         }
     }
 

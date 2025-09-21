@@ -14,6 +14,7 @@ using TMPro;
 using SwiftXP.SPT.Common.ConfigurationManager;
 using SwiftXP.SPT.Common.Constants;
 using System.Linq;
+using SwiftXP.SPT.Common.Loggers;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Patches;
 
@@ -50,7 +51,7 @@ public class SimpleTooltipShowPatch : ModulePatch
         }
         catch (Exception exception)
         {
-            Plugin.SimpleSptLogger.LogException(exception);
+            SimpleSptLogger.Instance.LogException(exception);
         }
     }
 
@@ -76,7 +77,7 @@ public class SimpleTooltipShowPatch : ModulePatch
         }
         catch (Exception exception)
         {
-            Plugin.SimpleSptLogger.LogException(exception);
+            SimpleSptLogger.Instance.LogException(exception);
         }
     }
 
@@ -375,7 +376,7 @@ public class SimpleTooltipShowPatch : ModulePatch
         }
         catch (Exception)
         {
-            Plugin.SimpleSptLogger.LogDebug($"Could not get price from trader \"{trader.LocalizedName}\". Skipping.");
+            SimpleSptLogger.Instance.LogDebug($"Could not get price from trader \"{trader.LocalizedName}\". Skipping.");
         }
 
         return singleObjectPrice is not null;
