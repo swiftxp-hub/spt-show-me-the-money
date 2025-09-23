@@ -1,11 +1,11 @@
 ﻿using BepInEx;
 using EFT.InventoryLogic;
 using SwiftXP.SPT.ShowMeTheMoney.Configuration;
-using SwiftXP.SPT.ShowMeTheMoney.Models;
 using SwiftXP.SPT.ShowMeTheMoney.Patches;
 using SwiftXP.SPT.Common.Loggers;
 using SPT.Reflection.Patching;
 using SwiftXP.SPT.Common.ConfigurationManager;
+using SwiftXP.SPT.ShowMeTheMoney.Services;
 
 namespace SwiftXP.SPT.ShowMeTheMoney;
 
@@ -67,7 +67,6 @@ public class Plugin : BaseUnityPlugin
         new GridItemOnPointerExitPatch().Enable();
         new SimpleTooltipShowPatch().Enable();
 
-        new TooltipClosePatch().Enable();
         TooltipUpdatePatch = new TooltipUpdatePatch();
 
         if (Configuration!.FleaTaxToggleMode.IsEnabled())

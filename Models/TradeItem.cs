@@ -4,10 +4,12 @@ namespace SwiftXP.SPT.ShowMeTheMoney.Models;
 
 public class TradeItem
 {
-    public TradeItem(Item item, int itemSlotCount, TradePrice? traderPrice = null, TradePrice? fleaPrice = null)
+    public TradeItem(Item item, TradePrice? traderPrice = null, TradePrice? fleaPrice = null)
     {
+        XYCellSizeStruct itemSize = item.CalculateCellSize();
+        this.ItemSlotCount = itemSize.X * itemSize.Y;
+
         this.Item = item;
-        this.ItemSlotCount = itemSlotCount;
         this.TraderPrice = traderPrice;
         this.FleaPrice = fleaPrice;
     }

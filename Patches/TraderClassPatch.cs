@@ -1,6 +1,7 @@
 using System.Reflection;
 using HarmonyLib;
 using SPT.Reflection.Patching;
+using SwiftXP.SPT.ShowMeTheMoney.Extensions;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Patches;
 

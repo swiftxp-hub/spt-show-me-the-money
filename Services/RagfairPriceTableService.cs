@@ -2,8 +2,9 @@ using System;
 using Newtonsoft.Json;
 using SPT.Common.Http;
 using SwiftXP.SPT.Common.Loggers;
+using SwiftXP.SPT.ShowMeTheMoney.Models;
 
-namespace SwiftXP.SPT.ShowMeTheMoney.Models;
+namespace SwiftXP.SPT.ShowMeTheMoney.Services;
 
 public class RagfairPriceTableService
 {

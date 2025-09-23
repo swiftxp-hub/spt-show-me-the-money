@@ -1,12 +1,12 @@
 using BepInEx.Configuration;
 using SwiftXP.SPT.Common.ConfigurationManager;
-using SwiftXP.SPT.ShowMeTheMoney.Models;
 using SwiftXP.SPT.Common.Notifications;
 using SwiftXP.SPT.ShowMeTheMoney.Enums;
 using UnityEngine;
 using System;
 using SwiftXP.SPT.ShowMeTheMoney.Configuration.Migrations;
 using SwiftXP.SPT.Common.Loggers;
+using SwiftXP.SPT.ShowMeTheMoney.Services;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Configuration;
 

@@ -8,20 +8,17 @@ using System;
 using System.Text;
 using HarmonyLib;
 using SwiftXP.SPT.Common.Sessions;
-using EFT;
 using SwiftXP.SPT.ShowMeTheMoney.Enums;
 using TMPro;
 using SwiftXP.SPT.Common.ConfigurationManager;
-using SwiftXP.SPT.Common.Constants;
 using System.Linq;
 using SwiftXP.SPT.Common.Loggers;
+using SwiftXP.SPT.ShowMeTheMoney.Services;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Patches;
 
 public class SimpleTooltipShowPatch : ModulePatch
 {
-    private static SimpleTooltip? instance;
-
     private static string? patchText;
 
     protected override MethodBase GetTargetMethod() =>
@@ -35,7 +32,7 @@ public class SimpleTooltipShowPatch : ModulePatch
             if (!AreTooltipRequirementsMeet(text))
                 return;
 
-            instance = __instance;
+            Instance = __instance;
 
             SetToolTipDelay(ref delay);
 
@@ -59,7 +56,7 @@ public class SimpleTooltipShowPatch : ModulePatch
     {
         try
         {
-            if (instance is not null && IsActive)
+            if (Instance is not null && IsActive)
             {
                 string? instanceText = GetTextOfInstance();
                 if (instanceText is not null)
@@ -70,7 +67,7 @@ public class SimpleTooltipShowPatch : ModulePatch
                         string newTooltipText = instanceText.Replace(patchText, priceInformationText);
 
                         patchText = priceInformationText;
-                        instance.SetText(newTooltipText);
+                        Instance.SetText(newTooltipText);
                     }
                 }
             }
@@ -83,7 +80,7 @@ public class SimpleTooltipShowPatch : ModulePatch
 
     public static void OnClose()
     {
-        instance = null;
+        Instance = null;
         patchText = null;
         IsActive = false;
     }
@@ -131,16 +128,16 @@ public class SimpleTooltipShowPatch : ModulePatch
         Item? item = Plugin.HoveredItem;
         if (item is not null && ItemMeetsRequirements(item))
         {
-            TradeItem tradeItem = CreateTradeItem(item);
+            TradeItem tradeItem = new(item);
 
             bool hasTraderPrice = false;
             bool hasFleaPrice = false;
 
             if (Plugin.Configuration!.EnableTraderPrices.IsEnabled())
-                hasTraderPrice = GetBestTraderPrice(tradeItem);
+                hasTraderPrice = TraderPriceService.Instance.GetBestTraderPrice(tradeItem);
 
             if (Plugin.Configuration!.EnableFleaPrices.IsEnabled())
-                hasFleaPrice = GetFleaPrice(tradeItem);
+                hasFleaPrice = FleaPriceService.Instance.GetFleaPrice(tradeItem, Plugin.Configuration!.IncludeFleaTax);
 
             if (hasTraderPrice)
             {
@@ -297,196 +294,9 @@ public class SimpleTooltipShowPatch : ModulePatch
         FieldInfo? fieldInfo = typeof(SimpleTooltip)
             .GetField("_label", BindingFlags.NonPublic | BindingFlags.Instance);
 
-        TextMeshProUGUI? textMesh = fieldInfo?.GetValue(instance) as TextMeshProUGUI;
+        TextMeshProUGUI? textMesh = fieldInfo?.GetValue(Instance) as TextMeshProUGUI;
 
         return textMesh?.text ?? null;
-    }
-
-    private static TradeItem CreateTradeItem(Item item)
-    {
-        XYCellSizeStruct itemSize = item.CalculateCellSize();
-        int itemSlotCount = itemSize.X * itemSize.Y;
-
-        TradeItem tradeItem = new TradeItem(
-            item,
-            itemSlotCount
-        );
-
-        return tradeItem;
-    }
-
-    private static bool GetBestTraderPrice(TradeItem tradeItem)
-    {
-        TradePrice? highestTraderPrice = null;
-        foreach (TraderClass trader in SptSession.Session.Traders)
-        {
-            if (IsTraderAvailable(trader))
-            {
-                TraderClass.GStruct264? singleObjectPrice = null;
-                TraderClass.GStruct264? totalPrice = null;
-
-                bool hasPrice = TryGetTraderUserItemPrice(trader, tradeItem, out singleObjectPrice, out totalPrice);
-                if (hasPrice && (!Plugin.Configuration!.RoublesOnly.IsEnabled() || singleObjectPrice!.Value.CurrencyId.ToString() == SptConstants.CurrencyIds.Roubles))
-                {
-                    MongoID? currencyId = singleObjectPrice!.Value.CurrencyId;
-                    double? currencyCourse = GetCurrencyCourse(trader, currencyId);
-                    double itemPrice = singleObjectPrice.Value.Amount;
-
-                    double? totalItemPrice = totalPrice != null ? totalPrice.Value.Amount : null;
-
-                    TradePrice traderPrice =
-                        CreateTradePrice(
-                            tradeItem,
-                            trader.LocalizedName,
-                            singleObjectPrice.Value.Amount,
-                            totalItemPrice,
-                            currencyCourse,
-                            currencyId
-                        );
-
-                    if (highestTraderPrice == null || traderPrice.GetComparePriceInRouble() > highestTraderPrice.GetComparePriceInRouble())
-                        highestTraderPrice = traderPrice;
-                }
-            }
-        }
-
-        tradeItem.TraderPrice = highestTraderPrice;
-
-        return tradeItem.TraderPrice is not null;
-    }
-
-    private static bool IsTraderAvailable(TraderClass trader)
-    {
-        return trader.Info.Available && !trader.Info.Disabled && trader.Info.Unlocked;
-    }
-
-    private static bool TryGetTraderUserItemPrice(TraderClass trader, TradeItem tradeItem,
-        out TraderClass.GStruct264? singleObjectPrice, out TraderClass.GStruct264? totalPrice)
-    {
-        singleObjectPrice = null;
-        totalPrice = null;
-
-        try
-        {
-            Item singleItem = tradeItem.Item.CloneItem();
-            singleItem.StackObjectsCount = 1;
-            singleObjectPrice = trader.GetUserItemPrice(singleItem);
-
-            totalPrice = trader.GetUserItemPrice(tradeItem.Item);
-        }
-        catch (Exception)
-        {
-            SimpleSptLogger.Instance.LogDebug($"Could not get price from trader \"{trader.LocalizedName}\". Skipping.");
-        }
-
-        return singleObjectPrice is not null;
-    }
-
-    private static double? GetCurrencyCourse(TraderClass trader, MongoID? currencyId)
-    {
-        if (!currencyId.HasValue)
-            return null;
-
-        double? result = null;
-
-        switch (Plugin.Configuration?.CurrencyConversionMode?.Value ?? CurrencyConversionEnum.Handbook)
-        {
-            case CurrencyConversionEnum.Traders:
-                if (currencyId.ToString() == SptConstants.CurrencyIds.Euros)
-                    result = CurrencyPurchasePricesService.Instance.CurrencyPurchasePrices?.EUR;
-
-                if (currencyId.ToString() == SptConstants.CurrencyIds.Dollars)
-                    result = CurrencyPurchasePricesService.Instance.CurrencyPurchasePrices?.USD;
-
-                break;
-        }
-
-        if (!result.HasValue)
-            result = trader.GetSupplyData()?.CurrencyCourses[currencyId.Value];
-
-        return result ?? 1;
-    }
-
-    private static bool GetFleaPrice(TradeItem tradeItem)
-    {
-        if (RagfairPriceTableService.Instance.Prices is not null)
-        {
-            if (RagfairPriceTableService.Instance.Prices!.TryGetValue(tradeItem.Item.TemplateId, out double fleaSingleObjectPrice))
-            {
-                double minFleaPrice = fleaSingleObjectPrice * GetPriceRangeMin() * (double)Plugin.Configuration!.FleaPriceMultiplier.GetValue();
-
-                double? singleObjectTaxPrice = null;
-                double? totalTaxPrice = null;
-
-                if (Plugin.Configuration!.IncludeFleaTax || Plugin.Configuration!.ShowFleaTax)
-                {
-                    singleObjectTaxPrice = FleaTaxCalculatorAbstractClass.CalculateTaxPrice(tradeItem.Item, 1, minFleaPrice, false);
-                    totalTaxPrice = FleaTaxCalculatorAbstractClass.CalculateTaxPrice(tradeItem.Item, tradeItem.ItemObjectCount, minFleaPrice, false);
-                }
-
-                TradePrice tradePrice =
-                    CreateTradePrice(
-                        tradeItem,
-                        GetFleaMarketName(),
-
-                        minFleaPrice,
-                        null,
-
-                        null,
-                        null,
-
-                        singleObjectTaxPrice,
-                        totalTaxPrice,
-
-                        Plugin.Configuration!.IncludeFleaTax
-                    );
-
-                tradeItem.FleaPrice = tradePrice;
-            }
-        }
-
-        return tradeItem.FleaPrice is not null;
-    }
-
-    private static double GetPriceRangeMin()
-    {
-        return RagfairPriceRangesService.Instance.Ranges?.Default?.Min ?? 0.8d;
-    }
-
-    private static string GetFleaMarketName()
-    {
-        try
-        {
-            string fleaMarketName = "RAG FAIR".Localized(null);
-            return fleaMarketName.First().ToString().ToUpperInvariant()
-                + fleaMarketName.ToLowerInvariant().Substring(1);
-        }
-        catch (Exception) { }
-
-        return "Flea";
-    }
-
-    private static TradePrice CreateTradePrice(TradeItem tradeItem, string traderName, double singleObjectPrice, double? totalPrice,
-        double? currencyCourse, MongoID? currencyId, double? singleObjectTax = null, double? totalTax = null, bool includeFleaTax = false)
-    {
-        TradePrice traderPrice = new
-        (
-            tradeItem,
-            traderName,
-
-            singleObjectPrice,
-            totalPrice,
-
-            currencyCourse,
-            currencyId,
-
-            singleObjectTax,
-            totalTax,
-
-            includeFleaTax
-        );
-
-        return traderPrice;
     }
 
     private static void ShowPrice(TradeItem tradeItem, TradePrice tradePriceA, TradePrice? tradePriceB, StringBuilder text)
@@ -550,5 +360,7 @@ public class SimpleTooltipShowPatch : ModulePatch
         return $"{currency}{val:#,0}";
     }
 
-    public static bool IsActive = false;
+    public static SimpleTooltip? Instance { get; private set; }
+
+    public static bool IsActive { get; private set; } = false;
 }
