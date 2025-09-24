@@ -9,7 +9,7 @@ namespace SwiftXP.SPT.ShowMeTheMoney.Patches;
 public class TooltipUpdatePatch : ModulePatch
 {
     protected override MethodBase GetTargetMethod() =>
-        AccessTools.FirstMethod(typeof(Tooltip), x => x.Name == "Update");
+        AccessTools.FirstMethod(typeof(Tooltip), x => x.Name == nameof(Tooltip.Update));
 
     [PatchPrefix]
     public static void PatchPrefix(Tooltip __instance)

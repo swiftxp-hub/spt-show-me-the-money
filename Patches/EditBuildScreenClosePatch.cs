@@ -7,11 +7,8 @@ namespace SwiftXP.SPT.ShowMeTheMoney.Patches;
 
 public class EditBuildScreenClosePatch : ModulePatch
 {
-    protected override MethodBase GetTargetMethod()
-    {
-        return AccessTools.FirstMethod(typeof(EditBuildScreen),
-                x => x.Name == nameof(EditBuildScreen.Close));
-    }
+    protected override MethodBase GetTargetMethod() =>
+        AccessTools.FirstMethod(typeof(EditBuildScreen), x => x.Name == nameof(EditBuildScreen.Close));
 
     [PatchPostfix]
     public static void PatchPostfix(EditBuildScreen __instance)

@@ -22,7 +22,7 @@ public class SimpleTooltipShowPatch : ModulePatch
     private static string? patchText;
 
     protected override MethodBase GetTargetMethod() =>
-        AccessTools.FirstMethod(typeof(SimpleTooltip), x => x.Name == "Show" && x.GetParameters()[0].Name == "text");
+        AccessTools.FirstMethod(typeof(SimpleTooltip), x => x.Name == nameof(SimpleTooltip.Show) && x.GetParameters()[0].Name == "text");
 
     [PatchPrefix]
     public static void PatchPrefix(SimpleTooltip __instance, ref string text, Vector2? offset, ref float delay, float? maxWidth)

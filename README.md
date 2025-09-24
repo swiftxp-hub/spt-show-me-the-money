@@ -4,6 +4,8 @@ A BepInEx plugin and an accompanying server mod for SPT (Single Player Tarkov).
 
 ![Preview Image MOD](https://raw.githubusercontent.com/swiftxp-hub/spt-show-me-the-money/refs/heads/main/Assets/preview.png)
 
+Notice: A quick-sell companion mod is now available [here](https://github.com/swiftxp-hub/spt-show-me-the-money-quick-sell).
+
 ## What does it do?
 
 The BepInEx plugin modifies the in-game tooltip of items to display price information (in stash and in raid). The dealer who would buy the item for the best price and a flea market selling price is displayed. The display is divided into "price-per-slot" and "total"-price. The best offer is highlighted. The flea markt price is always the lowest expected profit (please see the "[For nerds](#for-nerds)" section for more details on this). Also flea market taxes can be included. Version >=1.5.0 adds a color coding feature (by default the color scheme familiar from WoW, ranging from poor to legendary).
@@ -99,8 +101,6 @@ Please note that I maintain all my mods in my spare time. Therefore, I can only 
 
 ## Features that may come in the future
 
-- Being able to select which flea market value should be displayed: e.g., Lowest, 1/3, Average, Highest
-- Quick-sell (as a seperate companion-mod)
 - ​More appearence options
 - What-ever comes to my mind or by feature-requests in the comments/SPT-discord
 

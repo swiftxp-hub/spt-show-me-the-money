@@ -9,8 +9,8 @@ namespace SwiftXP.SPT.ShowMeTheMoney.Patches;
 public class GridItemOnPointerEnterPatch : ModulePatch
 {
     protected override MethodBase GetTargetMethod() =>
-        AccessTools.FirstMethod(typeof(GridItemView), x => x.Name == "OnPointerEnter");
-    
+        AccessTools.FirstMethod(typeof(GridItemView), x => x.Name == nameof(GridItemView.OnPointerEnter));
+
     [PatchPrefix]
     static void PatchPrefix(GridItemView __instance, PointerEventData eventData)
     {

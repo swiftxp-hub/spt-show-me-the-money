@@ -7,7 +7,8 @@ namespace SwiftXP.SPT.ShowMeTheMoney.Patches;
 
 public class TraderClassPatch : ModulePatch
 {
-    protected override MethodBase GetTargetMethod() => AccessTools.FirstConstructor(typeof(TraderClass), x => true);
+    protected override MethodBase GetTargetMethod() =>
+        AccessTools.FirstConstructor(typeof(TraderClass), x => true);
 
     [PatchPostfix]
     public static void PatchPostfix(TraderClass __instance)

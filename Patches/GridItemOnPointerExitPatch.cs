@@ -9,8 +9,8 @@ namespace SwiftXP.SPT.ShowMeTheMoney.Patches;
 public class GridItemOnPointerExitPatch : ModulePatch
 {
     protected override MethodBase GetTargetMethod() =>
-        AccessTools.FirstMethod(typeof(GridItemView), x => x.Name == "OnPointerExit");
-    
+        AccessTools.FirstMethod(typeof(GridItemView), x => x.Name == nameof(GridItemView.OnPointerExit));
+
     [PatchPrefix]
     static void PatchPrefix(GridItemView __instance, PointerEventData eventData)
     {
