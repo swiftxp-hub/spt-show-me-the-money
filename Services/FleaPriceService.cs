@@ -17,8 +17,7 @@ public class FleaPriceService
         {
             if (RagfairPriceTableService.Instance.Prices!.TryGetValue(tradeItem.Item.TemplateId, out double fleaSingleObjectPrice))
             {
-                int minFleaPrice = (int)Math.Round(fleaSingleObjectPrice * GetPriceRangeMin()
-                    * (double)Plugin.Configuration!.FleaPriceMultiplier.GetValue());
+                int minFleaPrice = (int)Math.Round(fleaSingleObjectPrice * (double)Plugin.Configuration!.FleaPriceMultiplicand.GetValue());
 
                 double? singleObjectTaxPrice = null;
                 double? totalTaxPrice = null;
@@ -53,11 +52,6 @@ public class FleaPriceService
         }
 
         return tradeItem.FleaPrice is not null;
-    }
-
-    private static double GetPriceRangeMin()
-    {
-        return RagfairPriceRangesService.Instance.Ranges?.Default?.Min ?? 0.8d;
     }
 
     private static string GetFleaMarketName()

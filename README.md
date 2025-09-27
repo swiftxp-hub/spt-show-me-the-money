@@ -52,11 +52,9 @@ There is no need to install anything to your Fika headless client for this mod t
 
 Please use the BepInEx configurator to configure features of the mod (usually accessible by pressing F12 or F1 when you are in-game):
 
-![BepInEx Plugin Configuration](https://raw.githubusercontent.com/swiftxp-hub/spt-show-me-the-money/refs/heads/main/Assets/plugin-configuration.png)<br />
-*(Default configuration with freshly installed mod)*
+![BepInEx Plugin Configuration](https://raw.githubusercontent.com/swiftxp-hub/spt-show-me-the-money/refs/heads/main/Assets/plugin-configuration.png)
 
-![Demonstration of toggle-mode for flea tax](https://raw.githubusercontent.com/swiftxp-hub/spt-show-me-the-money/refs/heads/main/Assets/toggle-tax-sample.gif)<br />
-*(Demonstration of toggle-mode for flea tax)*
+![Demonstration of toggle-mode for flea tax](https://raw.githubusercontent.com/swiftxp-hub/spt-show-me-the-money/refs/heads/main/Assets/toggle-tax-sample.gif)
 
 As you can see, you can also manually trigger the plugin to retrieve the current flea market prices from your SPT server (this can be useful when you installed [DrakiaXYZ's SPT-LiveFleaPrices](https://github.com/DrakiaXYZ/SPT-LiveFleaPrices) - however, the flea market prices are retrieved from the SPT-server every time the game is started). 
 
@@ -97,7 +95,7 @@ Please see the "[For nerds](#for-nerds)" section in this readme, if you want to 
 
 ## Support and feature requests
 
-Please note that I maintain all my mods in my spare time. Therefore, I can only invest a limited amount of time, especially when it comes to support requests. The following principle always applies to support requests: No logs, no support. [Please follow this link to the SPT FAQ to find your logs](https://hub.sp-tarkov.com/faq-question/64-where-can-i-find-my-log-files/).
+Please note that I maintain all my mods in my spare time. Therefore, I can only invest a limited amount of time, especially when it comes to support requests. The following principle always applies to support requests: No logs, no support.
 
 ## Features that may come in the future
 

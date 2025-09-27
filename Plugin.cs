@@ -29,7 +29,7 @@ public class Plugin : BaseUnityPlugin
     {
         InitLogger();
         BindBepInExConfiguration();
-        InitPriceRangesAndTable();
+        InitPriceServices();
         EnablePatches();
     }
 
@@ -45,12 +45,11 @@ public class Plugin : BaseUnityPlugin
         Configuration = new PluginConfiguration(Config);
     }
 
-    private void InitPriceRangesAndTable()
+    private void InitPriceServices()
     {
-        SimpleSptLogger.Instance.LogInfo("Initializing currency purchase prices, price ranges and price table...");
+        SimpleSptLogger.Instance.LogInfo("Initializing price services...");
 
         CurrencyPurchasePricesService.Instance.GetCurrencyPurchasePrices();
-        RagfairPriceRangesService.Instance.GetPriceRanges();
         RagfairPriceTableService.Instance.UpdatePrices();
     }
 
@@ -66,6 +65,8 @@ public class Plugin : BaseUnityPlugin
         new GridItemOnPointerEnterPatch().Enable();
         new GridItemOnPointerExitPatch().Enable();
         new SimpleTooltipShowPatch().Enable();
+
+        new InventoryScreenShowPatch().Enable();
 
         TooltipUpdatePatch = new TooltipUpdatePatch();
 

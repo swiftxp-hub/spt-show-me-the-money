@@ -64,7 +64,8 @@ public class PluginConfiguration
         this.LegendaryColor = configFile.BindConfiguration("4. Color coding", "Legendary color", new Color(1f, 0.5f, 0f), "(Default: R 255, G 128, B 0)", 0);
 
         // --- 5. Flea market
-        this.FleaPriceMultiplier = configFile.BindConfiguration("5. Flea market", "Flea price multiplier", 1.0m, $"Sets the multiplier by which the displayed flea market price is multiplied. The following calculation is performed:{Environment.NewLine}{Environment.NewLine}Average flea market price of the item * Minimum flea price range * Flea price multiplier{Environment.NewLine}{Environment.NewLine}For example, if all settings are at default:{Environment.NewLine}{Environment.NewLine}Average flea market price of the item * 0.8 * 1.0{Environment.NewLine}{Environment.NewLine}(Default: 1.0)", 5);
+        this.RagfairPriceTableMethod = configFile.BindConfiguration("5. Flea market", "Average flea price method", RagfairPriceTableMethodEnum.Dynamic, $"Determines how prices for the flea market are calculated. With \"Static\", only the average values configured in the SPT server are queried. With \"Dynamic\", the actual flea market offers for each item are also included in the calculation.{Environment.NewLine}{Environment.NewLine}(Default: Dynamic)", 6);
+        this.FleaPriceMultiplicand = configFile.BindConfiguration("5. Flea market", "Flea price multiplicand", 1.0m, $"Sets the multiplicand by which the average flea market price is multiplied and then displayed in the tooltip. The following calculation is performed:{Environment.NewLine}{Environment.NewLine}Average flea market price of the item * Flea price multiplicand{Environment.NewLine}{Environment.NewLine}(Default: 1.0)", 5);
         this.includeFleaTaxConfigEntry = configFile.BindConfiguration("5. Flea market", "Include flea tax", false, $"Determines whether taxes for the flea market are included in the flea price.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 4);
         this.showFleaTaxConfigEntry = configFile.BindConfiguration("5. Flea market", "Show flea tax", false, $"Show the flea tax in the tool-tip.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 3);
         this.FleaTaxToggleMode = configFile.BindConfiguration("5. Flea market", "Toggle-mode for flea tax", false, $"When toggle mode is activated, the flea tax is only displayed when the specified key or key combination is pressed.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 2);
@@ -78,7 +79,7 @@ public class PluginConfiguration
             () =>
             {
                 SimpleSptLogger.Instance.LogInfo("Updating flea prices...");
-                bool pricesUpdated = RagfairPriceTableService.Instance.UpdatePrices();
+                bool pricesUpdated = RagfairPriceTableService.Instance.UpdatePrices(true);
 
                 if (pricesUpdated)
                     NotificationsService.Instance.SendLongNotice("Flea prices updated successfully.");
@@ -87,6 +88,11 @@ public class PluginConfiguration
         );
 
         this.ApplyMigrations(configFile);
+
+        this.RagfairPriceTableMethod.SettingChanged += (_, _) =>
+        {
+            RagfairPriceTableService.Instance.UpdatePrices(true);
+        };
 
         this.FleaTaxToggleMode.SettingChanged += (_, _) =>
         {
@@ -173,7 +179,9 @@ public class PluginConfiguration
     #endregion
 
     #region Flea market
-    public ConfigEntry<decimal> FleaPriceMultiplier { get; set; }
+    public ConfigEntry<RagfairPriceTableMethodEnum> RagfairPriceTableMethod { get; set; }
+
+    public ConfigEntry<decimal> FleaPriceMultiplicand { get; set; }
 
     public bool IncludeFleaTax
     {

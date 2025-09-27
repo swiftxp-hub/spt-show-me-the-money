@@ -1,79 +1,88 @@
 import type { DependencyContainer } from "tsyringe";
 import type { StaticRouterModService } from "@spt/services/mod/staticRouter/StaticRouterModService";
-import type { ConfigServer } from "@spt/servers/ConfigServer";
-import { ConfigTypes } from "@spt/models/enums/ConfigTypes"
-import { IRagfairConfig } from "@spt/models/spt/config/IRagfairConfig";
 import type { DatabaseServer } from "@spt/servers/DatabaseServer";
 import type { DatabaseService } from "@spt/services/DatabaseService";
+import type { RagfairOfferService } from "@spt/services/RagfairOfferService";
 import type { IPreSptLoadMod } from "@spt/models/external/IPreSptLoadMod";
 import { ILogger } from "@spt/models/spt/utils/ILogger";
+import { MemberCategory } from "@spt/models/enums/MemberCategory";
+import { CurrencyPurchasePrices } from "models/currencyPurchasePrices"
 
 class Mod implements IPreSptLoadMod
 {
-    private container: DependencyContainer;
+    private readonly modVersion = "1.6.0";
 
-    public preSptLoad(container: DependencyContainer): void 
+    private container: DependencyContainer;
+    private logger: ILogger;
+
+    public preSptLoad(container: DependencyContainer): void
     {
         this.container = container;
+        this.logger = container.resolve<ILogger>("WinstonLogger");
 
-        const logger = container.resolve<ILogger>("WinstonLogger");
         const staticRouterModService = this.container.resolve<StaticRouterModService>("StaticRouterModService");
 
         staticRouterModService.registerStaticRouter(
             "ShowMeTheMoneyRoutes-GetCurrencyPurchasePrices",
             [
-				{
-					url: "/showMeTheMoney/getCurrencyPurchasePrices",
+                {
+                    url: "/showMeTheMoney/getCurrencyPurchasePrices",
 
-					action: (url, info, sessionId, output) => {
-                        return new Promise((resolve) => {
+                    action: (url, info, sessionId, output) =>
+                    {
+                        return new Promise((resolve) =>
+                        {
                             const result = JSON.stringify(this.getCurrencyPurchasePrices());
                             resolve(result);
                         });
-					}
-				}
+                    }
+                }
             ],
             "Static-ShowMeTheMoneyRoutes"
         );
 
         staticRouterModService.registerStaticRouter(
-            "ShowMeTheMoneyRoutes-GetPriceTable",
+            "ShowMeTheMoneyRoutes-GetStaticPriceTable",
             [
-				{
-					url: "/showMeTheMoney/getPriceTable",
+                {
+                    url: "/showMeTheMoney/getStaticPriceTable",
 
-					action: (url, info, sessionId, output) => {
-                        return new Promise((resolve) => {
-                            const result = JSON.stringify(this.getPriceTable());
+                    action: (url, info, sessionId, output) =>
+                    {
+                        return new Promise((resolve) =>
+                        {
+                            const result = JSON.stringify(this.getStaticPriceTable());
                             resolve(result);
                         });
-					}
-				}
+                    }
+                }
             ],
             "Static-ShowMeTheMoneyRoutes"
         );
 
         staticRouterModService.registerStaticRouter(
-            "ShowMeTheMoneyRoutes-GetRagfairConfigPriceRanges",
+            "ShowMeTheMoneyRoutes-GetDynamicPriceTable",
             [
-				{
-					url: "/showMeTheMoney/getRagfairConfigPriceRanges",
+                {
+                    url: "/showMeTheMoney/getDynamicPriceTable",
 
-					action: (url, info, sessionId, output) => {
-                        return new Promise((resolve) => {
-                            const result = JSON.stringify(this.getRagfairConfigPriceRanges());
+                    action: (url, info, sessionId, output) =>
+                    {
+                        return new Promise((resolve) =>
+                        {
+                            const result = JSON.stringify(this.getDynamicPriceTable());
                             resolve(result);
                         });
-					}
-				}
+                    }
+                }
             ],
             "Static-ShowMeTheMoneyRoutes"
         );
 
-        logger.info("[Show Me The Money] Static routes hooked up. Ready to make some money...")
+        this.logInfo("Static routes hooked up. Ready to make some money...");
     }
 
-    private getCurrencyPurchasePrices()
+    private getCurrencyPurchasePrices(): CurrencyPurchasePrices
     {
         const databaseService = this.container.resolve<DatabaseService>("DatabaseService");
         const peacekeeper = databaseService.getTrader("5935c25fb3acc3127c3d8cd9");
@@ -82,10 +91,12 @@ class Mod implements IPreSptLoadMod
         const eurPrice = skier.assort.barter_scheme["677536ee7949f87882036fb0"][0][0].count;
         const usdPrice = peacekeeper.assort.barter_scheme["676d24a5798491c5260f4b01"][0][0].count;
 
-        return { eur: eurPrice, usd: usdPrice };
+        const result: CurrencyPurchasePrices = { eur: eurPrice, usd: usdPrice };
+
+        return result;
     }
 
-    private getPriceTable() 
+    private getStaticPriceTable(): Record<string, number>
     {
         const databaseServer = this.container.resolve<DatabaseServer>("DatabaseServer");
         const priceTable = databaseServer.getTables().templates.prices;
@@ -93,12 +104,46 @@ class Mod implements IPreSptLoadMod
         return priceTable;
     }
 
-    private getRagfairConfigPriceRanges() 
+    private getDynamicPriceTable(): Record<string, number>
     {
-        const configServer = this.container.resolve<ConfigServer>("ConfigServer");
-        const ragfairConfig: IRagfairConfig = configServer.getConfig(ConfigTypes.RAGFAIR);
+        const databaseServer = this.container.resolve<DatabaseServer>("DatabaseServer");
+        const ragfairOfferService = this.container.resolve<RagfairOfferService>("RagfairOfferService");
 
-        return ragfairConfig.dynamic.priceRanges;
+        const priceTable = databaseServer.getTables().templates.prices;
+
+        var clonedPriceTable: Record<string, number> = {};
+        for (const [templateId, price] of Object.entries(priceTable))
+        {
+            var averageOffersPrice = 0;
+            var countedOffers = 0;
+
+            const ragfairOffersForType = ragfairOfferService.getOffersOfType(templateId);
+            if (ragfairOffersForType != null)
+                ragfairOffersForType.forEach((offer) =>
+                {
+                    if (offer.sellResult == null && offer.user.memberType != MemberCategory.TRADER)
+                    {
+                        averageOffersPrice += offer.requirementsCost;
+                        ++countedOffers;
+                    }
+                });
+
+            if (averageOffersPrice > 0)
+            {
+                clonedPriceTable[templateId] = averageOffersPrice / countedOffers;
+            }
+            else
+            {
+                clonedPriceTable[templateId] = price;
+            }
+        }
+
+        return clonedPriceTable;
+    }
+
+    private logInfo(message: string): void
+    {
+        this.logger.info(`[Show Me The Money v${this.modVersion}] ${message}`);
     }
 }
 
