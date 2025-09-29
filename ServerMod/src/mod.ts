@@ -99,19 +99,35 @@ class Mod implements IPreSptLoadMod
     private getStaticPriceTable(): Record<string, number>
     {
         const databaseServer = this.container.resolve<DatabaseServer>("DatabaseServer");
+
+        const handbookTable = databaseServer.getTables().templates.handbook;
+        const itemTable = databaseServer.getTables().templates.items;
         const priceTable = databaseServer.getTables().templates.prices;
 
-        return priceTable;
+        var clonedPriceTable: Record<string, number> = {};
+        for (const [itemId, templateItem] of Object.entries(itemTable))
+        {
+            if (templateItem._props?.CanSellOnRagfair === true)
+            {
+                var price = priceTable[itemId];
+                if (!price)
+                {
+                    price = handbookTable.Items.find(x => x.Id === itemId)?.Price ?? null;
+                }
+
+                if (price)
+                    clonedPriceTable[itemId] = price;
+            }
+        }
+
+        return clonedPriceTable;
     }
 
     private getDynamicPriceTable(): Record<string, number>
     {
-        const databaseServer = this.container.resolve<DatabaseServer>("DatabaseServer");
         const ragfairOfferService = this.container.resolve<RagfairOfferService>("RagfairOfferService");
+        const priceTable = this.getStaticPriceTable();
 
-        const priceTable = databaseServer.getTables().templates.prices;
-
-        var clonedPriceTable: Record<string, number> = {};
         for (const [templateId, price] of Object.entries(priceTable))
         {
             var averageOffersPrice = 0;
@@ -130,15 +146,15 @@ class Mod implements IPreSptLoadMod
 
             if (averageOffersPrice > 0)
             {
-                clonedPriceTable[templateId] = averageOffersPrice / countedOffers;
+                priceTable[templateId] = averageOffersPrice / countedOffers;
             }
             else
             {
-                clonedPriceTable[templateId] = price;
+                priceTable[templateId] = price;
             }
         }
 
-        return clonedPriceTable;
+        return priceTable;
     }
 
     private logInfo(message: string): void
