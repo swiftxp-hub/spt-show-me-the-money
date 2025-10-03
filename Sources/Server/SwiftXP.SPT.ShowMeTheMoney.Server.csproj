@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+
+    <AssemblyName>SwiftXP.SPT.ShowMeTheMoney.Server</AssemblyName>
+    <Product>Show Me The Money - Server-Mod</Product>
+    <Version>2.0.0</Version>
+    <RootNamespace>SwiftXP.SPT.ShowMeTheMoney.Server</RootNamespace>
+    <OutputType>Library</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SPTarkov.Common" Version="4.0.0-pre.20251002.2103" />
+    <PackageReference Include="SPTarkov.DI" Version="4.0.0-pre.20251002.2103" />
+    <PackageReference Include="SPTarkov.Server.Core" Version="4.0.0-pre.20251002.2103" />
+  </ItemGroup>
+</Project>
