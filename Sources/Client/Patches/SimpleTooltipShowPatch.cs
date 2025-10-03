@@ -1,21 +1,21 @@
 using EFT.InventoryLogic;
 using EFT.UI;
 using SPT.Reflection.Patching;
-using SwiftXP.SPT.ShowMeTheMoney.Models;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Models;
 using System.Reflection;
 using UnityEngine;
 using System;
 using System.Text;
 using HarmonyLib;
 using SwiftXP.SPT.Common.Sessions;
-using SwiftXP.SPT.ShowMeTheMoney.Enums;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Enums;
 using TMPro;
 using SwiftXP.SPT.Common.ConfigurationManager;
 using System.Linq;
 using SwiftXP.SPT.Common.Loggers;
-using SwiftXP.SPT.ShowMeTheMoney.Services;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Services;
 
-namespace SwiftXP.SPT.ShowMeTheMoney.Patches;
+namespace SwiftXP.SPT.ShowMeTheMoney.Client.Patches;
 
 public class SimpleTooltipShowPatch : ModulePatch
 {

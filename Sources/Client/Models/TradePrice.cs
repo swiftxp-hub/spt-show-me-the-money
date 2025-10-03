@@ -1,7 +1,7 @@
 using EFT;
 using CurrencyUtility = GClass2934;
 
-namespace SwiftXP.SPT.ShowMeTheMoney.Models;
+namespace SwiftXP.SPT.ShowMeTheMoney.Client.Models;
 
 public class TradePrice
 {

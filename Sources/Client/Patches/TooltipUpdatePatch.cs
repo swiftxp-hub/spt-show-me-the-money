@@ -4,7 +4,7 @@ using System.Reflection;
 using HarmonyLib;
 using SwiftXP.SPT.Common.ConfigurationManager;
 
-namespace SwiftXP.SPT.ShowMeTheMoney.Patches;
+namespace SwiftXP.SPT.ShowMeTheMoney.Client.Patches;
 
 public class TooltipUpdatePatch : ModulePatch
 {

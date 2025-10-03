@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using SwiftXP.SPT.Common.ConfigurationManager;
-using SwiftXP.SPT.ShowMeTheMoney.Models;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Models;
 
-namespace SwiftXP.SPT.ShowMeTheMoney.Services;
+namespace SwiftXP.SPT.ShowMeTheMoney.Client.Services;
 
 public class FleaPriceService
 {

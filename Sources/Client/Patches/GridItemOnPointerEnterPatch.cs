@@ -4,7 +4,7 @@ using SPT.Reflection.Patching;
 using System.Reflection;
 using UnityEngine.EventSystems;
 
-namespace SwiftXP.SPT.ShowMeTheMoney.Patches;
+namespace SwiftXP.SPT.ShowMeTheMoney.Client.Patches;
 
 public class GridItemOnPointerEnterPatch : ModulePatch
 {

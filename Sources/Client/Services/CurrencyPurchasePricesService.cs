@@ -2,9 +2,9 @@ using System;
 using Newtonsoft.Json;
 using SPT.Common.Http;
 using SwiftXP.SPT.Common.Loggers;
-using SwiftXP.SPT.ShowMeTheMoney.Models;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Models;
 
-namespace SwiftXP.SPT.ShowMeTheMoney.Services;
+namespace SwiftXP.SPT.ShowMeTheMoney.Client.Services;
 
 public class CurrencyPurchasePricesService
 {

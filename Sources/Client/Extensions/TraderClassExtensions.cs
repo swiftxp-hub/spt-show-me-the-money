@@ -5,7 +5,7 @@ using EFT;
 using SwiftXP.SPT.Common.Loggers;
 using SwiftXP.SPT.Common.Sessions;
 
-namespace SwiftXP.SPT.ShowMeTheMoney.Extensions;
+namespace SwiftXP.SPT.ShowMeTheMoney.Client.Extensions;
 
 public static class TraderClassExtensions
 {

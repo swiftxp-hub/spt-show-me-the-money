@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace SwiftXP.SPT.ShowMeTheMoney.Configuration.Migrations;
+namespace SwiftXP.SPT.ShowMeTheMoney.Client.Configuration.Migrations;
 
 public class RenamedBindingsMigration
 {

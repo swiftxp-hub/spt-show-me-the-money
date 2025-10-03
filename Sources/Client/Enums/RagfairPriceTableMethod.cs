@@ -1,4 +1,4 @@
-namespace SwiftXP.SPT.ShowMeTheMoney.Enums;
+namespace SwiftXP.SPT.ShowMeTheMoney.Client.Enums;
 
 public enum RagfairPriceTableMethodEnum
 {

@@ -1,6 +1,6 @@
 using EFT.InventoryLogic;
 
-namespace SwiftXP.SPT.ShowMeTheMoney.Models;
+namespace SwiftXP.SPT.ShowMeTheMoney.Client.Models;
 
 public class TradeItem
 {

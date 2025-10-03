@@ -1,14 +1,14 @@
 using BepInEx.Configuration;
 using SwiftXP.SPT.Common.ConfigurationManager;
 using SwiftXP.SPT.Common.Notifications;
-using SwiftXP.SPT.ShowMeTheMoney.Enums;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Enums;
 using UnityEngine;
 using System;
-using SwiftXP.SPT.ShowMeTheMoney.Configuration.Migrations;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Configuration.Migrations;
 using SwiftXP.SPT.Common.Loggers;
-using SwiftXP.SPT.ShowMeTheMoney.Services;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Services;
 
-namespace SwiftXP.SPT.ShowMeTheMoney.Configuration;
+namespace SwiftXP.SPT.ShowMeTheMoney.Client.Configuration;
 
 public class PluginConfiguration
 {

@@ -1,14 +1,13 @@
 ﻿using BepInEx;
 using EFT.InventoryLogic;
-using SwiftXP.SPT.ShowMeTheMoney.Configuration;
-using SwiftXP.SPT.ShowMeTheMoney.Patches;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Configuration;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Patches;
 using SwiftXP.SPT.Common.Loggers;
 using SPT.Reflection.Patching;
 using SwiftXP.SPT.Common.ConfigurationManager;
-using SwiftXP.SPT.ShowMeTheMoney.Services;
-using SwiftXP.SPT.ShowMeTheMoney.Client;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Services;
 
-namespace SwiftXP.SPT.ShowMeTheMoney;
+namespace SwiftXP.SPT.ShowMeTheMoney.Client;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 [BepInProcess("EscapeFromTarkov.exe")]

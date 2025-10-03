@@ -12,6 +12,7 @@
       https://nuget.bepinex.dev/v3/index.json
     </RestoreAdditionalProjectSources>
     <RootNamespace>SwiftXP.SPT.ShowMeTheMoney.Client</RootNamespace>
+    <OutputType>Library</OutputType>
   </PropertyGroup>
 
   <ItemGroup>

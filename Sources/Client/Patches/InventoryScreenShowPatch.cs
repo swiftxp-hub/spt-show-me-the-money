@@ -3,9 +3,9 @@ using EFT.UI;
 using HarmonyLib;
 using SPT.Reflection.Patching;
 using SwiftXP.SPT.Common.EFT;
-using SwiftXP.SPT.ShowMeTheMoney.Services;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Services;
 
-namespace SwiftXP.SPT.ShowMeTheMoney.Patches;
+namespace SwiftXP.SPT.ShowMeTheMoney.Client.Patches;
 
 public class InventoryScreenShowPatch : ModulePatch
 {

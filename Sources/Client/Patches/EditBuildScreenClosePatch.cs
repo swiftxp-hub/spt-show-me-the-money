@@ -3,7 +3,7 @@ using EFT.UI;
 using HarmonyLib;
 using SPT.Reflection.Patching;
 
-namespace SwiftXP.SPT.ShowMeTheMoney.Patches;
+namespace SwiftXP.SPT.ShowMeTheMoney.Client.Patches;
 
 public class EditBuildScreenClosePatch : ModulePatch
 {
