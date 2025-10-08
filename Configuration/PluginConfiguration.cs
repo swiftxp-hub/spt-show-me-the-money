@@ -40,7 +40,8 @@ public class PluginConfiguration
         this.RenderInItalics = configFile.BindConfiguration("3. Appearance", "Italics", false, $"Renders the price(s) in italics.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 0);
 
         // --- 4. Color coding
-        this.EnableColorCoding = configFile.BindConfiguration("4. Color coding", "Enable color coding (based on price-per-slot)", true, $"Uses color coding to give an quick and easy indicator how valueable an item is. Always based on price-per-slot, except for ammunition, if you activate the respective feature. Default colors are from WoW.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 17);
+        this.EnableColorCoding = configFile.BindConfiguration("4. Color coding", "Enable color coding (based on price-per-slot)", true, $"Uses color coding to give an quick and easy indicator how valueable an item is. Always based on price-per-slot, except for ammunition, if you activate the respective feature. Default colors are from WoW.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 18);
+        this.ColorCodingMode = configFile.BindConfiguration("4. Color coding", "Color coding mode", ColorCodingModeEnum.ItemName, $"Defines the color coding mode.{Environment.NewLine}{Environment.NewLine}(Default: ItemName)", 17);
 
         this.PoorValue = configFile.BindConfiguration("4. Color coding", "Poor value (smaller than)", 770m, "(Default: 770)", 16);
         this.CommonValue = configFile.BindConfiguration("4. Color coding", "Common value (smaller than)", 7600m, "(Default: 7600)", 15);
@@ -142,6 +143,8 @@ public class PluginConfiguration
 
     #region Color coding
     public ConfigEntry<bool> EnableColorCoding { get; set; }
+
+    public ConfigEntry<ColorCodingModeEnum> ColorCodingMode { get; set; }
 
     public ConfigEntry<decimal> PoorValue { get; set; }
 

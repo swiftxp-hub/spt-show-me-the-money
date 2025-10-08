@@ -39,7 +39,11 @@ public class SimpleTooltipShowPatch : ModulePatch
             bool success = TryShowPriceInformations(out string? priceInformationText, out double? highestComparePrice);
             if (success)
             {
-                SetColorCoding(ref text, highestComparePrice);
+                if (Plugin.Configuration!.EnableColorCoding.IsEnabled()
+                    && (Plugin.Configuration!.ColorCodingMode.GetValue() == ColorCodingModeEnum.ItemName || Plugin.Configuration!.ColorCodingMode.GetValue() == ColorCodingModeEnum.Both))
+                {
+                    SetColorCoding(ref text, Plugin.HoveredItem.LocalizedName(), highestComparePrice);
+                }
 
                 patchText = priceInformationText;
                 text += patchText;
@@ -165,35 +169,25 @@ public class SimpleTooltipShowPatch : ModulePatch
         return highestComparePrice is not null;
     }
 
-    private static void SetColorCoding(ref string text, double? highestComparePrice)
+    private static void SetColorCoding(ref string text, string textToReplace, double? highestComparePrice)
     {
-        if (highestComparePrice is not null && Plugin.Configuration!.EnableColorCoding.IsEnabled())
+        if (highestComparePrice is not null)
         {
             Item item = Plugin.HoveredItem!;
-            string templateName = item.Template._name;
-
-            switch (templateName)
+            if (Plugin.Configuration!.UseCaliberPenetrationPower.IsEnabled()
+                && (item is AmmoBox || item is AmmoItemClass))
             {
-                case var _ when Plugin.Configuration.UseCaliberPenetrationPower.IsEnabled() && templateName.StartsWith("item_patron_", StringComparison.InvariantCultureIgnoreCase):
-                case var _ when Plugin.Configuration.UseCaliberPenetrationPower.IsEnabled() && templateName.StartsWith("patron_", StringComparison.InvariantCultureIgnoreCase):
-                case var _ when Plugin.Configuration.UseCaliberPenetrationPower.IsEnabled() && templateName.StartsWith("item_ammo_box_", StringComparison.InvariantCultureIgnoreCase):
-                case var _ when Plugin.Configuration.UseCaliberPenetrationPower.IsEnabled() && templateName.StartsWith("ammo_", StringComparison.InvariantCultureIgnoreCase):
-
-                    SetColorCodingForAmmunition(item, ref text, highestComparePrice);
-
-                    break;
-
-                default:
-                    SetColorCodingForItem(item, ref text, highestComparePrice);
-
-                    break;
+                SetColorCodingForAmmunition(item, ref text, textToReplace);
+            }
+            else
+            {
+                SetColorCodingForItem(ref text, textToReplace, highestComparePrice);
             }
         }
     }
 
-    private static void SetColorCodingForAmmunition(Item item, ref string text, double? highestComparePrice)
+    private static void SetColorCodingForAmmunition(Item item, ref string text, string textToReplace)
     {
-        string itemName = item.LocalizedName();
         string? colorCoding = null;
 
         int? penetrationPower = null;
@@ -238,12 +232,11 @@ public class SimpleTooltipShowPatch : ModulePatch
         }
 
         if (colorCoding is not null)
-            text = text.Replace(itemName, $"<color=#{colorCoding}>{itemName}</color>");
+            text = text.Replace(textToReplace, $"<color=#{colorCoding}>{textToReplace}</color>");
     }
 
-    private static void SetColorCodingForItem(Item item, ref string text, double? highestComparePrice)
+    private static void SetColorCodingForItem(ref string text, string textToReplace, double? highestComparePrice)
     {
-        string itemName = item.LocalizedName();
         string? colorCoding = null;
 
         switch (highestComparePrice)
@@ -274,7 +267,7 @@ public class SimpleTooltipShowPatch : ModulePatch
         }
 
         if (colorCoding is not null)
-            text = text.Replace(itemName, $"<color=#{colorCoding}>{itemName}</color>");
+            text = text.Replace(textToReplace, $"<color=#{colorCoding}>{textToReplace}</color>");
     }
 
     private static void SetToolTipDelay(ref float delay)
@@ -303,34 +296,47 @@ public class SimpleTooltipShowPatch : ModulePatch
     {
         text.Append("<br>");
 
+        bool isBestPrice = false;
         if (tradePriceB is not null)
         {
             if (tradePriceA.GetComparePriceInRouble() > tradePriceB.GetComparePriceInRouble())
-                text.Append($"<color=#{GetBestTradeColor()}>{tradePriceA.TraderName}</color>: ");
-            else
-                text.Append($"{tradePriceA.TraderName}: ");
+                isBestPrice = true;
         }
         else
         {
-            text.Append($"<color=#{GetBestTradeColor()}>{tradePriceA.TraderName}</color>: ");
+            isBestPrice = true;
         }
+
+        if (isBestPrice)
+            text.Append($"<color=#{GetBestTradeColor()}>{tradePriceA.TraderName}</color>: ");
+        else
+            text.Append($"{tradePriceA.TraderName}: ");
 
         if ((tradeItem.ItemSlotCount > 1 || tradeItem.Item.StackObjectsCount > 1) && Plugin.Configuration!.ShowPricePerSlot.IsEnabled())
         {
-            text.Append($"{FormatPrice(tradePriceA.GetComparePrice(), tradePriceA.CurrencySymbol)} {"Total".Localized(null)}: ");
+            string slotPrice = FormatPrice(tradePriceA.GetComparePrice(), tradePriceA.CurrencySymbol);
+
+            if (Plugin.Configuration!.EnableColorCoding.IsEnabled()
+                && (Plugin.Configuration!.ColorCodingMode.GetValue() == ColorCodingModeEnum.Price || Plugin.Configuration!.ColorCodingMode.GetValue() == ColorCodingModeEnum.Both))
+            {
+                SetColorCoding(ref slotPrice, slotPrice, tradePriceA.GetComparePriceInRouble());
+            }
+
+            text.Append($"{slotPrice} {"Total".Localized(null)}: ");
         }
 
-        if (tradePriceB is not null)
+        string totalPrice = FormatPrice(tradePriceA.GetTotalPrice(), tradePriceA.CurrencySymbol);
+        if (isBestPrice)
+            totalPrice = $"<b>{totalPrice}</b>";
+
+        if (Plugin.Configuration!.EnableColorCoding.IsEnabled()
+            && (Plugin.Configuration!.ColorCodingMode.GetValue() == ColorCodingModeEnum.Price || Plugin.Configuration!.ColorCodingMode.GetValue() == ColorCodingModeEnum.Both)
+            && ((tradeItem.ItemSlotCount == 1 && tradeItem.Item.StackObjectsCount == 1) || !Plugin.Configuration!.ShowPricePerSlot.IsEnabled()))
         {
-            if (tradePriceA.GetComparePriceInRouble() > tradePriceB.GetComparePriceInRouble())
-                text.Append($"<b>{FormatPrice(tradePriceA.GetTotalPrice(), tradePriceA.CurrencySymbol)}</b>");
-            else
-                text.Append($"{FormatPrice(tradePriceA.GetTotalPrice(), tradePriceA.CurrencySymbol)}");
+            SetColorCoding(ref totalPrice, totalPrice, tradePriceA.GetComparePriceInRouble());
         }
-        else
-        {
-            text.Append($"<b>{FormatPrice(tradePriceA.GetTotalPrice(), tradePriceA.CurrencySymbol)}</b>");
-        }
+
+        text.Append(totalPrice);
 
         if (Plugin.Configuration!.ShowFleaTax && tradePriceA.HasTax())
             text.Append($" {"ragfair/Fee".Localized(null)}: {FormatPrice(tradePriceA.GetTotalTax())}");
