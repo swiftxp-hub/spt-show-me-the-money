@@ -10,7 +10,7 @@ import { CurrencyPurchasePrices } from "models/currencyPurchasePrices"
 
 class Mod implements IPreSptLoadMod
 {
-    private readonly modVersion = "1.6.1";
+    private readonly modVersion = "1.7.0";
 
     private container: DependencyContainer;
     private logger: ILogger;
