@@ -156,6 +156,48 @@ public class SimpleTooltipShowPatch : ModulePatch
                 if (highestComparePrice is null || tradeItem.FleaPrice!.GetComparePriceInRouble() > tradeItem.TraderPrice!.GetComparePriceInRouble())
                     highestComparePrice = tradeItem.FleaPrice!.GetComparePriceInRouble();
             }
+
+            if (item is Weapon weapon)
+            {
+                double modsPrice = 0;
+                foreach (Mod mod in weapon.Mods)
+                {
+                    SimpleSptLogger.Instance.LogInfo(mod.LocalizedName());
+
+                    TradeItem modTradeItem = new TradeItem(mod);
+
+                    bool modHasTraderPrice = false;
+                    bool modHasFleaPrice = false;
+
+                    if (Plugin.Configuration!.EnableTraderPrices.IsEnabled())
+                        modHasTraderPrice = TraderPriceService.Instance.GetBestTraderPrice(modTradeItem);
+
+                    if (Plugin.Configuration!.EnableFleaPrices.IsEnabled())
+                        modHasFleaPrice = FleaPriceService.Instance.GetFleaPrice(modTradeItem, Plugin.Configuration!.IncludeFleaTax);
+
+                    if (modHasTraderPrice && modHasFleaPrice)
+                    {
+                        if (modTradeItem.TraderPrice!.GetComparePriceInRouble() > modTradeItem.FleaPrice!.GetComparePriceInRouble())
+                            modsPrice += modTradeItem.TraderPrice!.GetTotalPriceInRouble();
+                        else
+                            modsPrice += modTradeItem.FleaPrice!.GetTotalPriceInRouble();
+                    }
+                    else if (modHasFleaPrice)
+                    {
+                        modsPrice += modTradeItem.FleaPrice!.GetTotalPriceInRouble();
+                    }
+                    else
+                    {
+                        modsPrice += modTradeItem.TraderPrice!.GetTotalPriceInRouble();
+                    }
+                }
+
+                if (modsPrice > 0)
+                {
+                    SimpleSptLogger.Instance.LogInfo(modsPrice);
+                    textToAppendToTooltip.Append($"<br>Weapon-Mods: {FormatPrice(modsPrice)}");
+                }
+            }
         }
 
         if (Plugin.Configuration!.RenderInItalics.IsEnabled())
