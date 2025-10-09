@@ -19,10 +19,11 @@ public class PluginConfiguration
     public PluginConfiguration(ConfigFile configFile)
     {
         // --- 1. Main settings
-        this.EnablePlugin = configFile.BindConfiguration("1. Main settings", "Enable plug-in", true, $"Enable or disable the plug-in.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 4);
-        this.EnableTraderPrices = configFile.BindConfiguration("1. Main settings", "Enable trader price(s)", true, $"Enable the trader price(s) in the tool-tip.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 3);
-        this.EnableFleaPrices = configFile.BindConfiguration("1. Main settings", "Enable flea price(s)", true, $"Enable the flea price(s) in the tool-tip.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 2);
-        this.ShowPricePerSlot = configFile.BindConfiguration("1. Main settings", "Show price-per-slot", true, $"Show the price-per-slot in the tool-tip. The mod continues to calculate in the background using price-per-slot, even if the display is deactivated.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 1);
+        this.EnablePlugin = configFile.BindConfiguration("1. Main settings", "Enable plug-in", true, $"Enable or disable the plug-in.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 5);
+        this.EnableTraderPrices = configFile.BindConfiguration("1. Main settings", "Enable trader price(s)", true, $"Enable the trader price(s) in the tool-tip.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 4);
+        this.EnableFleaPrices = configFile.BindConfiguration("1. Main settings", "Enable flea price(s)", true, $"Enable the flea price(s) in the tool-tip.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 3);
+        this.ShowPricePerSlot = configFile.BindConfiguration("1. Main settings", "Show price-per-slot", true, $"Show the price-per-slot in the tool-tip. The mod continues to calculate in the background using price-per-slot, even if the display is deactivated.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 2);
+        this.ShowWeaponModsPrice = configFile.BindConfiguration("1. Main settings", "Show weapon-mods price", true, $"Show the total price of all modifications installed in a weapon.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 1);
         this.ToolTipDelay = configFile.BindConfiguration("1. Main settings", "Tool-Tip delay", 0.0m, $"Delays the tool-tip for x seconds.{Environment.NewLine}{Environment.NewLine}(Plug-In Default: 0, EFT Default: 0.6)", 0);
 
         // --- 2. Currency conversion
@@ -123,6 +124,8 @@ public class PluginConfiguration
     public ConfigEntry<bool> EnableFleaPrices { get; set; }
 
     public ConfigEntry<bool> ShowPricePerSlot { get; set; }
+
+    public ConfigEntry<bool> ShowWeaponModsPrice { get; set; }
 
     public ConfigEntry<decimal> ToolTipDelay { get; set; }
     #endregion
