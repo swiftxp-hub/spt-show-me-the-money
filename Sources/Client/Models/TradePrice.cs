@@ -1,5 +1,4 @@
 using EFT;
-using CurrencyUtility = GClass2934;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Models;
 
@@ -140,7 +139,7 @@ public class TradePrice
         get
         {
             if (this.CurrencyId.HasValue)
-                return CurrencyUtility.GetCurrencyCharById(this.CurrencyId.Value);
+                return GClass3130.GetCurrencyCharById(this.CurrencyId.Value);
 
             return "₽";
         }

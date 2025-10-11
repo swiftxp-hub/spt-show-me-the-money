@@ -14,7 +14,7 @@ public class TooltipUpdatePatch : ModulePatch
     [PatchPrefix]
     public static void PatchPrefix(Tooltip __instance)
     {
-        if (SimpleTooltipShowPatch.IsActive
+        if (SimpleTooltipShowPatch.PatchIsActive
             && Plugin.Configuration!.FleaTaxToggleMode.IsEnabled()
             && (Plugin.Configuration!.FleaTaxToggleKey.GetValue().IsDown()
                 || Plugin.Configuration!.FleaTaxToggleKey.GetValue().IsUp()

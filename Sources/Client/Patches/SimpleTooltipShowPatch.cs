@@ -36,14 +36,18 @@ public class SimpleTooltipShowPatch : ModulePatch
 
             SetToolTipDelay(ref delay);
 
-            bool success = TryShowPriceInformations(out string? priceInformationText, out double? highestComparePrice);
+            bool success = TryShowPriceInformation(out string? priceInformationText, out double? highestComparePrice);
             if (success)
             {
-                SetColorCoding(ref text, highestComparePrice);
+                if (Plugin.Configuration!.EnableColorCoding.IsEnabled()
+                    && (Plugin.Configuration!.ColorCodingMode.GetValue() == ColorCodingModeEnum.ItemName || Plugin.Configuration!.ColorCodingMode.GetValue() == ColorCodingModeEnum.Both))
+                {
+                    SetColorCoding(ref text, Plugin.HoveredItem.LocalizedName(), highestComparePrice);
+                }
 
                 patchText = priceInformationText;
                 text += patchText;
-                IsActive = true;
+                PatchIsActive = true;
             }
         }
         catch (Exception exception)
@@ -56,12 +60,12 @@ public class SimpleTooltipShowPatch : ModulePatch
     {
         try
         {
-            if (Instance is not null && IsActive)
+            if (Instance is not null && PatchIsActive)
             {
                 string? instanceText = GetTextOfInstance();
                 if (instanceText is not null)
                 {
-                    bool success = TryShowPriceInformations(out string? priceInformationText, out double? _);
+                    bool success = TryShowPriceInformation(out string? priceInformationText, out double? _);
                     if (success)
                     {
                         string newTooltipText = instanceText.Replace(patchText, priceInformationText);
@@ -82,7 +86,7 @@ public class SimpleTooltipShowPatch : ModulePatch
     {
         Instance = null;
         patchText = null;
-        IsActive = false;
+        PatchIsActive = false;
     }
 
     private static bool AreTooltipRequirementsMeet(in string tooltipText)
@@ -112,7 +116,7 @@ public class SimpleTooltipShowPatch : ModulePatch
         return false;
     }
 
-    private static bool TryShowPriceInformations(out string? priceInformationText, out double? highestComparePrice)
+    private static bool TryShowPriceInformation(out string? priceInformationText, out double? highestComparePrice)
     {
         highestComparePrice = null;
 
@@ -128,30 +132,10 @@ public class SimpleTooltipShowPatch : ModulePatch
         Item? item = Plugin.HoveredItem;
         if (item is not null && ItemMeetsRequirements(item))
         {
-            TradeItem tradeItem = new(item);
+            ShowTradeAndFleaPriceInformation(item, ref textToAppendToTooltip, out highestComparePrice);
 
-            bool hasTraderPrice = false;
-            bool hasFleaPrice = false;
-
-            if (Plugin.Configuration!.EnableTraderPrices.IsEnabled())
-                hasTraderPrice = TraderPriceService.Instance.GetBestTraderPrice(tradeItem);
-
-            if (Plugin.Configuration!.EnableFleaPrices.IsEnabled())
-                hasFleaPrice = FleaPriceService.Instance.GetFleaPrice(tradeItem, Plugin.Configuration!.IncludeFleaTax);
-
-            if (hasTraderPrice)
-            {
-                ShowPrice(tradeItem, tradeItem.TraderPrice!, tradeItem.FleaPrice, textToAppendToTooltip);
-                highestComparePrice = tradeItem.TraderPrice!.GetComparePriceInRouble();
-            }
-
-            if (hasFleaPrice)
-            {
-                ShowPrice(tradeItem, tradeItem.FleaPrice!, tradeItem.TraderPrice, textToAppendToTooltip);
-
-                if (highestComparePrice is null || tradeItem.FleaPrice!.GetComparePriceInRouble() > tradeItem.TraderPrice!.GetComparePriceInRouble())
-                    highestComparePrice = tradeItem.FleaPrice!.GetComparePriceInRouble();
-            }
+            if (Plugin.Configuration!.ShowWeaponModsPrice.IsEnabled() && item is Weapon weapon)
+                ShowWeaponModsPriceInformation(weapon, ref textToAppendToTooltip);
         }
 
         if (Plugin.Configuration!.RenderInItalics.IsEnabled())
@@ -165,35 +149,95 @@ public class SimpleTooltipShowPatch : ModulePatch
         return highestComparePrice is not null;
     }
 
-    private static void SetColorCoding(ref string text, double? highestComparePrice)
+    private static void ShowTradeAndFleaPriceInformation(Item item, ref StringBuilder textToAppendToTooltip, out double? highestComparePrice)
     {
-        if (highestComparePrice is not null && Plugin.Configuration!.EnableColorCoding.IsEnabled())
+        highestComparePrice = null;
+
+        TradeItem tradeItem = new(item);
+        bool hasTraderPrice = false;
+        bool hasFleaPrice = false;
+
+        if (Plugin.Configuration!.EnableTraderPrices.IsEnabled())
+            hasTraderPrice = TraderPriceService.Instance.GetBestTraderPrice(tradeItem);
+
+        if (Plugin.Configuration!.EnableFleaPrices.IsEnabled())
+            hasFleaPrice = FleaPriceService.Instance.GetFleaPrice(tradeItem, Plugin.Configuration!.IncludeFleaTax);
+
+        if (hasTraderPrice)
+        {
+            ShowPrice(tradeItem, tradeItem.TraderPrice!, tradeItem.FleaPrice, textToAppendToTooltip);
+            highestComparePrice = tradeItem.TraderPrice!.GetComparePriceInRouble();
+        }
+
+        if (hasFleaPrice)
+        {
+            ShowPrice(tradeItem, tradeItem.FleaPrice!, tradeItem.TraderPrice, textToAppendToTooltip);
+
+            if (highestComparePrice is null || tradeItem.FleaPrice!.GetComparePriceInRouble() > tradeItem.TraderPrice!.GetComparePriceInRouble())
+                highestComparePrice = tradeItem.FleaPrice!.GetComparePriceInRouble();
+        }
+    }
+
+    private static void ShowWeaponModsPriceInformation(Weapon weapon, ref StringBuilder textToAppendToTooltip)
+    {
+        double modsPrice = 0;
+
+        foreach (Mod mod in weapon.Mods)
+        {
+            Mod clonedMod = mod.CloneItem();
+            clonedMod.Slots = [];
+
+            TradeItem modTradeItem = new(clonedMod);
+
+            bool modHasTraderPrice = false;
+            bool modHasFleaPrice = false;
+
+            if (Plugin.Configuration!.EnableTraderPrices.IsEnabled())
+                modHasTraderPrice = TraderPriceService.Instance.GetBestTraderPrice(modTradeItem);
+
+            if (Plugin.Configuration!.EnableFleaPrices.IsEnabled())
+                modHasFleaPrice = FleaPriceService.Instance.GetFleaPrice(modTradeItem, Plugin.Configuration!.IncludeFleaTax);
+
+            if (modHasTraderPrice && modHasFleaPrice)
+            {
+                if (modTradeItem.TraderPrice!.GetComparePriceInRouble() > modTradeItem.FleaPrice!.GetComparePriceInRouble())
+                    modsPrice += modTradeItem.TraderPrice!.GetTotalPriceInRouble();
+                else
+                    modsPrice += modTradeItem.FleaPrice!.GetTotalPriceInRouble();
+            }
+            else if (modHasFleaPrice)
+            {
+                modsPrice += modTradeItem.FleaPrice!.GetTotalPriceInRouble();
+            }
+            else
+            {
+                modsPrice += modTradeItem.TraderPrice!.GetTotalPriceInRouble();
+            }
+        }
+
+        if (modsPrice > 0)
+            textToAppendToTooltip.Append($"<br>{"APCTab/Mods".Localized(null)}: {FormatPrice(modsPrice)}");
+    }
+
+    private static void SetColorCoding(ref string text, string textToReplace, double? highestComparePrice)
+    {
+        if (highestComparePrice is not null)
         {
             Item item = Plugin.HoveredItem!;
-            string templateName = item.Template._name;
-
-            switch (templateName)
+            if (Plugin.Configuration!.UseCaliberPenetrationPower.IsEnabled()
+                && (item is AmmoBox || item is AmmoItemClass))
             {
-                case var _ when Plugin.Configuration.UseCaliberPenetrationPower.IsEnabled() && templateName.StartsWith("item_patron_", StringComparison.InvariantCultureIgnoreCase):
-                case var _ when Plugin.Configuration.UseCaliberPenetrationPower.IsEnabled() && templateName.StartsWith("patron_", StringComparison.InvariantCultureIgnoreCase):
-                case var _ when Plugin.Configuration.UseCaliberPenetrationPower.IsEnabled() && templateName.StartsWith("item_ammo_box_", StringComparison.InvariantCultureIgnoreCase):
-                case var _ when Plugin.Configuration.UseCaliberPenetrationPower.IsEnabled() && templateName.StartsWith("ammo_", StringComparison.InvariantCultureIgnoreCase):
-
-                    SetColorCodingForAmmunition(item, ref text, highestComparePrice);
-
-                    break;
-
-                default:
-                    SetColorCodingForItem(item, ref text, highestComparePrice);
-
-                    break;
+                SetColorCodingForAmmunition(item, ref text, textToReplace);
+            }
+            else
+            {
+                SetColorCodingForItem(ref text, textToReplace, highestComparePrice);
             }
         }
     }
 
-    private static void SetColorCodingForAmmunition(Item item, ref string text, double? highestComparePrice)
+    private static void SetColorCodingForAmmunition(Item item, ref string text, string textToReplace)
     {
-        string itemName = item.LocalizedName();
         string? colorCoding = null;
 
         int? penetrationPower = null;
@@ -238,12 +282,11 @@ public class SimpleTooltipShowPatch : ModulePatch
         }
 
         if (colorCoding is not null)
-            text = text.Replace(itemName, $"<color=#{colorCoding}>{itemName}</color>");
+            text = text.Replace(textToReplace, $"<color=#{colorCoding}>{textToReplace}</color>");
     }
 
-    private static void SetColorCodingForItem(Item item, ref string text, double? highestComparePrice)
+    private static void SetColorCodingForItem(ref string text, string textToReplace, double? highestComparePrice)
     {
-        string itemName = item.LocalizedName();
         string? colorCoding = null;
 
         switch (highestComparePrice)
@@ -274,7 +317,7 @@ public class SimpleTooltipShowPatch : ModulePatch
         }
 
         if (colorCoding is not null)
-            text = text.Replace(itemName, $"<color=#{colorCoding}>{itemName}</color>");
+            text = text.Replace(textToReplace, $"<color=#{colorCoding}>{textToReplace}</color>");
     }
 
     private static void SetToolTipDelay(ref float delay)
@@ -303,34 +346,47 @@ public class SimpleTooltipShowPatch : ModulePatch
     {
         text.Append("<br>");
 
+        bool isBestPrice = false;
         if (tradePriceB is not null)
         {
             if (tradePriceA.GetComparePriceInRouble() > tradePriceB.GetComparePriceInRouble())
-                text.Append($"<color=#{GetBestTradeColor()}>{tradePriceA.TraderName}</color>: ");
-            else
-                text.Append($"{tradePriceA.TraderName}: ");
+                isBestPrice = true;
         }
         else
         {
-            text.Append($"<color=#{GetBestTradeColor()}>{tradePriceA.TraderName}</color>: ");
+            isBestPrice = true;
         }
+
+        if (isBestPrice)
+            text.Append($"<color=#{GetBestTradeColor()}>{tradePriceA.TraderName}</color>: ");
+        else
+            text.Append($"{tradePriceA.TraderName}: ");
 
         if ((tradeItem.ItemSlotCount > 1 || tradeItem.Item.StackObjectsCount > 1) && Plugin.Configuration!.ShowPricePerSlot.IsEnabled())
         {
-            text.Append($"{FormatPrice(tradePriceA.GetComparePrice(), tradePriceA.CurrencySymbol)} {"Total".Localized(null)}: ");
+            string slotPrice = FormatPrice(tradePriceA.GetComparePrice(), tradePriceA.CurrencySymbol);
+
+            if (Plugin.Configuration!.EnableColorCoding.IsEnabled()
+                && (Plugin.Configuration!.ColorCodingMode.GetValue() == ColorCodingModeEnum.Price || Plugin.Configuration!.ColorCodingMode.GetValue() == ColorCodingModeEnum.Both))
+            {
+                SetColorCoding(ref slotPrice, slotPrice, tradePriceA.GetComparePriceInRouble());
+            }
+
+            text.Append($"{slotPrice} {"Total".Localized(null)}: ");
         }
 
-        if (tradePriceB is not null)
+        string totalPrice = FormatPrice(tradePriceA.GetTotalPrice(), tradePriceA.CurrencySymbol);
+        if (isBestPrice)
+            totalPrice = $"<b>{totalPrice}</b>";
+
+        if (Plugin.Configuration!.EnableColorCoding.IsEnabled()
+            && (Plugin.Configuration!.ColorCodingMode.GetValue() == ColorCodingModeEnum.Price || Plugin.Configuration!.ColorCodingMode.GetValue() == ColorCodingModeEnum.Both)
+            && ((tradeItem.ItemSlotCount == 1 && tradeItem.Item.StackObjectsCount == 1) || !Plugin.Configuration!.ShowPricePerSlot.IsEnabled()))
         {
-            if (tradePriceA.GetComparePriceInRouble() > tradePriceB.GetComparePriceInRouble())
-                text.Append($"<b>{FormatPrice(tradePriceA.GetTotalPrice(), tradePriceA.CurrencySymbol)}</b>");
-            else
-                text.Append($"{FormatPrice(tradePriceA.GetTotalPrice(), tradePriceA.CurrencySymbol)}");
+            SetColorCoding(ref totalPrice, totalPrice, tradePriceA.GetComparePriceInRouble());
         }
-        else
-        {
-            text.Append($"<b>{FormatPrice(tradePriceA.GetTotalPrice(), tradePriceA.CurrencySymbol)}</b>");
-        }
+
+        text.Append(totalPrice);
 
         if (Plugin.Configuration!.ShowFleaTax && tradePriceA.HasTax())
             text.Append($" {"ragfair/Fee".Localized(null)}: {FormatPrice(tradePriceA.GetTotalTax())}");
@@ -362,5 +418,5 @@ public class SimpleTooltipShowPatch : ModulePatch
 
     public static SimpleTooltip? Instance { get; private set; }
 
-    public static bool IsActive { get; private set; } = false;
+    public static bool PatchIsActive { get; private set; } = false;
 }

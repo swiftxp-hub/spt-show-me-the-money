@@ -24,8 +24,8 @@ public class TraderPriceService
         {
             if (this.IsTraderAvailable(trader))
             {
-                TraderClass.GStruct264? singleObjectPrice = null;
-                TraderClass.GStruct264? totalPrice = null;
+                TraderClass.GStruct300? singleObjectPrice = null;
+                TraderClass.GStruct300? totalPrice = null;
 
                 bool hasPrice = this.TryGetTraderUserItemPrice(trader, tradeItem, out singleObjectPrice, out totalPrice);
                 if (hasPrice && (!Plugin.Configuration!.RoublesOnly.IsEnabled() || singleObjectPrice!.Value.CurrencyId.ToString() == SptConstants.CurrencyIds.Roubles))
@@ -63,7 +63,7 @@ public class TraderPriceService
     }
 
     private bool TryGetTraderUserItemPrice(TraderClass trader, TradeItem tradeItem,
-        out TraderClass.GStruct264? singleObjectPrice, out TraderClass.GStruct264? totalPrice)
+        out TraderClass.GStruct300? singleObjectPrice, out TraderClass.GStruct300? totalPrice)
     {
         singleObjectPrice = null;
         totalPrice = null;

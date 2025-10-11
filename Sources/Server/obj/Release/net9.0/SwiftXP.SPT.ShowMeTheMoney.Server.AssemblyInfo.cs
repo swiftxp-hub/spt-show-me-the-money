@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SwiftXP.SPT.ShowMeTheMoney.Server")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("2.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("2.0.0+339a17e917668bf7560263f3f494d0d59362c27d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("2.0.0+72e95e84d539620959dff539690f32783732c374")]
 [assembly: System.Reflection.AssemblyProductAttribute("Show Me The Money - Server-Mod")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SwiftXP.SPT.ShowMeTheMoney.Server")]
 [assembly: System.Reflection.AssemblyVersionAttribute("2.0.0.0")]

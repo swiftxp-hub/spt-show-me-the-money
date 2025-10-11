@@ -1,11 +1,10 @@
 using BepInEx.Configuration;
 using SwiftXP.SPT.Common.ConfigurationManager;
 using SwiftXP.SPT.Common.Notifications;
-using SwiftXP.SPT.ShowMeTheMoney.Client.Enums;
 using UnityEngine;
 using System;
-using SwiftXP.SPT.ShowMeTheMoney.Client.Configuration.Migrations;
 using SwiftXP.SPT.Common.Loggers;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Enums;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Services;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Configuration;
@@ -19,10 +18,11 @@ public class PluginConfiguration
     public PluginConfiguration(ConfigFile configFile)
     {
         // --- 1. Main settings
-        this.EnablePlugin = configFile.BindConfiguration("1. Main settings", "Enable plug-in", true, $"Enable or disable the plug-in.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 4);
-        this.EnableTraderPrices = configFile.BindConfiguration("1. Main settings", "Enable trader price(s)", true, $"Enable the trader price(s) in the tool-tip.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 3);
-        this.EnableFleaPrices = configFile.BindConfiguration("1. Main settings", "Enable flea price(s)", true, $"Enable the flea price(s) in the tool-tip.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 2);
-        this.ShowPricePerSlot = configFile.BindConfiguration("1. Main settings", "Show price-per-slot", true, $"Show the price-per-slot in the tool-tip. The mod continues to calculate in the background using price-per-slot, even if the display is deactivated.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 1);
+        this.EnablePlugin = configFile.BindConfiguration("1. Main settings", "Enable plug-in", true, $"Enable or disable the plug-in.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 5);
+        this.EnableTraderPrices = configFile.BindConfiguration("1. Main settings", "Enable trader price(s)", true, $"Enable the trader price(s) in the tool-tip.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 4);
+        this.EnableFleaPrices = configFile.BindConfiguration("1. Main settings", "Enable flea price(s)", true, $"Enable the flea price(s) in the tool-tip.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 3);
+        this.ShowPricePerSlot = configFile.BindConfiguration("1. Main settings", "Show price-per-slot", true, $"Show the price-per-slot in the tool-tip. The mod continues to calculate in the background using price-per-slot, even if the display is deactivated.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 2);
+        this.ShowWeaponModsPrice = configFile.BindConfiguration("1. Main settings", "Show weapon-mods price", true, $"Show the total price of all modifications installed in a weapon.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 1);
         this.ToolTipDelay = configFile.BindConfiguration("1. Main settings", "Tool-Tip delay", 0.0m, $"Delays the tool-tip for x seconds.{Environment.NewLine}{Environment.NewLine}(Plug-In Default: 0, EFT Default: 0.6)", 0);
 
         // --- 2. Currency conversion
@@ -40,7 +40,8 @@ public class PluginConfiguration
         this.RenderInItalics = configFile.BindConfiguration("3. Appearance", "Italics", false, $"Renders the price(s) in italics.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 0);
 
         // --- 4. Color coding
-        this.EnableColorCoding = configFile.BindConfiguration("4. Color coding", "Enable color coding (based on price-per-slot)", true, $"Uses color coding to give an quick and easy indicator how valueable an item is. Always based on price-per-slot, except for ammunition, if you activate the respective feature. Default colors are from WoW.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 17);
+        this.EnableColorCoding = configFile.BindConfiguration("4. Color coding", "Enable color coding (based on price-per-slot)", true, $"Uses color coding to give an quick and easy indicator how valueable an item is. Always based on price-per-slot, except for ammunition, if you activate the respective feature. Default colors are from WoW.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 18);
+        this.ColorCodingMode = configFile.BindConfiguration("4. Color coding", "Color coding mode", ColorCodingModeEnum.ItemName, $"Defines the color coding mode.{Environment.NewLine}{Environment.NewLine}(Default: ItemName)", 17);
 
         this.PoorValue = configFile.BindConfiguration("4. Color coding", "Poor value (smaller than)", 770m, "(Default: 770)", 16);
         this.CommonValue = configFile.BindConfiguration("4. Color coding", "Common value (smaller than)", 7600m, "(Default: 7600)", 15);
@@ -87,8 +88,6 @@ public class PluginConfiguration
             0
         );
 
-        this.ApplyMigrations(configFile);
-
         this.RagfairPriceTableMethod.SettingChanged += (_, _) =>
         {
             RagfairPriceTableService.Instance.UpdatePrices(true);
@@ -105,15 +104,6 @@ public class PluginConfiguration
         configFile.SaveOnConfigSet = true;
     }
 
-    private void ApplyMigrations(ConfigFile configFile)
-    {
-        RenamedBindingsMigration renamedBindingsMigration = new();
-        if (renamedBindingsMigration.IsApplicable(configFile))
-        {
-            renamedBindingsMigration.Migrate(this, configFile);
-        }
-    }
-
     #region Main settings 
     public ConfigEntry<bool> EnablePlugin { get; set; }
 
@@ -122,6 +112,8 @@ public class PluginConfiguration
     public ConfigEntry<bool> EnableFleaPrices { get; set; }
 
     public ConfigEntry<bool> ShowPricePerSlot { get; set; }
+
+    public ConfigEntry<bool> ShowWeaponModsPrice { get; set; }
 
     public ConfigEntry<decimal> ToolTipDelay { get; set; }
     #endregion
@@ -142,6 +134,8 @@ public class PluginConfiguration
 
     #region Color coding
     public ConfigEntry<bool> EnableColorCoding { get; set; }
+
+    public ConfigEntry<ColorCodingModeEnum> ColorCodingMode { get; set; }
 
     public ConfigEntry<decimal> PoorValue { get; set; }
 
