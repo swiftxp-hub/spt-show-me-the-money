@@ -389,7 +389,7 @@ public class SimpleTooltipShowPatch : ModulePatch
         text.Append(totalPrice);
 
         if (Plugin.Configuration!.ShowFleaTax && tradePriceA.HasTax())
-            text.Append($" {"Flea/Fee".Localized(null)}: {FormatPrice(tradePriceA.GetTotalTax())}");
+            text.Append($" {"ragfair/Fee".Localized(null)}: {FormatPrice(tradePriceA.GetTotalTax())}");
     }
 
     private static string GetBestTradeColor()
