@@ -49,7 +49,7 @@
           "lib/netstandard2.0/SemanticVersioning.dll": {}
         }
       },
-      "SPTarkov.Common/4.0.0": {
+      "SPTarkov.Common/4.0.1": {
         "type": "package",
         "dependencies": {
           "SemanticVersioning": "3.0.0"
@@ -68,7 +68,7 @@
           "Microsoft.AspNetCore.App"
         ]
       },
-      "SPTarkov.DI/4.0.0": {
+      "SPTarkov.DI/4.0.1": {
         "type": "package",
         "dependencies": {
           "JetBrains.Annotations": "2025.2.2",
@@ -85,12 +85,12 @@
           }
         }
       },
-      "SPTarkov.Server.Core/4.0.0": {
+      "SPTarkov.Server.Core/4.0.1": {
         "type": "package",
         "dependencies": {
           "FastCloner": "3.3.16",
-          "SPTarkov.Common": "4.0.0",
-          "SPTarkov.DI": "4.0.0",
+          "SPTarkov.Common": "4.0.1",
+          "SPTarkov.DI": "4.0.1",
           "System.IO.Hashing": "9.0.9"
         },
         "compile": {
@@ -206,45 +206,45 @@
         "semanticversioning.nuspec"
       ]
     },
-    "SPTarkov.Common/4.0.0": {
-      "sha512": "1v56bv6WdAFbqKhpfKFPl08wLV10uIeFKmaIemWWJj8Mw96DMIFOwKEBc94VUWYeshwPNHvyZGyGrlqPduuTZg==",
+    "SPTarkov.Common/4.0.1": {
+      "sha512": "MJFTMXOl/uoXPH8C9BRQ9EVR+bzdJV/afOYPlbSQ+kRpc+B1M2EhdFVvGj3EQRAso0O98ics/QQilaUI2ujjNQ==",
       "type": "package",
-      "path": "sptarkov.common/4.0.0",
+      "path": "sptarkov.common/4.0.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE",
         "lib/net9.0/SPTarkov.Common.dll",
         "lib/net9.0/SPTarkov.Common.xml",
-        "sptarkov.common.4.0.0.nupkg.sha512",
+        "sptarkov.common.4.0.1.nupkg.sha512",
         "sptarkov.common.nuspec"
       ]
     },
-    "SPTarkov.DI/4.0.0": {
-      "sha512": "cxYdqtPrx/fI0hw4npTTkhuQw411UP2KYQe99ajuS5i3RIFXHoqdjLBFAA+48rVpZNxAsWUI+1C2cKZVVA4ANA==",
+    "SPTarkov.DI/4.0.1": {
+      "sha512": "Z1QjMI5iQHQyaI4CxlOthFmTF9l9fp4hDQm+mylPSexlJ8FE0bUDFWGa8H7uWE8AiZPh72W0p0p5yRJtA7fQ7w==",
       "type": "package",
-      "path": "sptarkov.di/4.0.0",
+      "path": "sptarkov.di/4.0.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE",
         "lib/net9.0/SPTarkov.DI.dll",
         "lib/net9.0/SPTarkov.DI.xml",
-        "sptarkov.di.4.0.0.nupkg.sha512",
+        "sptarkov.di.4.0.1.nupkg.sha512",
         "sptarkov.di.nuspec"
       ]
     },
-    "SPTarkov.Server.Core/4.0.0": {
-      "sha512": "0Io4VO29aPw9Fd5xiMRGFvY6viRiFyNvqXHeX2hOwU8VoSoCtlHYlVJmwadoafZkgqWnaz1dRbTLZZKlo0OAlg==",
+    "SPTarkov.Server.Core/4.0.1": {
+      "sha512": "xy/hA5Qytmj9nc01Pe2K09j2nrdRQy+XxFpySxSxUc99BVXZVjpU/byuzwnOvJpszfTAVVT+eoK3iyUKVv1XxA==",
       "type": "package",
-      "path": "sptarkov.server.core/4.0.0",
+      "path": "sptarkov.server.core/4.0.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE",
         "lib/net9.0/SPTarkov.Server.Core.dll",
         "lib/net9.0/SPTarkov.Server.Core.xml",
-        "sptarkov.server.core.4.0.0.nupkg.sha512",
+        "sptarkov.server.core.4.0.1.nupkg.sha512",
         "sptarkov.server.core.nuspec"
       ]
     },
@@ -279,13 +279,14 @@
   },
   "projectFileDependencyGroups": {
     "net9.0": [
-      "SPTarkov.Common >= 4.0.0",
-      "SPTarkov.DI >= 4.0.0",
-      "SPTarkov.Server.Core >= 4.0.0"
+      "SPTarkov.Common >= 4.0.1",
+      "SPTarkov.DI >= 4.0.1",
+      "SPTarkov.Server.Core >= 4.0.1"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\sebas\\.nuget\\packages\\": {}
+    "C:\\Users\\sebas\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "2.0.0",
@@ -296,13 +297,20 @@
       "packagesPath": "C:\\Users\\sebas\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\sebas\\source\\repos\\spt\\swiftxp\\spt-show-me-the-money-spt4\\Sources\\Server\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\sebas\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\sebas\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -329,15 +337,15 @@
         "dependencies": {
           "SPTarkov.Common": {
             "target": "Package",
-            "version": "[4.0.0, )"
+            "version": "[4.0.1, )"
           },
           "SPTarkov.DI": {
             "target": "Package",
-            "version": "[4.0.0, )"
+            "version": "[4.0.1, )"
           },
           "SPTarkov.Server.Core": {
             "target": "Package",
-            "version": "[4.0.0, )"
+            "version": "[4.0.1, )"
           }
         },
         "imports": [
@@ -359,7 +367,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

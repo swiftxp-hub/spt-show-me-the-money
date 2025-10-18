@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "KI/9wiPQGoU=",
+  "dgSpecHash": "TcuWksKpNYs=",
   "success": true,
   "projectFilePath": "C:\\Users\\sebas\\source\\repos\\spt\\swiftxp\\spt-show-me-the-money-spt4\\Sources\\Server\\SwiftXP.SPT.ShowMeTheMoney.Server.csproj",
   "expectedPackageFiles": [
@@ -8,9 +8,9 @@
     "C:\\Users\\sebas\\.nuget\\packages\\jetbrains.annotations\\2025.2.2\\jetbrains.annotations.2025.2.2.nupkg.sha512",
     "C:\\Users\\sebas\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\9.0.9\\microsoft.extensions.dependencyinjection.abstractions.9.0.9.nupkg.sha512",
     "C:\\Users\\sebas\\.nuget\\packages\\semanticversioning\\3.0.0\\semanticversioning.3.0.0.nupkg.sha512",
-    "C:\\Users\\sebas\\.nuget\\packages\\sptarkov.common\\4.0.0\\sptarkov.common.4.0.0.nupkg.sha512",
-    "C:\\Users\\sebas\\.nuget\\packages\\sptarkov.di\\4.0.0\\sptarkov.di.4.0.0.nupkg.sha512",
-    "C:\\Users\\sebas\\.nuget\\packages\\sptarkov.server.core\\4.0.0\\sptarkov.server.core.4.0.0.nupkg.sha512",
+    "C:\\Users\\sebas\\.nuget\\packages\\sptarkov.common\\4.0.1\\sptarkov.common.4.0.1.nupkg.sha512",
+    "C:\\Users\\sebas\\.nuget\\packages\\sptarkov.di\\4.0.1\\sptarkov.di.4.0.1.nupkg.sha512",
+    "C:\\Users\\sebas\\.nuget\\packages\\sptarkov.server.core\\4.0.1\\sptarkov.server.core.4.0.1.nupkg.sha512",
     "C:\\Users\\sebas\\.nuget\\packages\\system.io.hashing\\9.0.9\\system.io.hashing.9.0.9.nupkg.sha512"
   ],
   "logs": []

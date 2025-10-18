@@ -13,13 +13,20 @@
         "packagesPath": "C:\\Users\\sebas\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\sebas\\source\\repos\\spt\\swiftxp\\spt-show-me-the-money-spt4\\Sources\\Server\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\sebas\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\sebas\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -46,15 +53,15 @@
           "dependencies": {
             "SPTarkov.Common": {
               "target": "Package",
-              "version": "[4.0.0, )"
+              "version": "[4.0.1, )"
             },
             "SPTarkov.DI": {
               "target": "Package",
-              "version": "[4.0.0, )"
+              "version": "[4.0.1, )"
             },
             "SPTarkov.Server.Core": {
               "target": "Package",
-              "version": "[4.0.0, )"
+              "version": "[4.0.1, )"
             }
           },
           "imports": [
@@ -76,7 +83,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

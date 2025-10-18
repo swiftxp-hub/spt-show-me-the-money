@@ -6,6 +6,7 @@ using System;
 using SwiftXP.SPT.Common.Loggers;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Enums;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Services;
+using System.Threading.Tasks;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Configuration;
 
@@ -26,12 +27,6 @@ public class PluginConfiguration
         this.ToolTipDelay = configFile.BindConfiguration("1. Main settings", "Tool-Tip delay", 0.0m, $"Delays the tool-tip for x seconds.{Environment.NewLine}{Environment.NewLine}(Plug-In Default: 0, EFT Default: 0.6)", 0);
 
         // --- 2. Currency conversion
-        this.CurrencyConversionMode = configFile.BindConfiguration("2. Currency conversion", "Currency conversion method", CurrencyConversionEnum.Handbook,
-            "Determines which source is used for currency conversion in the tooltip to determine the best trader offer. "
-            + "'Handbook' is the value SPT defines in the handbook.json for each currency (by default $1 = ₽125, €1 = ₽133). "
-            + $"'Trader' takes the price you have to actually pay to get dollars/euros at Peacekeeper/Skier (by default $1 = ₽139, €1 = ₽153).{Environment.NewLine}{Environment.NewLine}"
-            + "(Default: Handbook)", 1);
-
         this.RoublesOnly = configFile.BindConfiguration("2. Currency conversion", "Roubles only", false, $"Only sales prices in roubles will be considered. Basically no longer displays trades from traders who do not buy in rubles.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 0);
 
         // --- 3. Appearance
@@ -65,7 +60,7 @@ public class PluginConfiguration
         this.LegendaryColor = configFile.BindConfiguration("4. Color coding", "Legendary color", new Color(1f, 0.5f, 0f), "(Default: R 255, G 128, B 0)", 0);
 
         // --- 5. Flea market
-        this.RagfairPriceTableMethod = configFile.BindConfiguration("5. Flea market", "Average flea price method", RagfairPriceTableMethodEnum.Dynamic, $"Determines how prices for the flea market are calculated. With \"Static\", only the average values configured in the SPT server are queried. With \"Dynamic\", the actual flea market offers for each item are also included in the calculation.{Environment.NewLine}{Environment.NewLine}(Default: Dynamic)", 6);
+        this.FleaPriceTableMethod = configFile.BindConfiguration("5. Flea market", "Average flea price method", FleaPriceTableMethodEnum.Dynamic, $"Determines how prices for the flea market are calculated. With \"Static\", only the average values configured in the SPT server are queried. With \"Dynamic\", the actual flea market offers for each item are also included in the calculation.{Environment.NewLine}{Environment.NewLine}(Default: Dynamic)", 6);
         this.FleaPriceMultiplicand = configFile.BindConfiguration("5. Flea market", "Flea price multiplicand", 1.0m, $"Sets the multiplicand by which the average flea market price is multiplied and then displayed in the tooltip. The following calculation is performed:{Environment.NewLine}{Environment.NewLine}Average flea market price of the item * Flea price multiplicand{Environment.NewLine}{Environment.NewLine}(Default: 1.0)", 5);
         this.includeFleaTaxConfigEntry = configFile.BindConfiguration("5. Flea market", "Include flea tax", false, $"Determines whether taxes for the flea market are included in the flea price.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 4);
         this.showFleaTaxConfigEntry = configFile.BindConfiguration("5. Flea market", "Show flea tax", false, $"Show the flea tax in the tool-tip.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 3);
@@ -80,7 +75,7 @@ public class PluginConfiguration
             () =>
             {
                 SimpleSptLogger.Instance.LogInfo("Updating flea prices...");
-                bool pricesUpdated = RagfairPriceTableService.Instance.UpdatePrices(true);
+                bool pricesUpdated = Task.Run(() => FleaPriceTableService.Instance.UpdatePricesAsync(true)).GetAwaiter().GetResult();
 
                 if (pricesUpdated)
                     NotificationsService.Instance.SendLongNotice("Flea prices updated successfully.");
@@ -88,9 +83,9 @@ public class PluginConfiguration
             0
         );
 
-        this.RagfairPriceTableMethod.SettingChanged += (_, _) =>
+        this.FleaPriceTableMethod.SettingChanged += (_, _) =>
         {
-            RagfairPriceTableService.Instance.UpdatePrices(true);
+            Task.Run(() => FleaPriceTableService.Instance.UpdatePricesAsync(true));
         };
 
         this.FleaTaxToggleMode.SettingChanged += (_, _) =>
@@ -119,8 +114,6 @@ public class PluginConfiguration
     #endregion
 
     #region Currency conversion
-    public ConfigEntry<CurrencyConversionEnum> CurrencyConversionMode { get; set; }
-
     public ConfigEntry<bool> RoublesOnly { get; set; }
     #endregion
 
@@ -173,7 +166,7 @@ public class PluginConfiguration
     #endregion
 
     #region Flea market
-    public ConfigEntry<RagfairPriceTableMethodEnum> RagfairPriceTableMethod { get; set; }
+    public ConfigEntry<FleaPriceTableMethodEnum> FleaPriceTableMethod { get; set; }
 
     public ConfigEntry<decimal> FleaPriceMultiplicand { get; set; }
 

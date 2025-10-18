@@ -2,7 +2,7 @@ using EFT;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Models;
 
-public class TradePrice
+public record TradePrice
 {
     private readonly TradeItem tradeItem;
 

@@ -10,7 +10,7 @@ namespace SwiftXP.SPT.ShowMeTheMoney.Client.Extensions;
 public static class TraderClassExtensions
 {
     private static readonly FieldInfo SupplyDataField =
-        typeof(TraderClass).GetField("supplyData_0", BindingFlags.Public | BindingFlags.Instance);
+        typeof(TraderClass).GetField("SupplyData_0", BindingFlags.Public | BindingFlags.Instance);
 
     public static SupplyData? GetSupplyData(this TraderClass trader) =>
         SupplyDataField?.GetValue(trader) as SupplyData;

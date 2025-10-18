@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Threading.Tasks;
 using EFT.UI;
 using HarmonyLib;
 using SPT.Reflection.Patching;
@@ -16,6 +17,6 @@ public class InventoryScreenShowPatch : ModulePatch
     public static void PatchPostfix(InventoryScreen __instance)
     {
         if (!EFTHelper.IsInRaid)
-            RagfairPriceTableService.Instance.UpdatePrices();
+            Task.Run(() => FleaPriceTableService.Instance.UpdatePricesAsync());
     }
 }

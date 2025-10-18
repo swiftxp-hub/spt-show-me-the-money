@@ -2,7 +2,7 @@ using EFT.InventoryLogic;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Models;
 
-public class TradeItem
+public record TradeItem
 {
     public TradeItem(Item item, TradePrice? traderPrice = null, TradePrice? fleaPrice = null)
     {

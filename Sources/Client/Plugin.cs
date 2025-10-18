@@ -6,6 +6,7 @@ using SwiftXP.SPT.Common.Loggers;
 using SPT.Reflection.Patching;
 using SwiftXP.SPT.Common.ConfigurationManager;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Services;
+using System.Threading.Tasks;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client;
 
@@ -47,10 +48,9 @@ public class Plugin : BaseUnityPlugin
 
     private void InitPriceServices()
     {
-        SimpleSptLogger.Instance.LogInfo("Initializing price services...");
+        SimpleSptLogger.Instance.LogInfo("Initializing flea price service...");
 
-        CurrencyPurchasePricesService.Instance.GetCurrencyPurchasePrices();
-        RagfairPriceTableService.Instance.UpdatePrices();
+        Task.Run(() => FleaPriceTableService.Instance.UpdatePricesAsync());
     }
 
     private void EnablePatches()

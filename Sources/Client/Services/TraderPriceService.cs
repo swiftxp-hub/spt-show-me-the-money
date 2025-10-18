@@ -89,22 +89,7 @@ public class TraderPriceService
         if (!currencyId.HasValue)
             return null;
 
-        double? result = null;
-
-        switch (Plugin.Configuration!.CurrencyConversionMode.Value)
-        {
-            case CurrencyConversionEnum.Traders:
-                if (currencyId.ToString() == SptConstants.CurrencyIds.Euros)
-                    result = CurrencyPurchasePricesService.Instance.CurrencyPurchasePrices?.EUR;
-
-                if (currencyId.ToString() == SptConstants.CurrencyIds.Dollars)
-                    result = CurrencyPurchasePricesService.Instance.CurrencyPurchasePrices?.USD;
-
-                break;
-        }
-
-        if (!result.HasValue)
-            result = trader.GetSupplyData()?.CurrencyCourses[currencyId.Value];
+        double? result = trader.GetSupplyData()?.CurrencyCourses[currencyId.Value];
 
         return result ?? 1;
     }

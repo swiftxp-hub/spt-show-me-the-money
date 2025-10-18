@@ -1,6 +1,6 @@
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Enums;
 
-public enum RagfairPriceTableMethodEnum
+public enum FleaPriceTableMethodEnum
 {
     Static,
 
