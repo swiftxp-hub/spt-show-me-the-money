@@ -16,17 +16,14 @@ public class ShowMeTheMoneyStaticRouter : StaticRouter
 {
     private static JsonUtil? JsonUtil;
 
-    private static StaticFleaPriceTableService? StaticFleaPriceTableService;
+    private static FleaPriceService? FleaPriceService;
 
-    private static DynamicFleaPriceTableService? DynamicFleaPriceTableService;
-
-    public ShowMeTheMoneyStaticRouter(JsonUtil jsonUtil, StaticFleaPriceTableService staticFleaPriceTableService, DynamicFleaPriceTableService dynamicFleaPriceTableService)
+    public ShowMeTheMoneyStaticRouter(JsonUtil jsonUtil, FleaPriceService fleaPriceService)
         : base(jsonUtil, GetRoutes())
     {
         JsonUtil = jsonUtil;
 
-        StaticFleaPriceTableService = staticFleaPriceTableService;
-        DynamicFleaPriceTableService = dynamicFleaPriceTableService;
+        FleaPriceService = fleaPriceService;
     }
 
     private static List<RouteAction> GetRoutes()
@@ -34,37 +31,20 @@ public class ShowMeTheMoneyStaticRouter : StaticRouter
         return
         [
             new RouteAction(
-                "/showMeTheMoney/getStaticFleaPriceTable",
+                "/showMeTheMoney/getFleaPrices",
                 async (
                     url,
                     info,
                     sessionId,
                     output
-                ) => await GetStaticFleaPriceTable()
-            ),
-
-            new RouteAction(
-                "/showMeTheMoney/getDynamicFleaPriceTable",
-                async (
-                    url,
-                    info,
-                    sessionId,
-                    output
-                ) => await GetDynamicFleaPriceTable()
+                ) => await GetFleaPrices()
             )
         ];
     }
 
-    private static async ValueTask<string> GetStaticFleaPriceTable()
+    private static async ValueTask<string> GetFleaPrices()
     {
-        ConcurrentDictionary<MongoId, double> result = StaticFleaPriceTableService!.Get();
-
-        return JsonUtil!.Serialize(result)!;
-    }
-
-    private static async ValueTask<string> GetDynamicFleaPriceTable()
-    {
-        ConcurrentDictionary<MongoId, double> result = DynamicFleaPriceTableService!.Get();
+        ConcurrentDictionary<MongoId, double> result = FleaPriceService!.Get();
 
         return JsonUtil!.Serialize(result)!;
     }

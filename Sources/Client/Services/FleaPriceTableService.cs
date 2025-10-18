@@ -3,16 +3,13 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SPT.Common.Http;
 using SwiftXP.SPT.Common.Loggers;
-using SwiftXP.SPT.ShowMeTheMoney.Client.Enums;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Models;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Services;
 
 public class FleaPriceTableService
 {
-    private const string RemotePathToGetStaticPriceTable = "/showMeTheMoney/getStaticFleaPriceTable";
-
-    private const string RemotePathToGetDynamicPriceTable = "/showMeTheMoney/getDynamicFleaPriceTable";
+    private const string RemotePathToGetStaticPriceTable = "/showMeTheMoney/getFleaPrices";
 
     private const double UpdateAfterSeconds = 1d; //300d; // 5 minutes
 
@@ -32,14 +29,7 @@ public class FleaPriceTableService
             {
                 SimpleSptLogger.Instance.LogInfo("Trying to query flea price table from remote...");
 
-                FleaPriceTable? fleaPriceTable = GetStaticFleaPriceTable();
-                if (Plugin.Configuration!.FleaPriceTableMethod.Value == FleaPriceTableMethodEnum.Dynamic)
-                {
-                    FleaPriceTable? dynamicFleaPriceTable = GetDynamicFleaPriceTable();
-                    if (dynamicFleaPriceTable != null)
-                        fleaPriceTable = dynamicFleaPriceTable;
-                }
-
+                FleaPriceTable? fleaPriceTable = GetFleaPriceTable();
                 if (fleaPriceTable is not null)
                 {
                     SimpleSptLogger.Instance.LogInfo($"Flea price table was queried! Got {fleaPriceTable.Count} prices from remote...");
@@ -63,27 +53,13 @@ public class FleaPriceTableService
         return false;
     }
 
-    private static FleaPriceTable? GetStaticFleaPriceTable()
+    private static FleaPriceTable? GetFleaPriceTable()
     {
         SimpleSptLogger.Instance.LogInfo("Trying to query static flea price table from remote...");
 
         FleaPriceTable? result = null;
 
         string? pricesJson = RequestHandler.GetJson(RemotePathToGetStaticPriceTable);
-
-        if (!string.IsNullOrWhiteSpace(pricesJson))
-            result = JsonConvert.DeserializeObject<FleaPriceTable>(pricesJson);
-
-        return result;
-    }
-
-    private static FleaPriceTable? GetDynamicFleaPriceTable()
-    {
-        SimpleSptLogger.Instance.LogInfo("Trying to query dynamic flea price table from remote...");
-
-        FleaPriceTable? result = null;
-
-        string? pricesJson = RequestHandler.GetJson(RemotePathToGetDynamicPriceTable);
 
         if (!string.IsNullOrWhiteSpace(pricesJson))
             result = JsonConvert.DeserializeObject<FleaPriceTable>(pricesJson);

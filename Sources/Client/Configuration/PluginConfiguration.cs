@@ -30,18 +30,18 @@ public class PluginConfiguration
         this.RoublesOnly = configFile.BindConfiguration("2. Currency conversion", "Roubles only", false, $"Only sales prices in roubles will be considered. Basically no longer displays trades from traders who do not buy in rubles.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 0);
 
         // --- 3. Appearance
-        this.BestTradeColor = configFile.BindConfiguration("3. Appearance", "Best trade color", new Color(0.867f, 0.514f, 0.102f), $"Defines the color used to highlight the best trade, trader or flea.{Environment.NewLine}{Environment.NewLine}(Default: R 221, G 131, B 26)", 2);
-        this.FontSize = configFile.BindConfiguration("3. Appearance", "Font size", TooltipFontSizeEnum.Normal, $"Changes the font size of the price(s).{Environment.NewLine}{Environment.NewLine}(Default: Normal)", 1);
+        this.BestTradeColor = configFile.BindConfiguration("3. Appearance", "Best trade color", new Color(1.000f, 1.000f, 1.000f), $"Defines the color used to highlight the best trade, trader or flea.{Environment.NewLine}{Environment.NewLine}(Default: R 255, G 255, B 255)", 2);
+        this.FontSize = configFile.BindConfiguration("3. Appearance", "Font size", TooltipFontSizeEnum.Smaller, $"Changes the font size of the price(s).{Environment.NewLine}{Environment.NewLine}(Default: Smaller)", 1);
         this.RenderInItalics = configFile.BindConfiguration("3. Appearance", "Italics", false, $"Renders the price(s) in italics.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 0);
 
         // --- 4. Color coding
         this.EnableColorCoding = configFile.BindConfiguration("4. Color coding", "Enable color coding (based on price-per-slot)", true, $"Uses color coding to give an quick and easy indicator how valueable an item is. Always based on price-per-slot, except for ammunition, if you activate the respective feature. Default colors are from WoW.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 18);
-        this.ColorCodingMode = configFile.BindConfiguration("4. Color coding", "Color coding mode", ColorCodingModeEnum.ItemName, $"Defines the color coding mode.{Environment.NewLine}{Environment.NewLine}(Default: ItemName)", 17);
+        this.ColorCodingMode = configFile.BindConfiguration("4. Color coding", "Color coding mode", ColorCodingModeEnum.Both, $"Defines the color coding mode.{Environment.NewLine}{Environment.NewLine}(Default: Both)", 17);
 
-        this.PoorValue = configFile.BindConfiguration("4. Color coding", "Poor value (smaller than)", 770m, "(Default: 770)", 16);
-        this.CommonValue = configFile.BindConfiguration("4. Color coding", "Common value (smaller than)", 7600m, "(Default: 7600)", 15);
-        this.UncommonValue = configFile.BindConfiguration("4. Color coding", "Uncommon value (smaller than)", 14900m, "(Default: 14900)", 14);
-        this.RareValue = configFile.BindConfiguration("4. Color coding", "Rare value (smaller than)", 23800m, "(Default: 23800)", 13);
+        this.PoorValue = configFile.BindConfiguration("4. Color coding", "Poor value (smaller than)", 800m, "(Default: 800)", 16);
+        this.CommonValue = configFile.BindConfiguration("4. Color coding", "Common value (smaller than)", 8000m, "(Default: 8000)", 15);
+        this.UncommonValue = configFile.BindConfiguration("4. Color coding", "Uncommon value (smaller than)", 15000m, "(Default: 15000)", 14);
+        this.RareValue = configFile.BindConfiguration("4. Color coding", "Rare value (smaller than)", 24000m, "(Default: 24000)", 13);
         this.EpicValue = configFile.BindConfiguration("4. Color coding", "Epic value (smaller than) - everything above that is considered legendary", 54000m, "(Default: 54000)", 12);
 
         this.UseCaliberPenetrationPower = configFile.BindConfiguration("4. Color coding", "Use penetration power instead of price value for color coding of ammunition", true, $"Uses the caliber penetration power value instead of the price value for color coding of ammunition.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 11);
@@ -60,7 +60,6 @@ public class PluginConfiguration
         this.LegendaryColor = configFile.BindConfiguration("4. Color coding", "Legendary color", new Color(1f, 0.5f, 0f), "(Default: R 255, G 128, B 0)", 0);
 
         // --- 5. Flea market
-        this.FleaPriceTableMethod = configFile.BindConfiguration("5. Flea market", "Average flea price method", FleaPriceTableMethodEnum.Dynamic, $"Determines how prices for the flea market are calculated. With \"Static\", only the average values configured in the SPT server are queried. With \"Dynamic\", the actual flea market offers for each item are also included in the calculation.{Environment.NewLine}{Environment.NewLine}(Default: Dynamic)", 6);
         this.FleaPriceMultiplicand = configFile.BindConfiguration("5. Flea market", "Flea price multiplicand", 1.0m, $"Sets the multiplicand by which the average flea market price is multiplied and then displayed in the tooltip. The following calculation is performed:{Environment.NewLine}{Environment.NewLine}Average flea market price of the item * Flea price multiplicand{Environment.NewLine}{Environment.NewLine}(Default: 1.0)", 5);
         this.includeFleaTaxConfigEntry = configFile.BindConfiguration("5. Flea market", "Include flea tax", false, $"Determines whether taxes for the flea market are included in the flea price.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 4);
         this.showFleaTaxConfigEntry = configFile.BindConfiguration("5. Flea market", "Show flea tax", false, $"Show the flea tax in the tool-tip.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 3);
@@ -82,11 +81,6 @@ public class PluginConfiguration
             },
             0
         );
-
-        this.FleaPriceTableMethod.SettingChanged += (_, _) =>
-        {
-            Task.Run(() => FleaPriceTableService.Instance.UpdatePricesAsync(true));
-        };
 
         this.FleaTaxToggleMode.SettingChanged += (_, _) =>
         {
@@ -166,8 +160,6 @@ public class PluginConfiguration
     #endregion
 
     #region Flea market
-    public ConfigEntry<FleaPriceTableMethodEnum> FleaPriceTableMethod { get; set; }
-
     public ConfigEntry<decimal> FleaPriceMultiplicand { get; set; }
 
     public bool IncludeFleaTax

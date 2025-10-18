@@ -6,7 +6,7 @@ namespace SwiftXP.SPT.ShowMeTheMoney.Server;
 public record ModMetadata : AbstractModMetadata
 {
     public override string ModGuid { get; init; } = "com.swiftxp.spt.showmethemoney";
-    public override string Name { get; init; } = "ShowMeTheMoney";
+    public override string Name { get; init; } = "Show Me The Money";
     public override string Author { get; init; } = "SwiftXP";
     public override List<string>? Contributors { get; init; } = [];
     public override SemanticVersioning.Version Version { get; init; } = new("2.0.0");
