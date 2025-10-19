@@ -2,6 +2,6 @@ using System.Collections.Generic;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Models;
 
-public class FleaPriceTable : Dictionary<string, double>
+public class FleaPrices : Dictionary<string, double>
 {
 }

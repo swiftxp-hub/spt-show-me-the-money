@@ -13,8 +13,8 @@ public class FleaPriceService
 
     public bool GetFleaPrice(TradeItem tradeItem, bool includeTaxInPrices)
     {
-        if (FleaPriceTableService.Instance.Prices is not null
-            && FleaPriceTableService.Instance.Prices!.TryGetValue(tradeItem.Item.TemplateId, out double fleaPrice))
+        if (FleaPricesService.Instance.FleaPrices is not null
+            && FleaPricesService.Instance.FleaPrices!.TryGetValue(tradeItem.Item.TemplateId, out double fleaPrice))
         {
             SetFleaPriceOfTradeItem(tradeItem, fleaPrice, includeTaxInPrices);
         }

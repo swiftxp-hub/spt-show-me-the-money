@@ -74,7 +74,7 @@ public class PluginConfiguration
             () =>
             {
                 SimpleSptLogger.Instance.LogInfo("Updating flea prices...");
-                bool pricesUpdated = Task.Run(() => FleaPriceTableService.Instance.UpdatePricesAsync(true)).GetAwaiter().GetResult();
+                bool pricesUpdated = Task.Run(() => FleaPricesService.Instance.UpdatePricesAsync(true)).GetAwaiter().GetResult();
 
                 if (pricesUpdated)
                     NotificationsService.Instance.SendLongNotice("Flea prices updated successfully.");

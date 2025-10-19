@@ -50,7 +50,7 @@ public class Plugin : BaseUnityPlugin
     {
         SimpleSptLogger.Instance.LogInfo("Initializing flea price service...");
 
-        Task.Run(() => FleaPriceTableService.Instance.UpdatePricesAsync());
+        Task.Run(() => FleaPricesService.Instance.UpdatePricesAsync());
     }
 
     private void EnablePatches()

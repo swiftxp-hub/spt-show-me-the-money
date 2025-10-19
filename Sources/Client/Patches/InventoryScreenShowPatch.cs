@@ -17,6 +17,6 @@ public class InventoryScreenShowPatch : ModulePatch
     public static void PatchPostfix(InventoryScreen __instance)
     {
         if (!EFTHelper.IsInRaid)
-            Task.Run(() => FleaPriceTableService.Instance.UpdatePricesAsync());
+            Task.Run(() => FleaPricesService.Instance.UpdatePricesAsync());
     }
 }

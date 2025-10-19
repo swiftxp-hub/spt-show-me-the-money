@@ -1,6 +1,5 @@
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SPTarkov.DI.Annotations;
@@ -44,7 +43,7 @@ public class ShowMeTheMoneyStaticRouter : StaticRouter
 
     private static async ValueTask<string> GetFleaPrices()
     {
-        ConcurrentDictionary<MongoId, double> result = FleaPriceService!.Get();
+        Dictionary<MongoId, double> result = FleaPriceService!.Get();
 
         return JsonUtil!.Serialize(result)!;
     }
