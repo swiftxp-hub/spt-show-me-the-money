@@ -29,7 +29,7 @@ Basically none.
 
 ##### If you have a completely normal installation of SP-Tarkov (everything inside one folder, on one machine, like the SPT-Installer is doing it):
 
-Extract the contents of the .zip file into your SPT directory. 
+Extract the contents of the .zip or .7z file into your SPT directory. 
 
 You should end up having the following files copied to your SPT directory:
 ```
@@ -39,7 +39,7 @@ You should end up having the following files copied to your SPT directory:
 
 ##### If you have your client and your server separated:
 
-Extract the "BepInEx" folder from the .zip to your client and extract the "user" folder to your server.
+Extract the "BepInEx" folder from the .zip or .7z to your client and extract the "user" folder to your server.
 
 You should end up having the following files copied...
 
@@ -106,7 +106,7 @@ Basically none.
 
 ##### If you have a completely normal installation of SP-Tarkov (everything inside one folder, on one machine, like the SPT-Installer is doing it):
 
-Extract the contents of the .zip file into your SPT directory. 
+Extract the contents of the .zip or .7z file into your SPT directory. 
 
 You should end up having the following files copied to your SPT directory:
 ```
@@ -117,7 +117,7 @@ You should end up having the following files copied to your SPT directory:
 
 ##### If you have your client and your server separated:
 
-Extract the "BepInEx" folder from the .zip to your client and extract the "user" folder to your server.
+Extract the "BepInEx" folder from the .zip or .7z to your client and extract the "user" folder to your server.
 
 You should end up having the following files copied...
 
