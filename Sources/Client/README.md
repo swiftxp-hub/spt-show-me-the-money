@@ -9,13 +9,13 @@ ___
 ## Tabs {.tabset}
 
 ### SPT 4.0.x
-Please note that SPT 4.0.0 and 4.0.1 have a minor issue when creating flea market listings. When the server is started, the listings are initially created with prices that are too low. This may result in my mod displaying inaccurate prices. The SPT team is already working on the issue and a fix will likely be included in the next release.
+Please note that SPT 4.0.0 and 4.0.1 have a minor issue when creating flea market listings. When the server is started, the listings are initially created with prices that are too low. This may result in my mod displaying inaccurate prices. The SPT team is already working on the issue and a fix will likely be included in the next release of SPT.
 
 #### What does it do?
 
 The BepInEx plugin modifies the in-game tooltip of items to display price information (in stash and in raid). The dealer who would buy the item for the best price and an average price for the flea market is displayed. The display is divided into "price-per-slot" and "total"-price. The best offer is highlighted. Also flea market taxes can be included. Version >=1.5.0 adds a color coding feature (by default the color scheme familiar from WoW, ranging from poor to legendary).
 
-The accompanying server mod provides several endpoints for the BepInEx plugin, which are used to retrieve the trader prices for EUR and USD and the flea market prices.
+The accompanying server mod provides an endpoint for the BepInEx plugin, which is used to retrieve the flea market prices.
 
 Several configuration options are offered via the BepInEx configurator.
 
