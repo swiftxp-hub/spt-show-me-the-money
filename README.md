@@ -60,7 +60,7 @@ There is no need to install anything to your Fika headless client for this mod t
 
 Please use the BepInEx configurator to configure features of the mod (usually accessible by pressing F12 or F1 when you are in-game):
 
-![BepInEx Plugin Configuration](https://raw.githubusercontent.com/swiftxp-hub/spt-show-me-the-money/refs/heads/main-spt4/Assets/plugin-configuration.png)
+![BepInEx Plugin Configuration](https://raw.githubusercontent.com/swiftxp-hub/spt-show-me-the-money/refs/heads/main/Assets/plugin-configuration.png)
 
 As you can see, you can also manually trigger the plugin to retrieve the current flea market prices from your SPT server (this can be useful when you installed [DrakiaXYZ's SPT-LiveFleaPrices](https://forge.sp-tarkov.com/mod/1131/live-flea-prices) - however, the flea market prices are updated regulary).
 
@@ -140,9 +140,9 @@ There is no need to install anything to your Fika headless client for this mod t
 
 Please use the BepInEx configurator to configure features of the mod (usually accessible by pressing F12 or F1 when you are in-game):
 
-![BepInEx Plugin Configuration](https://raw.githubusercontent.com/swiftxp-hub/spt-show-me-the-money/refs/heads/main/Assets/plugin-configuration.png)
+![BepInEx Plugin Configuration](https://raw.githubusercontent.com/swiftxp-hub/spt-show-me-the-money/refs/heads/main-spt311/Assets/plugin-configuration.png)
 
-![Demonstration of toggle-mode for flea tax](https://raw.githubusercontent.com/swiftxp-hub/spt-show-me-the-money/refs/heads/main/Assets/toggle-tax-sample.gif)
+![Demonstration of toggle-mode for flea tax](https://raw.githubusercontent.com/swiftxp-hub/spt-show-me-the-money/refs/heads/main-spt311/Assets/toggle-tax-sample.gif)
 
 As you can see, you can also manually trigger the plugin to retrieve the current flea market prices from your SPT server (this can be useful when you installed [DrakiaXYZ's SPT-LiveFleaPrices](https://forge.sp-tarkov.com/mod/1131/live-flea-prices) - however, the flea market prices are updated regulary).
 
