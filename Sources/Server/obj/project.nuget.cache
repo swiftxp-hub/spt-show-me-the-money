@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "TcuWksKpNYs=",
+  "dgSpecHash": "mc03k4OJIpE=",
   "success": true,
-  "projectFilePath": "C:\\Users\\sebas\\source\\repos\\spt\\swiftxp\\spt-show-me-the-money-spt4\\Sources\\Server\\SwiftXP.SPT.ShowMeTheMoney.Server.csproj",
+  "projectFilePath": "C:\\Users\\sebas\\source\\repos\\swiftxp\\spt\\spt-show-me-the-money\\Sources\\Server\\SwiftXP.SPT.ShowMeTheMoney.Server.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\sebas\\.nuget\\packages\\fastcloner\\3.3.16\\fastcloner.3.3.16.nupkg.sha512",
     "C:\\Users\\sebas\\.nuget\\packages\\jetbrains.annotations\\2025.2.2\\jetbrains.annotations.2025.2.2.nupkg.sha512",
