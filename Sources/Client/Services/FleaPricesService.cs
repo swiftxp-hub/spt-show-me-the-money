@@ -11,7 +11,7 @@ public class FleaPricesService
 {
     private const string RemotePathToGetStaticPriceTable = "/showMeTheMoney/getFleaPrices";
 
-    private const double UpdateAfterSeconds = 1800d; // 30 minutes
+    private const double UpdateAfterSeconds = 300d; // 5 minutes
 
     private static readonly Lazy<FleaPricesService> instance = new(() => new FleaPricesService());
 
