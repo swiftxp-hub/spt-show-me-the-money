@@ -84,7 +84,7 @@ Just for clarifcation: This does not trigger DrakiaXYZ's SPT-LiveFleaPrices to q
 
 #### Problems that may occur
 
-- Price information for traders added by other mods may or may not work. E.g. [Couturier](https://forge.sp-tarkov.com/mod/2239/couturier-gear-and-clothing-pack) v1.2.0 by turbodestroyer seems to work fine.
+- Price information for traders added by other mods may or may not work.
 - The "Toggle-mode for flea tax"-feature is implemented in such a way that other mods that modify the tooltip should still work, but still... if you encounter problems, please let me know in the comments.
 
 ### SPT 3.11.x
