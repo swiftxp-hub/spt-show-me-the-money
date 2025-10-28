@@ -77,7 +77,7 @@ public class TraderPriceService
         }
         catch (Exception)
         {
-            SimpleSptLogger.Instance.LogDebug($"Could not get price from trader \"{trader.LocalizedName}\". Skipping.");
+            Plugin.SptLogger!.LogDebug($"Could not get price from trader \"{trader.LocalizedName}\". Skipping.");
         }
 
         return singleObjectPrice is not null;

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 namespace SwiftXP.SPT.ShowMeTheMoney.Client;
 
 [BepInPlugin("com.swiftxp.spt.showmethemoney", MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
+[BepInDependency("com.SPT.custom", "4.0.2")]
 [BepInProcess("EscapeFromTarkov.exe")]
 public class Plugin : BaseUnityPlugin
 {
@@ -36,26 +37,26 @@ public class Plugin : BaseUnityPlugin
 
     private void InitLogger()
     {
-        SimpleSptLogger.Instance.Init(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_VERSION);
+        SptLogger = new SimpleSptLogger(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_VERSION);
     }
 
     private void BindBepInExConfiguration()
     {
-        SimpleSptLogger.Instance.LogInfo("Bind configuration...");
+        SptLogger!.LogInfo("Bind configuration...");
 
         Configuration = new PluginConfiguration(Config);
     }
 
     private void InitPriceServices()
     {
-        SimpleSptLogger.Instance.LogInfo("Initializing flea price service...");
+        SptLogger!.LogInfo("Initializing flea price service...");
 
         Task.Run(() => FleaPricesService.Instance.UpdatePricesAsync());
     }
 
     private void EnablePatches()
     {
-        SimpleSptLogger.Instance.LogInfo("Enable patches...");
+        SptLogger!.LogInfo("Enable patches...");
 
         new TraderClassPatch().Enable();
 
@@ -75,6 +76,8 @@ public class Plugin : BaseUnityPlugin
     }
 
     public static PluginConfiguration? Configuration;
+
+    public static SimpleSptLogger? SptLogger;
 
     public static Item? HoveredItem { get; set; }
 

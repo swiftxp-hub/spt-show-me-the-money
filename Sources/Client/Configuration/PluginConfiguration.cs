@@ -73,7 +73,7 @@ public class PluginConfiguration
             "Pulls the current flea prices from your SPT server instance.",
             () =>
             {
-                SimpleSptLogger.Instance.LogInfo("Updating flea prices...");
+                Plugin.SptLogger!.LogInfo("Updating flea prices...");
                 bool pricesUpdated = Task.Run(() => FleaPricesService.Instance.UpdatePricesAsync(true)).GetAwaiter().GetResult();
 
                 if (pricesUpdated)

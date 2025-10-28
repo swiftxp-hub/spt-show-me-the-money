@@ -27,12 +27,12 @@ public class FleaPricesService
         {
             if (this.FleaPrices == null || (DateTimeOffset.Now - this.lastUpdate).TotalSeconds >= UpdateAfterSeconds || forceUpdate == true)
             {
-                SimpleSptLogger.Instance.LogInfo("Trying to query flea price table from remote...");
+                Plugin.SptLogger!.LogInfo("Trying to query flea price table from remote...");
 
                 FleaPrices? fleaPrices = QueryFleaPrices();
                 if (fleaPrices is not null)
                 {
-                    SimpleSptLogger.Instance.LogInfo($"Flea prices were queried! Got {fleaPrices.Count} prices from server...");
+                    Plugin.SptLogger!.LogInfo($"Flea prices were queried! Got {fleaPrices.Count} prices from server...");
 
                     this.FleaPrices = fleaPrices;
                     this.lastUpdate = DateTimeOffset.Now;
@@ -41,13 +41,13 @@ public class FleaPricesService
                 }
                 else
                 {
-                    SimpleSptLogger.Instance.LogError("Flea prices could not be queried! Is the server-mod missing? Flea-prices will not be displayed.");
+                    Plugin.SptLogger!.LogError("Flea prices could not be queried! Is the server-mod missing? Flea-prices will not be displayed.");
                 }
             }
         }
         catch (Exception exception)
         {
-            SimpleSptLogger.Instance.LogException(exception);
+            Plugin.SptLogger!.LogException(exception);
         }
 
         return false;
@@ -55,7 +55,7 @@ public class FleaPricesService
 
     private static FleaPrices? QueryFleaPrices()
     {
-        SimpleSptLogger.Instance.LogInfo("Trying to query flea prices from server...");
+        Plugin.SptLogger!.LogInfo("Trying to query flea prices from server...");
 
         FleaPrices? result = null;
 

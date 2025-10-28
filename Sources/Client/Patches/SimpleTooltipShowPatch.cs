@@ -52,7 +52,7 @@ public class SimpleTooltipShowPatch : ModulePatch
         }
         catch (Exception exception)
         {
-            SimpleSptLogger.Instance.LogException(exception);
+            Plugin.SptLogger!.LogException(exception);
         }
     }
 
@@ -78,7 +78,7 @@ public class SimpleTooltipShowPatch : ModulePatch
         }
         catch (Exception exception)
         {
-            SimpleSptLogger.Instance.LogException(exception);
+            Plugin.SptLogger!.LogException(exception);
         }
     }
 
