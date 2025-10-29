@@ -6,7 +6,7 @@
 
     <AssemblyName>SwiftXP.SPT.ShowMeTheMoney.Server</AssemblyName>
     <Product>Show Me The Money</Product>
-    <Version>2.1.0</Version>
+    <Version>2.2.0</Version>
     <RootNamespace>SwiftXP.SPT.ShowMeTheMoney.Server</RootNamespace>
     <OutputType>Library</OutputType>
   </PropertyGroup>
