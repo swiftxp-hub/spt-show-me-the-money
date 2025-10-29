@@ -15,16 +15,12 @@ using SPTarkov.Server.Core.Services;
 namespace SwiftXP.SPT.ShowMeTheMoney.Server.Services;
 
 [Injectable(InjectionType.Scoped)]
-public class FleaPriceService(ISptLogger<ShowMeTheMoneyStaticRouter> sptLogger,
-    RagfairPriceService ragfairPriceService,
+public class FleaPriceService(RagfairPriceService ragfairPriceService,
     RagfairOfferService ragfairOfferService,
     PaymentHelper paymentHelper)
 {
     public ConcurrentDictionary<MongoId, double> Get()
     {
-        Stopwatch stopwatch = new();
-        stopwatch.Start();
-
         Dictionary<MongoId, double> fleaPrices = ragfairPriceService.GetAllFleaPrices();
         ConcurrentDictionary<MongoId, double> result = new(fleaPrices);
 
@@ -46,10 +42,6 @@ public class FleaPriceService(ISptLogger<ShowMeTheMoneyStaticRouter> sptLogger,
         {
             return new ConcurrentDictionary<MongoId, double>(fleaPrices);
         }
-
-        stopwatch.Stop();
-
-        sptLogger.Info($"Elapsed time for flea prices: {stopwatch.ElapsedMilliseconds}ms");
 
         return result;
     }
