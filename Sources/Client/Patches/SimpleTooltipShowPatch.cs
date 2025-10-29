@@ -12,7 +12,6 @@ using SwiftXP.SPT.ShowMeTheMoney.Client.Enums;
 using TMPro;
 using SwiftXP.SPT.Common.ConfigurationManager;
 using System.Linq;
-using SwiftXP.SPT.Common.Loggers;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Services;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Patches;

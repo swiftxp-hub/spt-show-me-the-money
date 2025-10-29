@@ -1,9 +1,11 @@
 using System;
+using System.Collections;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SPT.Common.Http;
-using SwiftXP.SPT.Common.Loggers;
+using SwiftXP.SPT.Common.EFT;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Models;
+using UnityEngine;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Services;
 
@@ -13,58 +15,38 @@ public class FleaPricesService
 
     private const double UpdateAfterSeconds = 300d; // 5 minutes
 
-    private static readonly Lazy<FleaPricesService> instance = new(() => new FleaPricesService());
+    private WaitForSeconds coroutineIntervalWait = new(15);
 
     private DateTimeOffset lastUpdate = DateTimeOffset.MinValue;
 
+    private static readonly Lazy<FleaPricesService> instance = new(() => new FleaPricesService());
+
     private FleaPricesService() { }
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-    public async Task<bool> UpdatePricesAsync(bool forceUpdate = false)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+    public IEnumerator UpdatePrices()
     {
-        try
+        while (true)
         {
-            if (this.FleaPrices == null || (DateTimeOffset.Now - this.lastUpdate).TotalSeconds >= UpdateAfterSeconds || forceUpdate == true)
+            if (!EFTHelper.IsInRaid && (this.FleaPrices == null || (DateTimeOffset.Now - this.lastUpdate).TotalSeconds >= UpdateAfterSeconds))
             {
-                Plugin.SptLogger!.LogInfo("Trying to query flea price table from remote...");
+                Task<string> getJsonTask = RequestHandler.GetJsonAsync(RemotePathToGetStaticPriceTable);
+                yield return new WaitUntil(() => getJsonTask.IsCompleted);
 
-                FleaPrices? fleaPrices = QueryFleaPrices();
-                if (fleaPrices is not null)
+                string fleaPricesJson = getJsonTask.Result;
+                if (!string.IsNullOrWhiteSpace(fleaPricesJson))
                 {
-                    Plugin.SptLogger!.LogInfo($"Flea prices were queried! Got {fleaPrices.Count} prices from server...");
-
-                    this.FleaPrices = fleaPrices;
+                    FleaPrices = JsonConvert.DeserializeObject<FleaPrices>(fleaPricesJson);
                     this.lastUpdate = DateTimeOffset.Now;
-
-                    return true;
-                }
-                else
-                {
-                    Plugin.SptLogger!.LogError("Flea prices could not be queried! Is the server-mod missing? Flea-prices will not be displayed.");
                 }
             }
-        }
-        catch (Exception exception)
-        {
-            Plugin.SptLogger!.LogException(exception);
-        }
 
-        return false;
+            yield return this.coroutineIntervalWait;
+        }
     }
 
-    private static FleaPrices? QueryFleaPrices()
+    public void ForceUpdatePrices()
     {
-        Plugin.SptLogger!.LogInfo("Trying to query flea prices from server...");
-
-        FleaPrices? result = null;
-
-        string? pricesJson = RequestHandler.GetJson(RemotePathToGetStaticPriceTable);
-
-        if (!string.IsNullOrWhiteSpace(pricesJson))
-            result = JsonConvert.DeserializeObject<FleaPrices>(pricesJson);
-
-        return result;
+        this.lastUpdate = DateTimeOffset.MinValue;
     }
 
     public static FleaPricesService Instance => instance.Value;

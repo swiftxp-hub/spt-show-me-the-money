@@ -6,7 +6,6 @@ using SwiftXP.SPT.Common.Loggers;
 using SPT.Reflection.Patching;
 using SwiftXP.SPT.Common.ConfigurationManager;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Services;
-using System.Threading.Tasks;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client;
 
@@ -51,7 +50,7 @@ public class Plugin : BaseUnityPlugin
     {
         SptLogger!.LogInfo("Initializing flea price service...");
 
-        Task.Run(() => FleaPricesService.Instance.UpdatePricesAsync());
+        StartCoroutine(FleaPricesService.Instance.UpdatePrices());
     }
 
     private void EnablePatches()
@@ -66,8 +65,6 @@ public class Plugin : BaseUnityPlugin
         new GridItemOnPointerEnterPatch().Enable();
         new GridItemOnPointerExitPatch().Enable();
         new SimpleTooltipShowPatch().Enable();
-
-        new InventoryScreenShowPatch().Enable();
 
         TooltipUpdatePatch = new TooltipUpdatePatch();
 
