@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using SPTarkov.DI.Annotations;
@@ -9,7 +8,6 @@ using SPTarkov.Server.Core.Extensions;
 using SPTarkov.Server.Core.Helpers;
 using SPTarkov.Server.Core.Models.Common;
 using SPTarkov.Server.Core.Models.Eft.Ragfair;
-using SPTarkov.Server.Core.Models.Utils;
 using SPTarkov.Server.Core.Services;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Server.Services;
