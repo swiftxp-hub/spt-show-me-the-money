@@ -159,7 +159,7 @@ public class SimpleTooltipShowPatch : ModulePatch
         if (Plugin.Configuration!.EnableTraderPrices.IsEnabled())
             hasTraderPrice = TraderPriceService.Instance.GetBestTraderPrice(tradeItem);
 
-        if (Plugin.Configuration!.EnableFleaPrices.IsEnabled())
+        if (Plugin.Configuration!.EnableFleaPrices.IsEnabled() && (SptSession.Session.RagFair.Available || Plugin.Configuration!.ShowFleaPriceDespiteNotUnlocked.IsEnabled()))
             hasFleaPrice = FleaPriceService.Instance.GetFleaPrice(tradeItem, Plugin.Configuration!.IncludeFleaTax);
 
         if (hasTraderPrice)

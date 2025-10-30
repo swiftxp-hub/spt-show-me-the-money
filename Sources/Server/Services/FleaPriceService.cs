@@ -46,27 +46,26 @@ public class FleaPriceService(RagfairPriceService ragfairPriceService,
 
     protected double GetAveragePriceFromOffers(IEnumerable<RagfairOffer> offers)
     {
-        var sum = 0d;
-        var totalOfferCount = 0;
+        List<RagfairOffer> countableOffers = [.. offers
+            .Where(x => !x.Requirements!.Any(req => !paymentHelper.IsMoneyTpl(req.TemplateId))
+                && !x.IsTraderOffer()
+                && !x.IsPlayerOffer())];
 
-        foreach (RagfairOffer offer in offers)
+        if (countableOffers.Count > 0)
         {
-            if (offer.Requirements!.Any(req => !paymentHelper.IsMoneyTpl(req.TemplateId))
-                || offer.IsTraderOffer()
-                || offer.IsPlayerOffer())
+            double offerSum = countableOffers.Sum(x =>
             {
-                continue;
-            }
+                double itemCount = x.SellInOnePiece.GetValueOrDefault(false)
+                    ? x.Items!.First().Upd?.StackObjectsCount
+                    ?? 1 : 1;
 
-            double offerItemCount = offer.SellInOnePiece.GetValueOrDefault(false) ? offer.Items!.First().Upd?.StackObjectsCount ?? 1 : 1;
-            double? perItemPrice = offer.RequirementsCost / offerItemCount;
+                double? perItemPrice = x.RequirementsCost / itemCount;
+                return perItemPrice ?? 0d;
+            });
 
-            sum += perItemPrice!.Value;
-            totalOfferCount++;
+            if (offerSum > 0d)
+                return Math.Round(offerSum / countableOffers.Count);
         }
-
-        if (sum > 0d && totalOfferCount > 0d)
-            return Math.Round(sum / totalOfferCount);
 
         return 0d;
     }
