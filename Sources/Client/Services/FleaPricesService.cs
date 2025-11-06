@@ -1,10 +1,11 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using EFT;
 using Newtonsoft.Json;
 using SPT.Common.Http;
 using SwiftXP.SPT.Common.EFT;
-using SwiftXP.SPT.ShowMeTheMoney.Client.Models;
 using UnityEngine;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Services;
@@ -25,6 +26,10 @@ public class FleaPricesService
 
     public IEnumerator UpdatePrices()
     {
+        // Delay until Main-Menu was loaded.
+        while (!Plugin.MainMenuLoaded)
+            yield return new WaitForSeconds(1);
+
         while (true)
         {
             if (!EFTHelper.IsInRaid && (this.FleaPrices == null || (DateTimeOffset.Now - this.lastUpdate).TotalSeconds >= UpdateAfterSeconds))
@@ -35,7 +40,7 @@ public class FleaPricesService
                 string fleaPricesJson = getJsonTask.Result;
                 if (!string.IsNullOrWhiteSpace(fleaPricesJson))
                 {
-                    FleaPrices = JsonConvert.DeserializeObject<FleaPrices>(fleaPricesJson);
+                    FleaPrices = JsonConvert.DeserializeObject<Dictionary<MongoID, double>>(fleaPricesJson);
                     this.lastUpdate = DateTimeOffset.Now;
                 }
             }
@@ -51,5 +56,5 @@ public class FleaPricesService
 
     public static FleaPricesService Instance => instance.Value;
 
-    public FleaPrices? FleaPrices { get; private set; }
+    public Dictionary<MongoID, double>? FleaPrices { get; private set; }
 }

@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using EFT.InventoryLogic;
 using SwiftXP.SPT.Common.ConfigurationManager;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Models;
 
@@ -13,14 +15,49 @@ public class FleaPriceService
 
     public bool GetFleaPrice(TradeItem tradeItem, bool includeTaxInPrices)
     {
-        if (tradeItem.Item.CanSellOnRagfair
-            && FleaPricesService.Instance.FleaPrices is not null
-            && FleaPricesService.Instance.FleaPrices!.TryGetValue(tradeItem.Item.TemplateId, out double fleaPrice))
+        if (tradeItem.Item.CanSellOnRagfair && FleaPricesService.Instance.FleaPrices != null)
         {
-            SetFleaPriceOfTradeItem(tradeItem, fleaPrice, includeTaxInPrices);
+            List<double> serverFleaPrices = [];
+            if (GetFleaPriceForItem(tradeItem.Item, out double? fleaPriceForBaseItem))
+                serverFleaPrices.Add(fleaPriceForBaseItem!.Value);
+
+            if (tradeItem.Item.TryGetItemComponent(out ArmorHolderComponent armorHolderComponent))
+            {
+                Plugin.SptLogger!.LogInfo("Is Armor...");
+
+                foreach (ArmorPlateItemClass armorPlateItem in armorHolderComponent.MoveAbleArmorPlates)
+                {
+                    if (GetFleaPriceForItem(armorPlateItem, out double? fleaPriceForPlate))
+                    {
+                        serverFleaPrices.Add(fleaPriceForPlate!.Value);
+                        Plugin.SptLogger!.LogInfo("Armor-Plate...");
+                    }
+                }
+            }
+
+            double sum = serverFleaPrices.Sum();
+
+            if (sum > 0d)
+                SetFleaPriceOfTradeItem(tradeItem, sum, includeTaxInPrices);
         }
 
         return tradeItem.FleaPrice is not null;
+    }
+
+    private bool GetFleaPriceForItem(Item item, out double? fleaPriceForItem)
+    {
+        fleaPriceForItem = null;
+
+        double? fleaPrice = FleaPricesService.Instance.FleaPrices?.GetValueOrDefault(item.TemplateId);
+        if (fleaPrice.HasValue)
+        {
+            double priceQualityModifier = ItemQualityService.GetItemQualityModifier(item);
+            fleaPriceForItem = fleaPrice.Value * priceQualityModifier;
+
+            return true;
+        }
+
+        return false;
     }
 
     private static void SetFleaPriceOfTradeItem(TradeItem tradeItem, double fleaPrice, bool includeTaxInPrices)

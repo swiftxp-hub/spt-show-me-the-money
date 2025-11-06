@@ -7,13 +7,15 @@ using SPTarkov.DI.Annotations;
 using SPTarkov.Server.Core.Extensions;
 using SPTarkov.Server.Core.Helpers;
 using SPTarkov.Server.Core.Models.Common;
+using SPTarkov.Server.Core.Models.Eft.Common.Tables;
 using SPTarkov.Server.Core.Models.Eft.Ragfair;
 using SPTarkov.Server.Core.Services;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Server.Services;
 
 [Injectable(InjectionType.Scoped)]
-public class FleaPriceService(RagfairPriceService ragfairPriceService,
+public class FleaPriceService(ItemHelper itemHelper,
+    RagfairPriceService ragfairPriceService,
     RagfairOfferService ragfairOfferService,
     PaymentHelper paymentHelper)
 {
@@ -22,51 +24,86 @@ public class FleaPriceService(RagfairPriceService ragfairPriceService,
         Dictionary<MongoId, double> fleaPrices = ragfairPriceService.GetAllFleaPrices();
         ConcurrentDictionary<MongoId, double> result = new(fleaPrices);
 
-        try
+        Parallel.ForEach(result, fleaPrice =>
         {
-            Parallel.ForEach(fleaPrices, (KeyValuePair<MongoId, double> fleaPrice) =>
+            if (!itemHelper.IsOfBaseclass(fleaPrice.Key, BaseClasses.ARMOR))
             {
-                IEnumerable<RagfairOffer>? offers = ragfairOfferService.GetOffersOfType(fleaPrice.Key);
-                if (offers != null && offers.Any())
-                {
-                    double averageOffersPrice = GetAveragePriceFromOffers(offers);
-
-                    if (averageOffersPrice > 0)
-                        result[fleaPrice.Key] = averageOffersPrice;
-                }
-            });
-        }
-        catch (Exception)
-        {
-            return new ConcurrentDictionary<MongoId, double>(fleaPrices);
-        }
+                double newPrice = GetAveragePriceFromOffers(fleaPrice.Key);
+                if (newPrice > 0d)
+                    result[fleaPrice.Key] = newPrice;
+            }
+        });
 
         return result;
     }
 
-    protected double GetAveragePriceFromOffers(IEnumerable<RagfairOffer> offers)
+    private double GetAveragePriceFromOffers(MongoId itemTemplateId)
     {
-        List<RagfairOffer> countableOffers = [.. offers
-            .Where(x => !x.Requirements!.Any(req => !paymentHelper.IsMoneyTpl(req.TemplateId))
-                && !x.IsTraderOffer()
-                && !x.IsPlayerOffer())];
-
-        if (countableOffers.Count > 0)
+        try
         {
-            double offerSum = countableOffers.Sum(x =>
+            IEnumerable<RagfairOffer>? offers = ragfairOfferService.GetOffersOfType(itemTemplateId);
+            if (offers != null && offers.Any())
             {
-                double itemCount = x.SellInOnePiece.GetValueOrDefault(false)
-                    ? x.Items!.First().Upd?.StackObjectsCount
-                    ?? 1 : 1;
+                List<RagfairOffer> countableOffers = [.. offers
+                    .Where(x => !x.Requirements!.Any(req => !paymentHelper.IsMoneyTpl(req.TemplateId))
+                        && !x.IsTraderOffer()
+                        && !x.IsPlayerOffer())];
 
-                double? perItemPrice = x.RequirementsCost / itemCount;
-                return perItemPrice ?? 0d;
-            });
+                if (countableOffers.Count > 0)
+                {
+                    double offerSum = 0;
+                    int countedOffers = 0;
 
-            if (offerSum > 0d)
-                return Math.Round(offerSum / countableOffers.Count);
+                    foreach (RagfairOffer ragfairOffer in countableOffers)
+                    {
+                        Item firstItem = ragfairOffer.Items!.First();
+                        if (IsInPerfectCondition(firstItem))
+                        {
+                            double itemCount = ragfairOffer.SellInOnePiece.GetValueOrDefault(false)
+                                ? firstItem.Upd?.StackObjectsCount
+                                ?? 1 : 1;
+
+                            double? perItemPrice = ragfairOffer.RequirementsCost / itemCount;
+                            if (perItemPrice.HasValue && perItemPrice > 0)
+                            {
+                                offerSum += perItemPrice.Value;
+                                ++countedOffers;
+                            }
+                        }
+                    }
+
+                    if (offerSum > 0d && countedOffers >= 5)
+                        return Math.Round(offerSum / countedOffers);
+                }
+            }
         }
+        catch (Exception) { }
 
         return 0d;
+    }
+
+    private bool IsInPerfectCondition(Item item)
+    {
+        TemplateItem? itemDetails = itemHelper.GetItem(item.Template).Value;
+
+        if ((item.Upd?.MedKit?.HpResource ?? 0) != (itemDetails?.Properties?.MaxHpResource ?? 0))
+            return false;
+
+        if ((item.Upd?.Repairable?.Durability ?? 0) != (item.Upd?.Repairable?.MaxDurability ?? 0))
+            return false;
+
+        if ((item.Upd?.FoodDrink?.HpPercent ?? 0) != (itemDetails?.Properties?.MaxResource ?? 0))
+            return false;
+
+        if ((item.Upd?.Key?.NumberOfUsages ?? 0) != (itemDetails?.Properties?.MaximumNumberOfUsage ?? 0))
+            return false;
+
+        if ((item.Upd?.Resource?.Value ?? 0) != (itemDetails?.Properties?.MaxResource ?? 0))
+            return false;
+
+        if ((item.Upd?.RepairKit?.Resource ?? 0) != (itemDetails?.Properties?.MaxRepairResource ?? 0))
+            return false;
+
+        return true;
     }
 }

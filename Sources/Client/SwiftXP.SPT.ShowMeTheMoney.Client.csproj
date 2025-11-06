@@ -6,7 +6,7 @@
 
     <AssemblyName>SwiftXP.SPT.ShowMeTheMoney.Client</AssemblyName>
     <Product>Show Me The Money</Product>
-    <Version>2.3.0</Version>
+    <Version>2.4.0</Version>
     <RestoreAdditionalProjectSources>
       https://api.nuget.org/v3/index.json;
       https://nuget.bepinex.dev/v3/index.json
