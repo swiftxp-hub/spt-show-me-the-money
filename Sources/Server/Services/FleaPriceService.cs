@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using SPTarkov.DI.Annotations;
@@ -9,30 +10,38 @@ using SPTarkov.Server.Core.Helpers;
 using SPTarkov.Server.Core.Models.Common;
 using SPTarkov.Server.Core.Models.Eft.Common.Tables;
 using SPTarkov.Server.Core.Models.Eft.Ragfair;
+using SPTarkov.Server.Core.Models.Utils;
 using SPTarkov.Server.Core.Services;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Server.Services;
 
 [Injectable(InjectionType.Scoped)]
-public class FleaPriceService(ItemHelper itemHelper,
+public class FleaPriceService(ISptLogger<ShowMeTheMoneyStaticRouter> sptLogger,
+    ItemHelper itemHelper,
     RagfairPriceService ragfairPriceService,
     RagfairOfferService ragfairOfferService,
     PaymentHelper paymentHelper)
 {
     public ConcurrentDictionary<MongoId, double> Get()
     {
+        Stopwatch stopwatch = new();
+        stopwatch.Start();
+
         Dictionary<MongoId, double> fleaPrices = ragfairPriceService.GetAllFleaPrices();
         ConcurrentDictionary<MongoId, double> result = new(fleaPrices);
 
         Parallel.ForEach(result, fleaPrice =>
         {
-            if (!itemHelper.IsOfBaseclass(fleaPrice.Key, BaseClasses.ARMOR))
+            if (!itemHelper.ArmorItemHasRemovablePlateSlots(fleaPrice.Key))
             {
                 double newPrice = GetAveragePriceFromOffers(fleaPrice.Key);
                 if (newPrice > 0d)
                     result[fleaPrice.Key] = newPrice;
             }
         });
+
+        stopwatch.Stop();
+        sptLogger.Debug($"FleaPriceService.Get() was finished in {stopwatch.ElapsedMilliseconds}ms.");
 
         return result;
     }

@@ -23,15 +23,10 @@ public class FleaPriceService
 
             if (tradeItem.Item.TryGetItemComponent(out ArmorHolderComponent armorHolderComponent))
             {
-                Plugin.SptLogger!.LogInfo("Is Armor...");
-
                 foreach (ArmorPlateItemClass armorPlateItem in armorHolderComponent.MoveAbleArmorPlates)
                 {
                     if (GetFleaPriceForItem(armorPlateItem, out double? fleaPriceForPlate))
-                    {
                         serverFleaPrices.Add(fleaPriceForPlate!.Value);
-                        Plugin.SptLogger!.LogInfo("Armor-Plate...");
-                    }
                 }
             }
 

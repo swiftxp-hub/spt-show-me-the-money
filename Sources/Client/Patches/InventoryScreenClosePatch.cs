@@ -5,14 +5,15 @@ using HarmonyLib;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Patches;
 
-public class MenuScreenShowPatch : ModulePatch
+public class InventoryScreenClosePatch : ModulePatch
 {
     protected override MethodBase GetTargetMethod() =>
-        AccessTools.FirstMethod(typeof(MenuScreen), x => x.Name == nameof(Tooltip.Show));
+        AccessTools.FirstMethod(typeof(InventoryScreen), x => x.Name == nameof(InventoryScreen.Close));
 
     [PatchPrefix]
     public static void PatchPrefix(Tooltip __instance)
     {
-        Plugin.MainMenuLoaded = true;
+        Plugin.HoveredItem = null;
+        SimpleTooltipShowPatch.OnClose();
     }
 }

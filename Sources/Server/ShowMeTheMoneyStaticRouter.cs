@@ -2,6 +2,7 @@
 
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using SPTarkov.DI.Annotations;
 using SPTarkov.Server.Core.DI;

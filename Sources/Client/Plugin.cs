@@ -57,7 +57,6 @@ public class Plugin : BaseUnityPlugin
     {
         SptLogger!.LogInfo("Enable patches...");
 
-        new MenuScreenShowPatch().Enable();
         new TraderClassPatch().Enable();
 
         new EditBuildScreenShowPatch().Enable();
@@ -65,6 +64,9 @@ public class Plugin : BaseUnityPlugin
 
         new GridItemOnPointerEnterPatch().Enable();
         new GridItemOnPointerExitPatch().Enable();
+
+        new InventoryScreenClosePatch().Enable();
+
         new SimpleTooltipShowPatch().Enable();
 
         TooltipUpdatePatch = new TooltipUpdatePatch();
@@ -80,6 +82,4 @@ public class Plugin : BaseUnityPlugin
     public static Item? HoveredItem { get; set; }
 
     public static bool DisableTemporary { get; set; }
-
-    public static bool MainMenuLoaded { get; set; }
 }

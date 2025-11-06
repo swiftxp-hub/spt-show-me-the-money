@@ -38,11 +38,11 @@ public class PluginConfiguration
         this.EnableColorCoding = configFile.BindConfiguration("4. Color coding", "Enable color coding (based on price-per-slot)", true, $"Uses color coding to give an quick and easy indicator how valueable an item is. Always based on price-per-slot, except for ammunition, if you activate the respective feature. Default colors are from WoW.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 18);
         this.ColorCodingMode = configFile.BindConfiguration("4. Color coding", "Color coding mode", ColorCodingModeEnum.Both, $"Defines the color coding mode.{Environment.NewLine}{Environment.NewLine}(Default: Both)", 17);
 
-        this.PoorValue = configFile.BindConfiguration("4. Color coding", "Poor value (smaller than)", 800m, "(Default: 800)", 16);
-        this.CommonValue = configFile.BindConfiguration("4. Color coding", "Common value (smaller than)", 8000m, "(Default: 8000)", 15);
-        this.UncommonValue = configFile.BindConfiguration("4. Color coding", "Uncommon value (smaller than)", 15000m, "(Default: 15000)", 14);
-        this.RareValue = configFile.BindConfiguration("4. Color coding", "Rare value (smaller than)", 24000m, "(Default: 24000)", 13);
-        this.EpicValue = configFile.BindConfiguration("4. Color coding", "Epic value (smaller than) - everything above that is considered legendary", 54000m, "(Default: 54000)", 12);
+        this.PoorValue = configFile.BindConfiguration("4. Color coding", "Poor value (smaller than)", 900m, "(Default: 900)", 16);
+        this.CommonValue = configFile.BindConfiguration("4. Color coding", "Common value (smaller than)", 12000m, "(Default: 12000)", 15);
+        this.UncommonValue = configFile.BindConfiguration("4. Color coding", "Uncommon value (smaller than)", 21000m, "(Default: 21000)", 14);
+        this.RareValue = configFile.BindConfiguration("4. Color coding", "Rare value (smaller than)", 38000m, "(Default: 38000)", 13);
+        this.EpicValue = configFile.BindConfiguration("4. Color coding", "Epic value (smaller than) - everything above that is considered legendary", 92000m, "(Default: 92000)", 12);
 
         this.UseCaliberPenetrationPower = configFile.BindConfiguration("4. Color coding", "Use penetration power instead of price value for color coding of ammunition", true, $"Uses the caliber penetration power value instead of the price value for color coding of ammunition.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 11);
 

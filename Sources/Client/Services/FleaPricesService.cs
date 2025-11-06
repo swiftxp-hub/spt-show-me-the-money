@@ -26,10 +26,6 @@ public class FleaPricesService
 
     public IEnumerator UpdatePrices()
     {
-        // Delay until Main-Menu was loaded.
-        while (!Plugin.MainMenuLoaded)
-            yield return new WaitForSeconds(1);
-
         while (true)
         {
             if (!EFTHelper.IsInRaid && (this.FleaPrices == null || (DateTimeOffset.Now - this.lastUpdate).TotalSeconds >= UpdateAfterSeconds))

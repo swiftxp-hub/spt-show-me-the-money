@@ -9,8 +9,6 @@ ___
 ## Tabs {.tabset}
 
 ### SPT 4.0.x
-Please note that SPT 4.0.0 and 4.0.1 have a minor issue when creating flea market listings. When the server is started, the listings are initially created with prices that are too low. This may result in my mod displaying inaccurate prices. The SPT team is already working on the issue and a fix will likely be included in the next release of SPT.
-
 #### What does it do?
 
 The BepInEx plugin modifies the in-game tooltip of items to display price information (in stash and in raid). The dealer who would buy the item for the best price and an average price for the flea market is displayed. The display is divided into "price-per-slot" and "total"-price. The best offer is highlighted. Also flea market taxes can be included. Version >=1.5.0 adds a color coding feature (by default the color scheme familiar from WoW, ranging from poor to legendary).
@@ -76,8 +74,15 @@ Just for clarifcation: This does not trigger DrakiaXYZ's SPT-LiveFleaPrices to q
 - [SPT-LiveFleaPrices](https://forge.sp-tarkov.com/mod/1131/live-flea-prices) v2.0.1 by DrakiaXYZ
 - [UIFixes](https://forge.sp-tarkov.com/mod/1342/ui-fixes) v5.0.2 by Tyfon
 
+#### Planned features/changes
+- Fix bug that the damage report/health condition screen my rarely show the price information tooltip.
+- Take the condition of an item into account for the flea market price.
+- Take armour plates into account for the flea market price.
+
 #### Known problems
 
+- The condition of an item is not taken into account for the flea market price. This means that the price is always displayed as if the item were in perfect condition.
+- Armour plates are not taken into account for the flea market price.
 - The damage report/health condition screen may rarely show the price information tooltip. I'm almost tempted not to fix it. It's too funny.
 - A buddy of mine has a minor problem with the "Toggle-mode for flea tax" where the tooltip sometimes gets "stuck"—meaning the display doesn't jump back when he releases Left-Alt. I haven't been able to figure out what's causing the problem yet. But he also told me that he doesn't think it's a big deal.
 - Some weapons have suffixes in their names, such as "Carbine." These are not always colored by the color coding feature.
@@ -161,6 +166,8 @@ Just for clarifcation: This does not trigger DrakiaXYZ's SPT-LiveFleaPrices to q
 
 #### Known problems
 
+- The condition of an item is not taken into account for the flea market price. This means that the price is always displayed as if the item were in perfect condition.
+- Armour plates are not taken into account for the flea market price.
 - The damage report/health condition screen may rarely show the price information tooltip. I'm almost tempted not to fix it. It's too funny.
 - A buddy of mine has a minor problem with the "Toggle-mode for flea tax" where the tooltip sometimes gets "stuck"—meaning the display doesn't jump back when he releases Left-Alt. I haven't been able to figure out what's causing the problem yet. But he also told me that he doesn't think it's a big deal.
 - Some weapons have suffixes in their names, such as "Carbine." These are not always colored by the color coding feature.
