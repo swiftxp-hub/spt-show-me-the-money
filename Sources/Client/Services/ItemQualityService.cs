@@ -7,7 +7,7 @@ public static class ItemQualityService
 {
     public static double GetItemQualityModifier(Item item/*, bool skipArmorItemsWithoutDurability = true*/)
     {
-        var result = 1d;
+        double result = 1d;
 
         if (item is MedsItemClass medsItem)
         {
@@ -33,6 +33,9 @@ public static class ItemQualityService
         {
             result = repairKitsItemClass.Resource / repairKitsItemClass.MaxRepairResource;
         }
+
+        if (double.IsNaN(result))
+            result = 1d;
 
         if (result == 0d)
             result = 0.01d;

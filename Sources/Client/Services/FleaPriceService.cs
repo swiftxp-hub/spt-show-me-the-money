@@ -49,6 +49,8 @@ public class FleaPriceService
             double priceQualityModifier = ItemQualityService.GetItemQualityModifier(item);
             fleaPriceForItem = fleaPrice.Value * priceQualityModifier;
 
+            Plugin.SptLogger!.LogInfo($"Quality-Modifier: {priceQualityModifier} - Price: {fleaPriceForItem}");
+
             return true;
         }
 
