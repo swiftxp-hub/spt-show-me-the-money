@@ -48,8 +48,9 @@ public class Plugin : BaseUnityPlugin
 
     private void InitPriceServices()
     {
-        SptLogger!.LogInfo("Initializing flea price service...");
+        SptLogger!.LogInfo("Initializing config and flea price service...");
 
+        StartCoroutine(ConfigService.Instance.GetSellChangeConfig());
         StartCoroutine(FleaPricesService.Instance.UpdatePrices());
     }
 

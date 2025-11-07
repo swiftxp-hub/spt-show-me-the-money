@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using SPTarkov.DI.Annotations;
 using SPTarkov.Server.Core.DI;
 using SPTarkov.Server.Core.Models.Common;
+using SPTarkov.Server.Core.Models.Spt.Config;
 using SPTarkov.Server.Core.Utils;
 using SwiftXP.SPT.ShowMeTheMoney.Server.Services;
 
@@ -17,13 +18,16 @@ public class ShowMeTheMoneyStaticRouter : StaticRouter
 {
     private static JsonUtil? JsonUtil;
 
+    private static ConfigService? ConfigService;
+
     private static FleaPriceService? FleaPriceService;
 
-    public ShowMeTheMoneyStaticRouter(JsonUtil jsonUtil, FleaPriceService fleaPriceService)
+    public ShowMeTheMoneyStaticRouter(JsonUtil jsonUtil, ConfigService configService, FleaPriceService fleaPriceService)
         : base(jsonUtil, GetRoutes())
     {
         JsonUtil = jsonUtil;
 
+        ConfigService = configService;
         FleaPriceService = fleaPriceService;
     }
 
@@ -39,6 +43,16 @@ public class ShowMeTheMoneyStaticRouter : StaticRouter
                     sessionId,
                     output
                 ) => await GetFleaPrices()
+            ),
+
+            new RouteAction(
+                "/showMeTheMoney/getSellChanceConfig",
+                async (
+                    url,
+                    info,
+                    sessionId,
+                    output
+                ) => await GetSellChanceConfig()
             )
         ];
     }
@@ -46,6 +60,13 @@ public class ShowMeTheMoneyStaticRouter : StaticRouter
     private static async ValueTask<string> GetFleaPrices()
     {
         ConcurrentDictionary<MongoId, double> result = FleaPriceService!.Get();
+
+        return JsonUtil!.Serialize(result)!;
+    }
+
+    private static async ValueTask<string> GetSellChanceConfig()
+    {
+        Chance result = ConfigService!.GetSellChanceConfig();
 
         return JsonUtil!.Serialize(result)!;
     }
