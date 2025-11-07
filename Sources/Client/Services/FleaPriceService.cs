@@ -52,8 +52,6 @@ public class FleaPriceService
             double qualityModifier = ItemQualityService.GetItemQualityModifier(item);
             fleaPriceForItem = SellChangeService.GetPriceForDesiredSellChange(fleaPrice.Value, qualityModifier);
 
-            NotificationsService.Instance.SendNotice($"Old-FleaPrice: {oldFleaPrice} - New-FleaPrice: {fleaPriceForItem}");
-
             return true;
         }
 
