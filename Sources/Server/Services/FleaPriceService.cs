@@ -81,7 +81,7 @@ public class FleaPriceService(ISptLogger<ShowMeTheMoneyStaticRouter> sptLogger,
                         }
                     }
 
-                    if (offerSum > 0d && countedOffers >= 5)
+                    if (offerSum > 0d/* && countedOffers >= 5*/)
                         return Math.Round(offerSum / countedOffers);
                 }
             }

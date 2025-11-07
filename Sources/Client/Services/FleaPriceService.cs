@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Comfort.Common;
 using EFT.InventoryLogic;
 using SwiftXP.SPT.Common.ConfigurationManager;
 using SwiftXP.SPT.Common.Notifications;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Models;
-using UnityEngine.Timeline;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Services;
 
@@ -52,7 +50,7 @@ public class FleaPriceService
             double oldFleaPrice = fleaPrice.Value;
 
             double qualityModifier = ItemQualityService.GetItemQualityModifier(item);
-            fleaPriceForItem = SellChangeService.GetPriceForDesiredSellChange(fleaPrice.Value, qualityModifier, 90d);
+            fleaPriceForItem = SellChangeService.GetPriceForDesiredSellChange(fleaPrice.Value, qualityModifier);
 
             NotificationsService.Instance.SendNotice($"Old-FleaPrice: {oldFleaPrice} - New-FleaPrice: {fleaPriceForItem}");
 
