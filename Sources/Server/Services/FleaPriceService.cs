@@ -93,6 +93,8 @@ public class FleaPriceService(ISptLogger<ShowMeTheMoneyStaticRouter> sptLogger,
 
     private bool IsInPerfectCondition(Item item)
     {
+        return true;
+
         TemplateItem? itemDetails = itemHelper.GetItem(item.Template).Value;
 
         if ((item.Upd?.MedKit?.HpResource ?? 0) != (itemDetails?.Properties?.MaxHpResource ?? 0))

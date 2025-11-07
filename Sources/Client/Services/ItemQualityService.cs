@@ -5,7 +5,7 @@ namespace SwiftXP.SPT.ShowMeTheMoney.Client.Services;
 
 public static class ItemQualityService
 {
-    public static double GetItemQualityModifier(Item item/*, bool skipArmorItemsWithoutDurability = true*/)
+    public static double GetItemQualityModifier(Item item)
     {
         double result = 1d;
 
@@ -72,8 +72,8 @@ public static class ItemQualityService
         float maxPossibleDurability = repairableComponent.MaxDurability;
         float durability = repairableComponent.Durability / maxPossibleDurability;
 
-        if (durability == 0)
-            return 1;
+        if (durability == 0f)
+            return 1d;
 
         return Math.Sqrt(durability);
     }

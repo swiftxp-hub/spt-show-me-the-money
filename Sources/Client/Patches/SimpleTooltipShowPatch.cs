@@ -159,8 +159,14 @@ public class SimpleTooltipShowPatch : ModulePatch
         if (Plugin.Configuration!.EnableTraderPrices.IsEnabled())
             hasTraderPrice = TraderPriceService.Instance.GetBestTraderPrice(tradeItem);
 
-        if (Plugin.Configuration!.EnableFleaPrices.IsEnabled() && (SptSession.Session.RagFair.Available || Plugin.Configuration!.ShowFleaPriceDespiteNotUnlocked.IsEnabled()))
+        if (Plugin.Configuration!.EnableFleaPrices.IsEnabled()
+            && (SptSession.Session.RagFair.Available || Plugin.Configuration!.AlwaysShowFleaPrice.IsEnabled())
+            && (!RagFairClass.Settings.isOnlyFoundInRaidAllowed
+                || (RagFairClass.Settings.isOnlyFoundInRaidAllowed && tradeItem.Item.MarkedAsSpawnedInSession)
+                || Plugin.Configuration!.AlwaysShowFleaPrice.IsEnabled()))
+        {
             hasFleaPrice = FleaPriceService.Instance.GetFleaPrice(tradeItem, Plugin.Configuration!.IncludeFleaTax);
+        }
 
         if (hasTraderPrice)
         {
@@ -194,8 +200,14 @@ public class SimpleTooltipShowPatch : ModulePatch
             if (Plugin.Configuration!.EnableTraderPrices.IsEnabled())
                 modHasTraderPrice = TraderPriceService.Instance.GetBestTraderPrice(modTradeItem);
 
-            if (Plugin.Configuration!.EnableFleaPrices.IsEnabled() && (SptSession.Session.RagFair.Available || Plugin.Configuration!.ShowFleaPriceDespiteNotUnlocked.IsEnabled()))
+            if (Plugin.Configuration!.EnableFleaPrices.IsEnabled()
+                && (SptSession.Session.RagFair.Available || Plugin.Configuration!.AlwaysShowFleaPrice.IsEnabled())
+                && (!RagFairClass.Settings.isOnlyFoundInRaidAllowed
+                    || (RagFairClass.Settings.isOnlyFoundInRaidAllowed && mod.MarkedAsSpawnedInSession)
+                    || Plugin.Configuration!.AlwaysShowFleaPrice.IsEnabled()))
+            {
                 modHasFleaPrice = FleaPriceService.Instance.GetFleaPrice(modTradeItem, Plugin.Configuration!.IncludeFleaTax);
+            }
 
             if (modHasTraderPrice && modHasFleaPrice)
             {

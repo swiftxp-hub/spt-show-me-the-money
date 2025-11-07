@@ -60,7 +60,7 @@ public class PluginConfiguration
         this.LegendaryColor = configFile.BindConfiguration("4. Color coding", "Legendary color", new Color(1f, 0.5f, 0f), "(Default: R 255, G 128, B 0)", 0);
 
         // --- 5. Flea market
-        this.ShowFleaPriceDespiteNotUnlocked = configFile.BindConfiguration("5. Flea market", "Show flea price despite not unlocked", false, $"Show the flea price of an item even if the flea market is not yet unlocked.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 6);
+        this.AlwaysShowFleaPrice = configFile.BindConfiguration("5. Flea market", "Always show flea price", false, $"Always show the flea price of an item even if the flea market is not yet unlocked or the item is not found-in-raid and the \"Can only sell items with 'Found in raid' tag\" setting in SPT/SVM is enabled.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 6);
         this.FleaPriceMultiplicand = configFile.BindConfiguration("5. Flea market", "Flea price multiplicand", 1.0m, $"Sets the multiplicand by which the average flea market price is multiplied and then displayed in the tooltip. The following calculation is performed:{Environment.NewLine}{Environment.NewLine}Average flea market price of the item * Flea price multiplicand{Environment.NewLine}{Environment.NewLine}(Default: 1.0)", 5);
         this.includeFleaTaxConfigEntry = configFile.BindConfiguration("5. Flea market", "Include flea tax", false, $"Determines whether taxes for the flea market are included in the flea price.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 4);
         this.showFleaTaxConfigEntry = configFile.BindConfiguration("5. Flea market", "Show flea tax", false, $"Show the flea tax in the tool-tip.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 3);
@@ -158,7 +158,7 @@ public class PluginConfiguration
     #endregion
 
     #region Flea market
-    public ConfigEntry<bool> ShowFleaPriceDespiteNotUnlocked { get; set; }
+    public ConfigEntry<bool> AlwaysShowFleaPrice { get; set; }
 
     public ConfigEntry<decimal> FleaPriceMultiplicand { get; set; }
 
