@@ -47,10 +47,8 @@ public class FleaPriceService
         double? fleaPrice = FleaPricesService.Instance.FleaPrices?.GetValueOrDefault(item.TemplateId);
         if (fleaPrice.HasValue)
         {
-            double oldFleaPrice = fleaPrice.Value;
-
             double qualityModifier = ItemQualityService.GetItemQualityModifier(item);
-            fleaPriceForItem = SellChangeService.GetPriceForDesiredSellChange(fleaPrice.Value, qualityModifier);
+            fleaPriceForItem = SellChangeService.GetPriceForDesiredSellChange(item.TemplateId, fleaPrice.Value, qualityModifier);
 
             return true;
         }

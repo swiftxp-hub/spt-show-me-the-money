@@ -50,7 +50,7 @@ public class Plugin : BaseUnityPlugin
     {
         SptLogger!.LogInfo("Initializing config and flea price service...");
 
-        StartCoroutine(ConfigService.Instance.GetSellChangeConfig());
+        StartCoroutine(PartialRagfairConfigService.Instance.GetPartialRagfairConfig());
         StartCoroutine(FleaPricesService.Instance.UpdatePrices());
     }
 

@@ -2,7 +2,6 @@
 
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using SPTarkov.DI.Annotations;
 using SPTarkov.Server.Core.DI;
@@ -18,17 +17,17 @@ public class ShowMeTheMoneyStaticRouter : StaticRouter
 {
     private static JsonUtil? JsonUtil;
 
-    private static ConfigService? ConfigService;
-
     private static FleaPriceService? FleaPriceService;
 
-    public ShowMeTheMoneyStaticRouter(JsonUtil jsonUtil, ConfigService configService, FleaPriceService fleaPriceService)
+    private static RagfairConfigService? RagfairConfigService;
+
+    public ShowMeTheMoneyStaticRouter(JsonUtil jsonUtil, RagfairConfigService ragfairConfigService, FleaPriceService fleaPriceService)
         : base(jsonUtil, GetRoutes())
     {
         JsonUtil = jsonUtil;
 
-        ConfigService = configService;
         FleaPriceService = fleaPriceService;
+        RagfairConfigService = ragfairConfigService;
     }
 
     private static List<RouteAction> GetRoutes()
@@ -46,13 +45,13 @@ public class ShowMeTheMoneyStaticRouter : StaticRouter
             ),
 
             new RouteAction(
-                "/showMeTheMoney/getSellChanceConfig",
+                "/showMeTheMoney/getPartialRagfairConfig",
                 async (
                     url,
                     info,
                     sessionId,
                     output
-                ) => await GetSellChanceConfig()
+                ) => await GetPartialRagfairConfig()
             )
         ];
     }
@@ -64,9 +63,9 @@ public class ShowMeTheMoneyStaticRouter : StaticRouter
         return JsonUtil!.Serialize(result)!;
     }
 
-    private static async ValueTask<string> GetSellChanceConfig()
+    private static async ValueTask<string> GetPartialRagfairConfig()
     {
-        Chance result = ConfigService!.GetSellChanceConfig();
+        Models.PartialRagfairConfig result = RagfairConfigService!.Get();
 
         return JsonUtil!.Serialize(result)!;
     }
