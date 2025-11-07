@@ -66,22 +66,19 @@ public class FleaPriceService(ISptLogger<ShowMeTheMoneyStaticRouter> sptLogger,
                     foreach (RagfairOffer ragfairOffer in countableOffers)
                     {
                         Item firstItem = ragfairOffer.Items!.First();
-                        if (IsInPerfectCondition(firstItem))
-                        {
-                            double itemCount = ragfairOffer.SellInOnePiece.GetValueOrDefault(false)
-                                ? firstItem.Upd?.StackObjectsCount
-                                ?? 1 : 1;
+                        double itemCount = ragfairOffer.SellInOnePiece.GetValueOrDefault(false)
+                            ? firstItem.Upd?.StackObjectsCount
+                            ?? 1 : 1;
 
-                            double? perItemPrice = ragfairOffer.RequirementsCost / itemCount;
-                            if (perItemPrice.HasValue && perItemPrice > 0)
-                            {
-                                offerSum += perItemPrice.Value;
-                                ++countedOffers;
-                            }
+                        double? perItemPrice = ragfairOffer.RequirementsCost / itemCount;
+                        if (perItemPrice.HasValue && perItemPrice > 0)
+                        {
+                            offerSum += perItemPrice.Value;
+                            ++countedOffers;
                         }
                     }
 
-                    if (offerSum > 0d/* && countedOffers >= 5*/)
+                    if (offerSum > 0d)
                         return Math.Round(offerSum / countedOffers);
                 }
             }
@@ -89,32 +86,5 @@ public class FleaPriceService(ISptLogger<ShowMeTheMoneyStaticRouter> sptLogger,
         catch (Exception) { }
 
         return 0d;
-    }
-
-    private bool IsInPerfectCondition(Item item)
-    {
-        return true;
-
-        TemplateItem? itemDetails = itemHelper.GetItem(item.Template).Value;
-
-        if ((item.Upd?.MedKit?.HpResource ?? 0) != (itemDetails?.Properties?.MaxHpResource ?? 0))
-            return false;
-
-        if ((item.Upd?.Repairable?.Durability ?? 0) != (item.Upd?.Repairable?.MaxDurability ?? 0))
-            return false;
-
-        if ((item.Upd?.FoodDrink?.HpPercent ?? 0) != (itemDetails?.Properties?.MaxResource ?? 0))
-            return false;
-
-        if ((item.Upd?.Key?.NumberOfUsages ?? 0) != (itemDetails?.Properties?.MaximumNumberOfUsage ?? 0))
-            return false;
-
-        if ((item.Upd?.Resource?.Value ?? 0) != (itemDetails?.Properties?.MaxResource ?? 0))
-            return false;
-
-        if ((item.Upd?.RepairKit?.Resource ?? 0) != (itemDetails?.Properties?.MaxRepairResource ?? 0))
-            return false;
-
-        return true;
     }
 }
