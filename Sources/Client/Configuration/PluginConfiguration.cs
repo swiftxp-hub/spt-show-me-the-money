@@ -3,10 +3,8 @@ using SwiftXP.SPT.Common.ConfigurationManager;
 using SwiftXP.SPT.Common.Notifications;
 using UnityEngine;
 using System;
-using SwiftXP.SPT.Common.Loggers;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Enums;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Services;
-using System.Threading.Tasks;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Configuration;
 

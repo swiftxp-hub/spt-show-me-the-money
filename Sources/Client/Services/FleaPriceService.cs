@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using EFT.InventoryLogic;
 using SwiftXP.SPT.Common.ConfigurationManager;
-using SwiftXP.SPT.Common.Notifications;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Models;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Services;

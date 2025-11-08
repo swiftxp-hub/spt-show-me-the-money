@@ -3,7 +3,6 @@ using EFT;
 using EFT.InventoryLogic;
 using SwiftXP.SPT.Common.ConfigurationManager;
 using SwiftXP.SPT.Common.Constants;
-using SwiftXP.SPT.Common.Loggers;
 using SwiftXP.SPT.Common.Sessions;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Extensions;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Models;

@@ -71,8 +71,8 @@ Just for clarifcation: This does not trigger DrakiaXYZ's SPT-LiveFleaPrices to q
 
 #### Known compatibility
 
-- [SPT-LiveFleaPrices](https://forge.sp-tarkov.com/mod/1131/live-flea-prices) v2.0.1 by DrakiaXYZ
-- [UIFixes](https://forge.sp-tarkov.com/mod/1342/ui-fixes) v5.0.2 by Tyfon
+- [SPT-LiveFleaPrices](https://forge.sp-tarkov.com/mod/1131/live-flea-prices) v2.0.1 or newer by DrakiaXYZ
+- [UIFixes](https://forge.sp-tarkov.com/mod/1342/ui-fixes) v5.0.2 or newer by Tyfon
 
 #### Planned features/changes
 - Fix bug that the damage report/health condition screen my rarely show the price information tooltip.
