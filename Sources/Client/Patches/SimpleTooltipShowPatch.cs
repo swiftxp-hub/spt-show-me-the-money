@@ -135,6 +135,9 @@ public class SimpleTooltipShowPatch : ModulePatch
 
             if (Plugin.Configuration!.ShowWeaponModsPrice.IsEnabled() && item is Weapon weapon)
                 ShowWeaponModsPriceInformation(weapon, ref textToAppendToTooltip);
+
+            if (Plugin.Configuration!.ShowArmorPlatesPrice.IsEnabled() && (item.GetItemComponent<ArmorHolderComponent>()?.MoveAbleArmorPlates?.Any() ?? false))
+                ShowArmorPlatesPriceInformation(item, ref textToAppendToTooltip);
         }
 
         if (Plugin.Configuration!.RenderInItalics.IsEnabled())
@@ -185,7 +188,7 @@ public class SimpleTooltipShowPatch : ModulePatch
 
     private static void ShowWeaponModsPriceInformation(Weapon weapon, ref StringBuilder textToAppendToTooltip)
     {
-        double modsPrice = 0;
+        double modsPrice = 0d;
 
         foreach (Mod mod in weapon.Mods)
         {
@@ -228,6 +231,52 @@ public class SimpleTooltipShowPatch : ModulePatch
 
         if (modsPrice > 0)
             textToAppendToTooltip.Append($"<br>{"APCTab/Mods".Localized(null)}: {FormatPrice(modsPrice)}");
+    }
+
+    private static void ShowArmorPlatesPriceInformation(Item armorItem, ref StringBuilder textToAppendToTooltip)
+    {
+        double platesPrice = 0d;
+
+        ArmorHolderComponent armorHolderComponent = armorItem.GetItemComponent<ArmorHolderComponent>();
+        foreach (ArmorPlateItemClass armorPlateItemClass in armorHolderComponent.MoveAbleArmorPlates)
+        {
+            ArmorPlateItemClass clonedPlate = armorPlateItemClass.CloneItem();
+            TradeItem plateTradeItem = new(clonedPlate);
+
+            bool modHasTraderPrice = false;
+            bool modHasFleaPrice = false;
+
+            if (Plugin.Configuration!.EnableTraderPrices.IsEnabled())
+                modHasTraderPrice = TraderPriceService.Instance.GetBestTraderPrice(plateTradeItem);
+
+            if (Plugin.Configuration!.EnableFleaPrices.IsEnabled()
+                && (SptSession.Session.RagFair.Available || Plugin.Configuration!.AlwaysShowFleaPrice.IsEnabled())
+                && (!RagFairClass.Settings.isOnlyFoundInRaidAllowed
+                    || (RagFairClass.Settings.isOnlyFoundInRaidAllowed && armorPlateItemClass.MarkedAsSpawnedInSession)
+                    || Plugin.Configuration!.AlwaysShowFleaPrice.IsEnabled()))
+            {
+                modHasFleaPrice = FleaPriceService.Instance.GetFleaPrice(plateTradeItem, Plugin.Configuration!.IncludeFleaTax);
+            }
+
+            if (modHasTraderPrice && modHasFleaPrice)
+            {
+                if (plateTradeItem.TraderPrice!.GetComparePriceInRouble() > plateTradeItem.FleaPrice!.GetComparePriceInRouble())
+                    platesPrice += plateTradeItem.TraderPrice!.GetTotalPriceInRouble();
+                else
+                    platesPrice += plateTradeItem.FleaPrice!.GetTotalPriceInRouble();
+            }
+            else if (modHasFleaPrice)
+            {
+                platesPrice += plateTradeItem.FleaPrice!.GetTotalPriceInRouble();
+            }
+            else
+            {
+                platesPrice += plateTradeItem.TraderPrice!.GetTotalPriceInRouble();
+            }
+        }
+
+        if (platesPrice > 0)
+            textToAppendToTooltip.Append($"<br>{"67600929bd0a0549d70993f6 ShortName".Localized(null)}: {FormatPrice(platesPrice)}");
     }
 
     private static void SetColorCoding(ref string text, string textToReplace, double? highestComparePrice)

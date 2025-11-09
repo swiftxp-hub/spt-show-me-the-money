@@ -16,16 +16,16 @@ public class ShowMeTheMoneyStaticRouter : StaticRouter
 {
     private static JsonUtil? JsonUtil;
 
-    private static FleaPriceService? FleaPriceService;
+    private static FleaPricesService? FleaPricesService;
 
     private static RagfairConfigService? RagfairConfigService;
 
-    public ShowMeTheMoneyStaticRouter(JsonUtil jsonUtil, RagfairConfigService ragfairConfigService, FleaPriceService fleaPriceService)
+    public ShowMeTheMoneyStaticRouter(JsonUtil jsonUtil, RagfairConfigService ragfairConfigService, FleaPricesService fleaPricesService)
         : base(jsonUtil, GetRoutes())
     {
         JsonUtil = jsonUtil;
 
-        FleaPriceService = fleaPriceService;
+        FleaPricesService = fleaPricesService;
         RagfairConfigService = ragfairConfigService;
     }
 
@@ -57,7 +57,7 @@ public class ShowMeTheMoneyStaticRouter : StaticRouter
 
     private static async ValueTask<string> GetFleaPrices()
     {
-        ConcurrentDictionary<MongoId, double> result = FleaPriceService!.Get();
+        ConcurrentDictionary<MongoId, double> result = FleaPricesService!.Get();
 
         return JsonUtil!.Serialize(result)!;
     }

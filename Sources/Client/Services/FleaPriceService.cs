@@ -4,6 +4,7 @@ using System.Linq;
 using EFT.InventoryLogic;
 using SwiftXP.SPT.Common.ConfigurationManager;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Models;
+using Unity.Collections;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Services;
 
@@ -17,42 +18,45 @@ public class FleaPriceService
     {
         if (tradeItem.Item.CanSellOnRagfair && FleaPricesService.Instance.FleaPrices != null)
         {
-            List<double> serverFleaPrices = [];
-            if (GetFleaPriceForItem(tradeItem.Item, out double? fleaPriceForBaseItem))
-                serverFleaPrices.Add(fleaPriceForBaseItem!.Value);
-
-            if (tradeItem.Item.TryGetItemComponent(out ArmorHolderComponent armorHolderComponent))
+            if (FleaPricesService.Instance.FleaPrices?.TryGetValue(tradeItem.Item.TemplateId, out double fleaPrice) ?? false)
             {
-                foreach (ArmorPlateItemClass armorPlateItem in armorHolderComponent.MoveAbleArmorPlates)
+                double qualityModifier = ItemQualityService.GetItemQualityModifier(tradeItem.Item);
+
+                // Handle weapons
+                if (tradeItem.Item is Weapon weapon)
                 {
-                    if (GetFleaPriceForItem(armorPlateItem, out double? fleaPriceForPlate))
-                        serverFleaPrices.Add(fleaPriceForPlate!.Value);
+                    fleaPrice = GetWeaponPrice(weapon, fleaPrice);
                 }
+                // Handle everything else
+                else
+                {
+                    if (PartialRagfairConfigService.Instance.PartialRagfairConfig?.ItemPriceMultiplier?.TryGetValue(tradeItem.Item.TemplateId, out double itemPriceModifer) ?? false)
+                        fleaPrice *= itemPriceModifer;
+                }
+
+                fleaPrice *= qualityModifier;
+
+                double bestFleaPrice = SellChangeService.GetPriceForDesiredSellChange(fleaPrice, qualityModifier);
+
+                if (bestFleaPrice > 0d)
+                    SetFleaPriceOfTradeItem(tradeItem, bestFleaPrice, includeTaxInPrices);
             }
-
-            double sum = serverFleaPrices.Sum();
-
-            if (sum > 0d)
-                SetFleaPriceOfTradeItem(tradeItem, sum, includeTaxInPrices);
         }
 
         return tradeItem.FleaPrice is not null;
     }
 
-    private bool GetFleaPriceForItem(Item item, out double? fleaPriceForItem)
+    private double GetWeaponPrice(Weapon weapon, double staticWeaponPrice)
     {
-        fleaPriceForItem = null;
+        double totalWeaponPrice = staticWeaponPrice;
 
-        double? fleaPrice = FleaPricesService.Instance.FleaPrices?.GetValueOrDefault(item.TemplateId);
-        if (fleaPrice.HasValue)
+        foreach (Mod mod in weapon.Mods)
         {
-            double qualityModifier = ItemQualityService.GetItemQualityModifier(item);
-            fleaPriceForItem = SellChangeService.GetPriceForDesiredSellChange(item.TemplateId, fleaPrice.Value, qualityModifier);
-
-            return true;
+            if (FleaPricesService.Instance.FleaPrices?.TryGetValue(mod.TemplateId, out double fleaPrice) ?? false)
+                totalWeaponPrice += fleaPrice;
         }
 
-        return false;
+        return totalWeaponPrice;
     }
 
     private static void SetFleaPriceOfTradeItem(TradeItem tradeItem, double fleaPrice, bool includeTaxInPrices)

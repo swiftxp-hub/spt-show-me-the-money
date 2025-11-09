@@ -16,7 +16,7 @@ using SPTarkov.Server.Core.Services;
 namespace SwiftXP.SPT.ShowMeTheMoney.Server.Services;
 
 [Injectable(InjectionType.Scoped)]
-public class FleaPriceService(ISptLogger<ShowMeTheMoneyStaticRouter> sptLogger,
+public class FleaPricesService(ISptLogger<ShowMeTheMoneyStaticRouter> sptLogger,
     ItemHelper itemHelper,
     RagfairPriceService ragfairPriceService,
     RagfairOfferService ragfairOfferService,
@@ -30,9 +30,15 @@ public class FleaPriceService(ISptLogger<ShowMeTheMoneyStaticRouter> sptLogger,
         Dictionary<MongoId, double> fleaPrices = ragfairPriceService.GetAllFleaPrices();
         ConcurrentDictionary<MongoId, double> result = new(fleaPrices);
 
-        Parallel.ForEach(result, fleaPrice =>
+        Parallel.ForEach(fleaPrices, fleaPrice =>
         {
-            if (!itemHelper.ArmorItemHasRemovablePlateSlots(fleaPrice.Key))
+            if (itemHelper.IsOfBaseclass(fleaPrice.Key, BaseClasses.WEAPON))
+            {
+                double? staticWeaponPrice = ragfairPriceService.GetStaticPriceForItem(fleaPrice.Key);
+                if (staticWeaponPrice.HasValue)
+                    result[fleaPrice.Key] = staticWeaponPrice.Value;
+            }
+            else
             {
                 double newPrice = GetAveragePriceFromOffers(fleaPrice.Key);
                 if (newPrice > 0d)
@@ -41,7 +47,7 @@ public class FleaPriceService(ISptLogger<ShowMeTheMoneyStaticRouter> sptLogger,
         });
 
         stopwatch.Stop();
-        sptLogger.Debug($"FleaPriceService.Get() was finished in {stopwatch.ElapsedMilliseconds}ms.");
+        sptLogger.Info($"FleaPriceService.Get() was finished in {stopwatch.ElapsedMilliseconds}ms.");
 
         return result;
     }

@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using EFT.InventoryLogic;
+using Unity.Burst.Intrinsics;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Services;
 
@@ -13,9 +15,13 @@ public static class ItemQualityService
         {
             result = (medsItem.MedKitComponent?.HpResource / medsItem.MedKitComponent?.MaxHpResource) ?? 1d;
         }
-        else if (IsRepairable(item, out RepairableComponent repairableComponent))
+        else if (IsRepairable(item, out RepairableComponent repairableComponent) && !item.TryGetItemComponent(out ArmorHolderComponent _))
         {
             result = GetRepairableItemQualityValue(repairableComponent);
+        }
+        else if (item.TryGetItemComponent(out ArmorHolderComponent armorHolderComponent) && armorHolderComponent.ArmorPlates.Any())
+        {
+            result = GetArmorHolderQualityValue(item, armorHolderComponent);
         }
         else if (item is FoodDrinkItemClass foodDrinkItem)
         {
@@ -23,7 +29,14 @@ public static class ItemQualityService
         }
         else if (IsKey(item, out KeyComponent keyComponent))
         {
-            result = ((keyComponent.Template?.MaximumNumberOfUsage - keyComponent.NumberOfUsages) / keyComponent.Template?.MaximumNumberOfUsage) ?? 1d;
+            /* Quality of keys is bugged.
+            double? numberOfUsages = keyComponent.NumberOfUsages;
+            double? maximumNumberOfUsage = keyComponent.Template?.MaximumNumberOfUsage;
+
+            result = ((maximumNumberOfUsage - numberOfUsages) / maximumNumberOfUsage) ?? 1d;
+            */
+
+            result = 1d;
         }
         else if (IsResource(item, out ResourceComponent resourceComponent))
         {
@@ -70,11 +83,48 @@ public static class ItemQualityService
             repairableComponent.MaxDurability = repairableComponent.Durability;
 
         float maxPossibleDurability = repairableComponent.MaxDurability;
+        if (repairableComponent.TemplateDurability > 0)
+            maxPossibleDurability = repairableComponent.TemplateDurability;
+
         float durability = repairableComponent.Durability / maxPossibleDurability;
 
         if (durability == 0f)
             return 1d;
 
         return Math.Sqrt(durability);
+    }
+
+    private static double GetArmorHolderQualityValue(Item rootItem, ArmorHolderComponent armorHolderComponent)
+    {
+        double qualityModifier = 0d;
+        double itemsWithQualityCount = 0d;
+
+        if (armorHolderComponent.MoveAbleArmorSlots.Any() || rootItem.GetItemComponent<HelmetComponent>() != null)
+        {
+            qualityModifier = 1d;
+            itemsWithQualityCount++;
+        }
+
+        foreach (ArmorPlateItemClass armorPlateItemClass in armorHolderComponent.ArmorPlates)
+        {
+            RepairableComponent repairableComponent = armorPlateItemClass.GetItemComponent<RepairableComponent>();
+            if (repairableComponent != null)
+            {
+                double plateQuality = GetRepairableItemQualityValue(armorPlateItemClass.GetItemComponent<RepairableComponent>());
+                if (Math.Abs(plateQuality - (-1)) < 0.001)
+                {
+                    continue;
+                }
+
+                qualityModifier += plateQuality;
+                itemsWithQualityCount++;
+            }
+        }
+
+        double result = qualityModifier / itemsWithQualityCount;
+        if (double.IsNaN(result))
+            result = 1d;
+
+        return Math.Min(result, 1d);
     }
 }
