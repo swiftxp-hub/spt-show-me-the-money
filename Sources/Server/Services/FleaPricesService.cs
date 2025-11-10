@@ -47,7 +47,7 @@ public class FleaPricesService(ISptLogger<ShowMeTheMoneyStaticRouter> sptLogger,
         });
 
         stopwatch.Stop();
-        sptLogger.Info($"FleaPriceService.Get() was finished in {stopwatch.ElapsedMilliseconds}ms.");
+        sptLogger.Debug($"FleaPriceService.Get() was finished in {stopwatch.ElapsedMilliseconds}ms.");
 
         return result;
     }
