@@ -14,7 +14,7 @@ public class FleaPricesService
 {
     private const string RemotePathToGetStaticPriceTable = "/showMeTheMoney/getFleaPrices";
 
-    private const double UpdateAfterSeconds = 60d; // 1 minute
+    private const double UpdateAfterSeconds = 300d; // 5 minutes
 
     private WaitForSeconds coroutineIntervalWait = new(15);
 
