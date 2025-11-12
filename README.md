@@ -2,7 +2,7 @@ A BepInEx plugin and an accompanying server mod for SPT (Single Player Tarkov).
 
 ![Preview Image MOD](https://raw.githubusercontent.com/swiftxp-hub/spt-show-me-the-money/refs/heads/main/Assets/preview.png)
 
-**Notice:** A quick-sell companion mod is available [here](https://forge.sp-tarkov.com/mod/2323/show-me-the-money-quick-sell).
+**Notice:** A quick-sell addon is also available.
 
 ___
 
