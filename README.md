@@ -11,11 +11,11 @@ ___
 ### SPT 4.0.x
 #### What does it do?
 
-The BepInEx plugin modifies the in-game item tooltip to display price information (both in stash and in raid). It shows the trader who offers the best purchase price for the item, as well as the flea market price that targets a 100% sell chance. The display is divided into "price per slot" and "total price," with the best offer highlighted. Flea market taxes can also be included.
+The BepInEx plugin modifies the in-game item tooltip to display price information (both in stash and in raid). It shows the trader who offers the best purchase price for the item, as well as the flea market price that targets a 100% sell chance. The display is divided into "price per slot" and "total price" with the best offer highlighted. Flea market taxes can also be included.
 
 Version 1.5.0 and later add a color-coding feature (by default using the familiar World of Warcraft color scheme, ranging from *poor* to *legendary*).
 
-The accompanying server mod provides an endpoint for the BepInEx plugin, which is used to retrieve flea market prices.
+The accompanying server mod provides an endpoint for the BepInEx plugin, which is used to retrieve some server configuration values and flea market prices.
 
 Several configuration options are available through the BepInEx configurator.
 
@@ -54,8 +54,7 @@ You should end up with the following files copied...
 
 ##### If you use the Fika headless client
 
-There is no need to install anything to your Fika headless client for this mod to work properly. In fact, I recommend **not** installing my mod on your Fika headless client.  
-This also means I recommend adding my mod to your `Exclusions.json` if you use [Corter's Mod Sync](https://github.com/c-orter/ModSync).  
+There is no need to install anything to your Fika headless client for this mod to work properly. In fact, I recommend **not** installing my mod on your Fika headless client This also means I recommend adding my mod to your `Exclusions.json` if you use [Corter's Mod Sync](https://github.com/c-orter/ModSync).
 [Please see his FAQ on how to add sync exclusions.](https://github.com/c-orter/ModSync/wiki/Configuration#exclusions)
 
 #### Configuration
@@ -64,8 +63,7 @@ Please use the BepInEx configurator to adjust the mod’s features (usually acce
 
 ![BepInEx Plugin Configuration](https://raw.githubusercontent.com/swiftxp-hub/spt-show-me-the-money/refs/heads/main/Assets/plugin-configuration.png)
 
-As you can see, you can also manually trigger the plugin to retrieve the current flea market prices from your SPT server.  
-This can be useful if you have installed [DrakiaXYZ's SPT-LiveFleaPrices](https://forge.sp-tarkov.com/mod/1131/live-flea-prices) — however, flea market prices are updated regularly.
+As you can see, you can also manually trigger the plugin to retrieve the current flea market prices from your SPT server. This can be useful if you have installed [DrakiaXYZ's SPT-LiveFleaPrices](https://forge.sp-tarkov.com/mod/1131/live-flea-prices) — however, flea market prices are updated regularly.
 
 Just for clarification: This does not trigger DrakiaXYZ's SPT-LiveFleaPrices to query the latest flea prices. Instead, my mod retrieves the latest flea prices from your SPT server (which are set by SPT-LiveFleaPrices).
 
@@ -98,7 +96,7 @@ Just for clarification: This does not trigger DrakiaXYZ's SPT-LiveFleaPrices to 
 ### SPT 3.11.x
 #### What does it do?
 
-The BepInEx plugin modifies the in-game item tooltip to display price information (in stash and in raid). It shows the trader who offers the best purchase price for the item, as well as the average flea market price. The display is divided into "price per slot" and "total price," with the best offer highlighted. Flea market taxes can also be included.  
+The BepInEx plugin modifies the in-game item tooltip to display price information (in stash and in raid). It shows the trader who offers the best purchase price for the item, as well as the average flea market price. The display is divided into "price per slot" and "total price" with the best offer highlighted. Flea market taxes can also be included.  
 
 Version 1.5.0 and later add a color-coding feature (by default using the familiar World of Warcraft color scheme, ranging from *poor* to *legendary*).
 
@@ -144,9 +142,7 @@ You should end up with the following files copied...
 
 ##### If you use the Fika headless client
 
-There is no need to install anything to your Fika headless client for this mod to work properly. In fact, I recommend **not** installing my mod on your Fika headless client.  
-This also means I recommend adding my mod to your `Exclusions.json` if you use [Corter's Mod Sync](https://github.com/c-orter/ModSync).  
-[Please see his FAQ on how to add sync exclusions.](https://github.com/c-orter/ModSync/wiki/Configuration#exclusions)
+There is no need to install anything to your Fika headless client for this mod to work properly. In fact, I recommend **not** installing my mod on your Fika headless client. This also means I recommend adding my mod to your `Exclusions.json` if you use [Corter's Mod Sync](https://github.com/c-orter/ModSync). [Please see his FAQ on how to add sync exclusions.](https://github.com/c-orter/ModSync/wiki/Configuration#exclusions)
 
 #### Configuration
 
@@ -156,8 +152,7 @@ Please use the BepInEx configurator to adjust the mod’s features (usually acce
 
 ![Demonstration of toggle mode for flea tax](https://raw.githubusercontent.com/swiftxp-hub/spt-show-me-the-money/refs/heads/main-spt311/Assets/toggle-tax-sample.gif)
 
-As you can see, you can also manually trigger the plugin to retrieve the current flea market prices from your SPT server.  
-This can be useful if you have installed [DrakiaXYZ's SPT-LiveFleaPrices](https://forge.sp-tarkov.com/mod/1131/live-flea-prices) — however, flea market prices are updated regularly.
+As you can see, you can also manually trigger the plugin to retrieve the current flea market prices from your SPT server. This can be useful if you have installed [DrakiaXYZ's SPT-LiveFleaPrices](https://forge.sp-tarkov.com/mod/1131/live-flea-prices) — however, flea market prices are updated regularly.
 
 Just for clarification: This does not trigger DrakiaXYZ's SPT-LiveFleaPrices to query the latest flea prices. Instead, my mod retrieves the latest flea prices from your SPT server (which are set by SPT-LiveFleaPrices).
 
