@@ -216,7 +216,7 @@ I will try to continue supporting SPT 3.11.x as long as the SPT team supports th
     - SMTM is designed to keep the load on the SPT server low. As such, only one request is sent every 5 minutes (and only when not in raid) to update the average flea market prices that SMTM uses to calculate the displayed price. A lot can happen in those 5 minutes that influences the flea market price: new offers are created by the SPT server, offers expire, you buy or sell items on the flea market, or mods like "Live Flea Prices" update the price database. These many factors can cause discrepancies in the displayed flea prices. While it’s not perfect, experience shows that SMTM’s calculations are usually accurate enough.
     - The “Live Flea Prices” mod can sometimes cause sharp fluctuations in prices. However, the mod itself is not to blame. The live flea market can often be unpredictable, especially when BSG makes changes that suddenly cause previously unwanted items to become highly sought after. Similarly, trolls can also influence the live flea market. These fluctuations can sometimes be reflected in the offers created by the SPT server. SMTM is designed to ensure that the displayed price still represents a 100% chance of sale, but this is not always guaranteed.
 
-- **The displayed flea market prices differ greatly from what I would expect.**
+- **The displayed flea market prices differ greatly from what I would expect. Why?**
   - First, please check your settings for SMTM, SPT/SVM, and other mods that may influence prices.
   - If you're sure that SMTM has a problem, please leave a comment. Providing details is greatly appreciated:
     - Which item(s)?
@@ -226,6 +226,9 @@ I will try to continue supporting SPT 3.11.x as long as the SPT team supports th
 
 - **Armor with installed plates is the same value as without plates. Why?**
   - SPT 4.0.4 does not take plates into account when calculating its chance to buy an offer you created. As a result, you receive the same amount of money for an armor with installed plates as you would for armor without plates. This behavior is mirrored by SMTM. Ergo, the same flea market price is displayed for both armors. However, SMTM 2.5.0 introduced the feature to display the value of the installed armor plates. It is expected that SPT 4.0.5 or later will take plates into account, and I will amend SMTM to reflect this change.
+
+- **Remaining uses of keys don’t appear to affect the flea market price. Why?**  
+  - SPT 4.0.4 has a bug in how it calculates the sell chance related to a key’s remaining uses. As a result, a key with only 1 out of 40 uses left sells for the same amount on the flea market as a fully unused (40/40) key. SMTM mirrors this behavior when displaying the flea market price.
 
 {.endtabset}
 
