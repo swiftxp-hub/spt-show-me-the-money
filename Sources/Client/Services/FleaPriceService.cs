@@ -27,6 +27,11 @@ public class FleaPriceService
                 {
                     fleaPrice = GetWeaponPrice(weapon, fleaPrice);
                 }
+                // Handle armor holders
+                else if (tradeItem.Item.TryGetItemComponent(out ArmorHolderComponent armorHolderComponent) && armorHolderComponent.MoveAbleArmorPlates.Any())
+                {
+                    fleaPrice = GetArmorHolderPrice(armorHolderComponent, fleaPrice);
+                }
                 // Handle everything else
                 else
                 {
@@ -57,6 +62,21 @@ public class FleaPriceService
         }
 
         return totalWeaponPrice;
+    }
+
+    private double GetArmorHolderPrice(ArmorHolderComponent armorHolderComponent, double armorHolderPrice)
+    {
+        double totalArmorHolderPrice = armorHolderPrice;
+
+        foreach (ArmorPlateItemClass armorPlateItemClass in armorHolderComponent.MoveAbleArmorPlates)
+        {
+            if (FleaPricesService.Instance.FleaPrices?.TryGetValue(armorPlateItemClass.TemplateId, out double fleaPrice) ?? false)
+            {
+                totalArmorHolderPrice += fleaPrice;
+            }
+        }
+
+        return totalArmorHolderPrice;
     }
 
     private static void SetFleaPriceOfTradeItem(TradeItem tradeItem, double fleaPrice, bool includeTaxInPrices)

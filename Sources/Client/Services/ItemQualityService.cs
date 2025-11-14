@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using EFT.InventoryLogic;
-using Unity.Burst.Intrinsics;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Services;
 
