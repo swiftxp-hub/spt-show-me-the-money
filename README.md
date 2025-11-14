@@ -186,7 +186,7 @@ I will try to continue supporting SPT 3.11.x as long as the SPT team supports th
 
 ### FAQ
 
-**Last update of the FAQ:** November 13, 2025  
+**Last update of the FAQ:** November 14, 2025  
 **FAQ SMTM version:** 2.5.0
 
 - **How do I install SMTM?**  
