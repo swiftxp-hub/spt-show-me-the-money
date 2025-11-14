@@ -27,16 +27,12 @@ public static class ItemQualityService
         {
             result = (foodDrinkItem.FoodDrinkComponent?.HpPercent / foodDrinkItem.FoodDrinkComponent?.MaxResource) ?? 1d;
         }
-        else if (IsKey(item, out KeyComponent keyComponent))
+        else if (IsKey(item, out KeyComponent keyComponent) && keyComponent?.NumberOfUsages > 0 && keyComponent?.Template?.MaximumNumberOfUsage > 0)
         {
-            /* Quality of keys is bugged.
-            double? numberOfUsages = keyComponent.NumberOfUsages;
-            double? maximumNumberOfUsage = keyComponent.Template?.MaximumNumberOfUsage;
+            double numberOfUsages = keyComponent.NumberOfUsages!;
+            double maximumNumberOfUsage = keyComponent.Template.MaximumNumberOfUsage!;
 
-            result = ((maximumNumberOfUsage - numberOfUsages) / maximumNumberOfUsage) ?? 1d;
-            */
-
-            result = 1d;
+            result = (maximumNumberOfUsage - numberOfUsages) / maximumNumberOfUsage;
         }
         else if (IsResource(item, out ResourceComponent resourceComponent))
         {
