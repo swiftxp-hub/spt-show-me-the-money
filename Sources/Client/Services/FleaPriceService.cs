@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using EFT.InventoryLogic;
 using SwiftXP.SPT.Common.ConfigurationManager;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Models;
-using Unity.Collections;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Services;
 
