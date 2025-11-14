@@ -54,7 +54,7 @@ You should end up with the following files copied...
 
 ##### If you use the Fika headless client
 
-There is no need to install anything to your Fika headless client for this mod to work properly. In fact, I recommend **not** installing my mod on your Fika headless client This also means I recommend adding my mod to your `Exclusions.json` if you use [Corter's Mod Sync](https://github.com/c-orter/ModSync).
+There is no need to install anything to your Fika headless client for this mod to work properly. In fact, I recommend **not** installing my mod on your Fika headless client. This also means I recommend adding my mod to your `Exclusions.json` if you use [Corter's Mod Sync](https://github.com/c-orter/ModSync).
 [Please see his FAQ on how to add sync exclusions.](https://github.com/c-orter/ModSync/wiki/Configuration#exclusions)
 
 #### Configuration
@@ -183,6 +183,49 @@ Just for clarification: This does not trigger DrakiaXYZ's SPT-LiveFleaPrices to 
 #### Support for 3.11.x
 
 I will try to continue supporting SPT 3.11.x as long as the SPT team supports this version. However, I cannot promise this 100%. Support will be limited to bug fixes and minor adjustments.
+
+### FAQ
+
+**Last update of the FAQ:** November 13, 2025  
+**FAQ SMTM version:** 2.5.0
+
+- **How do I install SMTM?**  
+  - Simply extract the two folders from the `.zip` or `.7z` file into the folder where you installed SPT. A more detailed explanation can be found in the mod's description.
+
+- **How do I configure SMTM?**  
+  - Press F12 or F1. This will open the BepInEx Configurator, where you should find SMTM and all its configurable features.
+
+- **Is there a quick-sell addon?**
+  - Yes, it is. Please have a look at the "Addon" tab on the mod page.
+
+- **No price information is shown in the tooltip. What can I do?**  
+  - Double-check that SMTM is installed correctly. If you're unsure, reinstall it. Check the mod's description for detailed installation instructions.  
+  - Avoid using WinRAR to extract `.7z` files. It has been known to occasionally corrupt extracted files.
+
+- **No flea market prices are shown in the tooltip. What can I do?**  
+  - By default, flea market prices are only visible once you’ve unlocked the flea market (level requirement).  
+    - You can force SMTM to always display flea market prices by enabling the "Always show flea market price" option in the BepInEx Configurator.  
+  - Double-check that SMTM is installed correctly. If flea market prices aren’t showing, it usually indicates that the server component of SMTM is not installed correctly. Refer to the mod's description for installation instructions.
+
+- **I get SSL connection errors with this mod. How can I fix this?**
+  - While it's not impossible, it's highly unlikely that SMTM is responsible for these SSL connection errors. Tarkov's SSL connection issues can have many causes — Live Tarkov experiences these problems as well. Unfortunately, the potential causes are so varied that they go beyond the scope of support I can provide in this FAQ. The SPT Discord might be a better place to seek help.
+
+- **The flea market prices displayed may differ slightly from the actual average flea market prices. How can I fix this?**  
+  - Some degree of inaccuracy is to be expected. There are several reasons for this:
+    - SMTM shows the flea market price aimed at achieving a 100% sell chance, not necessarily the average price. In SPT 4.0.4 and SMTM 2.5.0, the achievable flea market price is often slightly higher than the average price.
+    - SMTM is designed to keep the load on the SPT server low. As such, only one request is sent every 5 minutes (and only when not in raid) to update the average flea market prices that SMTM uses to calculate the displayed price. A lot can happen in those 5 minutes that influences the flea market price: new offers are created by the SPT server, offers expire, you buy or sell items on the flea market, or mods like "Live Flea Prices" update the price database. These many factors can cause discrepancies in the displayed flea prices. While it’s not perfect, experience shows that SMTM’s calculations are usually accurate enough.
+    - The “Live Flea Prices” mod can sometimes cause sharp fluctuations in prices. However, the mod itself is not to blame. The live flea market can often be unpredictable, especially when BSG makes changes that suddenly cause previously unwanted items to become highly sought after. Similarly, trolls can also influence the live flea market. These fluctuations can sometimes be reflected in the offers created by the SPT server. SMTM is designed to ensure that the displayed price still represents a 100% chance of sale, but this is not always guaranteed.
+
+- **The displayed flea market prices differ greatly from what I would expect.**
+  - First, please check your settings for SMTM, SPT/SVM, and other mods that may influence prices.
+  - If you're sure that SMTM has a problem, please leave a comment. Providing details is greatly appreciated:
+    - Which item(s)?
+    - What flea market price is displayed?
+    - What flea market price did you expect?
+    - Screenshots and logs can be very helpful.
+
+- **Armor with installed plates is the same value as without plates. Why?**
+  - SPT 4.0.4 does not take plates into account when calculating its chance to buy an offer you created. As a result, you receive the same amount of money for an armor with installed plates as you would for armor without plates. This behavior is mirrored by SMTM. Ergo, the same flea market price is displayed for both armors. However, SMTM 2.5.0 introduced the feature to display the value of the installed armor plates. It is expected that SPT 4.0.5 or later will take plates into account, and I will amend SMTM to reflect this change.
 
 {.endtabset}
 
