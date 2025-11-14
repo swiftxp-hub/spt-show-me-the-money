@@ -1,9 +1,8 @@
-A BepInEx plugin and an accompanying server mod for SPT (Single Player Tarkov).
-
 ![Preview Image MOD](https://raw.githubusercontent.com/swiftxp-hub/spt-show-me-the-money/refs/heads/main/Assets/preview.png)
 
-**Notice:** A quick-sell addon is also available.
-
+___
+> Speed up your sales! A quick-sell add-on is ready for you in the "Addon" tab. 
+> Or just click [here](https://forge.sp-tarkov.com/addon/1/quick-sell).
 ___
 
 ## Tabs {.tabset}
@@ -196,7 +195,7 @@ I will try to continue supporting SPT 3.11.x as long as the SPT team supports th
   - Press F12 or F1. This will open the BepInEx Configurator, where you should find SMTM and all its configurable features.
 
 - **Is there a quick-sell addon?**
-  - Yes, it is. Please have a look at the "Addon" tab on the mod page.
+  - Yes, there is. Please have a look at the "Addon" tab on the mod page.
 
 - **No price information is shown in the tooltip. What can I do?**  
   - Double-check that SMTM is installed correctly. If you're unsure, reinstall it. Check the mod's description for detailed installation instructions.  
