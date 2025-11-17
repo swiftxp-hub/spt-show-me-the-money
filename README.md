@@ -111,7 +111,7 @@ Just to be clear: Triggering this does **not** cause LiveFleaPrices itself to co
 - The flea-tax toggle exists to maintain peace between tooltip-altering mods. If something goes wrong, let me know.
 
 ### FAQ  
-*(Last updated Nov 14, 2025 — SMTM v2.5.0)*
+*(Last updated Nov 17, 2025 — SMTM v2.5.1)*
 
 - **How do I install SMTM?**  
   - Extract the folders into your SPT directory. If that sounds too simple, consult the installation section above.
@@ -146,6 +146,7 @@ Just to be clear: Triggering this does **not** cause LiveFleaPrices itself to co
 
 - **Key remaining-uses don’t affect the price. Why?**  
   - SPT 4.0.4 bug. A 1/40 key and a 40/40 key sell for the same amount. SMTM mimics SPT’s logic.
+    **SPT 4.0.5 fixed this bug.** Update for SMTM (2.5.1) is availabe.
 
 {.endtabset}
 
