@@ -136,7 +136,7 @@ Just to be clear: Triggering this does **not** cause LiveFleaPrices itself to co
     - SMTM shows the 100% sell-chance price, not the average.  
     - It updates flea data every 5 minutes to avoid server overload.  
     - Live Flea Prices may cause sudden market lurches.  
-    - The flea market is fundamentally chaotic, occasionally sentient, and possibly drunk.
+    - The flea market is fundamentally chaotic, briefly capable of holding an opinion, and possibly drunk.
 
 - **Displayed flea prices seem wildly wrong. Why?**  
   - Check your settings (SPT, SVM, SMTM, etc.). If still wrong, report details: item, expected vs shown price, screenshots, logs, the alignment of Jupiter, etc.
@@ -146,7 +146,7 @@ Just to be clear: Triggering this does **not** cause LiveFleaPrices itself to co
 
 - **Key remaining-uses don’t affect the price. Why?**  
   - SPT 4.0.4 bug. A 1/40 key and a 40/40 key sell for the same amount. SMTM mimics SPT’s logic.
-    **SPT 4.0.5 fixed this bug.** Update for SMTM (2.5.1) is availabe.
+    **SPT 4.0.5 fixed this bug.** Update for SMTM (2.5.1) is available.
 
 {.endtabset}
 

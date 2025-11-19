@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using EFT;
 using Newtonsoft.Json;
 using SPT.Common.Http;
+using SwiftXP.SPT.Common.ConfigurationManager;
 using SwiftXP.SPT.Common.EFT;
 using UnityEngine;
 
@@ -14,9 +15,7 @@ public class FleaPricesService
 {
     private const string RemotePathToGetStaticPriceTable = "/showMeTheMoney/getFleaPrices";
 
-    private const double UpdateAfterSeconds = 300d; // 5 minutes
-
-    private WaitForSeconds coroutineIntervalWait = new(15);
+    private WaitForSeconds coroutineIntervalWait = new(30);
 
     private DateTimeOffset lastUpdate = DateTimeOffset.MinValue;
 
@@ -28,7 +27,9 @@ public class FleaPricesService
     {
         while (true)
         {
-            if (!EFTHelper.IsInRaid && (this.FleaPrices == null || (DateTimeOffset.Now - this.lastUpdate).TotalSeconds >= UpdateAfterSeconds))
+            if ((!EFTHelper.IsInRaid || Plugin.Configuration!.UpdateDuringRaid.IsEnabled())
+                && (this.FleaPrices == null
+                    || (DateTimeOffset.Now - this.lastUpdate).TotalMinutes >= Plugin.Configuration!.UpdateInterval.GetValue()))
             {
                 Task<string> getJsonTask = RequestHandler.GetJsonAsync(RemotePathToGetStaticPriceTable);
                 yield return new WaitUntil(() => getJsonTask.IsCompleted);

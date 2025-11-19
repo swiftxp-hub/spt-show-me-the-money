@@ -17,12 +17,13 @@ public class PluginConfiguration
     public PluginConfiguration(ConfigFile configFile)
     {
         // --- 1. Main settings
-        this.EnablePlugin = configFile.BindConfiguration("1. Main settings", "Enable plug-in", true, $"Enable or disable the plug-in.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 6);
-        this.EnableTraderPrices = configFile.BindConfiguration("1. Main settings", "Enable trader price(s)", true, $"Enable the trader price(s) in the tool-tip.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 5);
-        this.EnableFleaPrices = configFile.BindConfiguration("1. Main settings", "Enable flea price(s)", true, $"Enable the flea price(s) in the tool-tip.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 4);
-        this.ShowPricePerSlot = configFile.BindConfiguration("1. Main settings", "Show price-per-slot", true, $"Show the price-per-slot in the tool-tip. The mod continues to calculate in the background using price-per-slot, even if the display is deactivated.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 3);
-        this.ShowWeaponModsPrice = configFile.BindConfiguration("1. Main settings", "Show weapon-mods price", true, $"Show the total price of all modifications installed in a weapon.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 2);
-        this.ShowArmorPlatesPrice = configFile.BindConfiguration("1. Main settings", "Show armor-plates price", true, $"Show the total price of all (removable-)plates installed in an armor.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 1);
+        this.EnablePlugin = configFile.BindConfiguration("1. Main settings", "Enable plug-in", true, $"Enable or disable the plug-in.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 8);
+        this.EnableTraderPrices = configFile.BindConfiguration("1. Main settings", "Enable trader price(s)", true, $"Enable the trader price(s) in the tool-tip.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 7);
+        this.EnableFleaPrices = configFile.BindConfiguration("1. Main settings", "Enable flea price(s)", true, $"Enable the flea price(s) in the tool-tip.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 6);
+        this.ShowPricePerSlot = configFile.BindConfiguration("1. Main settings", "Show price-per-slot", true, $"Show the price-per-slot in the tool-tip. The mod continues to calculate in the background using price-per-slot, even if the display is deactivated.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 5);
+        this.ShowWeaponModsPrice = configFile.BindConfiguration("1. Main settings", "Show weapon-mods price", true, $"Show the total price of all modifications installed in a weapon.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 4);
+        this.ShowArmorPlatesPrice = configFile.BindConfiguration("1. Main settings", "Show armor-plates price", true, $"Show the total price of all (removable-)plates installed in an armor.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 3);
+
         this.ToolTipDelay = configFile.BindConfiguration("1. Main settings", "Tool-Tip delay", 0.0m, $"Delays the tool-tip for x seconds.{Environment.NewLine}{Environment.NewLine}(Plug-In Default: 0, EFT Default: 0.6)", 0);
 
         // --- 2. Currency conversion
@@ -59,18 +60,21 @@ public class PluginConfiguration
         this.LegendaryColor = configFile.BindConfiguration("4. Color coding", "Legendary color", new Color(1f, 0.5f, 0f), "(Default: R 255, G 128, B 0)", 0);
 
         // --- 5. Flea market
-        this.AlwaysShowFleaPrice = configFile.BindConfiguration("5. Flea market", "Always show flea price", false, $"Always show the flea price of an item even if the flea market is not yet unlocked or the item is not found-in-raid and the \"Can only sell items with 'Found in raid' tag\" setting in SPT/SVM is enabled.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 6);
-        this.FleaPriceMultiplicand = configFile.BindConfiguration("5. Flea market", "Flea price multiplicand", 1.0m, $"Sets the multiplicand by which the average flea market price is multiplied and then displayed in the tooltip. The following calculation is performed:{Environment.NewLine}{Environment.NewLine}Average flea market price of the item * Flea price multiplicand{Environment.NewLine}{Environment.NewLine}(Default: 1.0)", 5);
-        this.includeFleaTaxConfigEntry = configFile.BindConfiguration("5. Flea market", "Include flea tax", false, $"Determines whether taxes for the flea market are included in the flea price.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 4);
-        this.showFleaTaxConfigEntry = configFile.BindConfiguration("5. Flea market", "Show flea tax", false, $"Show the flea tax in the tool-tip.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 3);
-        this.FleaTaxToggleMode = configFile.BindConfiguration("5. Flea market", "Toggle-mode for flea tax", false, $"When toggle mode is activated, the flea tax is only displayed when the specified key or key combination is pressed.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 2);
-        this.FleaTaxToggleKey = configFile.BindConfiguration("5. Flea market", "Toggle-mode key", new KeyboardShortcut(KeyCode.LeftAlt), $"Defines which key or key combination needs to be pressed to display the flea tax.{Environment.NewLine}{Environment.NewLine}(Default: LeftAlt)", 1);
+        this.AlwaysShowFleaPrice = configFile.BindConfiguration("5. Flea market", "Always show flea price", false, $"Always show the flea price of an item even if the flea market is not yet unlocked or the item is not found-in-raid and the \"Can only sell items with 'Found in raid' tag\" setting in SPT/SVM is enabled.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 8);
+        this.FleaPriceMultiplicand = configFile.BindConfiguration("5. Flea market", "Flea price multiplicand", 1.0m, $"Sets the multiplicand by which the average flea market price is multiplied and then displayed in the tooltip. The following calculation is performed:{Environment.NewLine}{Environment.NewLine}Average flea market price of the item * Flea price multiplicand{Environment.NewLine}{Environment.NewLine}(Default: 1.0)", 7);
+        this.includeFleaTaxConfigEntry = configFile.BindConfiguration("5. Flea market", "Include flea tax", false, $"Determines whether taxes for the flea market are included in the flea price.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 6);
+        this.showFleaTaxConfigEntry = configFile.BindConfiguration("5. Flea market", "Show flea tax", false, $"Show the flea tax in the tool-tip.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 5);
+        this.FleaTaxToggleMode = configFile.BindConfiguration("5. Flea market", "Toggle-mode for flea tax", false, $"When toggle mode is activated, the flea tax is only displayed when the specified key or key combination is pressed.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 4);
+        this.FleaTaxToggleKey = configFile.BindConfiguration("5. Flea market", "Toggle-mode key", new KeyboardShortcut(KeyCode.LeftAlt), $"Defines which key or key combination needs to be pressed to display the flea tax.{Environment.NewLine}{Environment.NewLine}(Default: LeftAlt)", 3);
+
+        this.UpdateInterval = configFile.BindConfiguration("5. Flea market", "Update flea price interval", 5, $"Specifies the interval in minutes at which the mod updates flea-market prices. More frequent updates can provide more accurate prices but may also increase server load.{Environment.NewLine}{Environment.NewLine}(Default: 5 minutes)", 2);
+        this.UpdateDuringRaid = configFile.BindConfiguration("5. Flea market", "Update flea price during raids", false, $"Specifies whether flea-market prices are updated while in-raid.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 1);
 
         configFile.CreateButton(
             "5. Flea market",
             "Update flea prices",
             "Update now",
-            "Pulls the current flea prices from your SPT server instance.",
+            "Pulls the current flea prices from your SPT server instance (can take up to 30 seconds).",
             () =>
             {
                 FleaPricesService.Instance.ForceUpdatePrices();
@@ -102,6 +106,10 @@ public class PluginConfiguration
     public ConfigEntry<bool> ShowWeaponModsPrice { get; set; }
 
     public ConfigEntry<bool> ShowArmorPlatesPrice { get; set; }
+
+    public ConfigEntry<int> UpdateInterval { get; set; }
+
+    public ConfigEntry<bool> UpdateDuringRaid { get; set; }
 
     public ConfigEntry<decimal> ToolTipDelay { get; set; }
     #endregion

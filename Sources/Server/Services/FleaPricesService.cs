@@ -32,18 +32,22 @@ public class FleaPricesService(ISptLogger<ShowMeTheMoneyStaticRouter> sptLogger,
 
         Parallel.ForEach(fleaPrices, fleaPrice =>
         {
-            if (itemHelper.IsOfBaseclass(fleaPrice.Key, BaseClasses.WEAPON))
+            try
             {
-                double? staticWeaponPrice = ragfairPriceService.GetStaticPriceForItem(fleaPrice.Key);
-                if (staticWeaponPrice.HasValue)
-                    result[fleaPrice.Key] = staticWeaponPrice.Value;
+                if (itemHelper.IsOfBaseclass(fleaPrice.Key, BaseClasses.WEAPON))
+                {
+                    double? staticWeaponPrice = ragfairPriceService.GetStaticPriceForItem(fleaPrice.Key);
+                    if (staticWeaponPrice.HasValue)
+                        result[fleaPrice.Key] = staticWeaponPrice.Value;
+                }
+                else
+                {
+                    double newPrice = GetAveragePriceFromOffers(fleaPrice.Key);
+                    if (newPrice > 0d)
+                        result[fleaPrice.Key] = newPrice;
+                }
             }
-            else
-            {
-                double newPrice = GetAveragePriceFromOffers(fleaPrice.Key);
-                if (newPrice > 0d)
-                    result[fleaPrice.Key] = newPrice;
-            }
+            catch (Exception) { }
         });
 
         stopwatch.Stop();
