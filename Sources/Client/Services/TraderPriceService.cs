@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using EFT;
 using EFT.InventoryLogic;
 using SwiftXP.SPT.Common.ConfigurationManager;
@@ -57,7 +59,12 @@ public class TraderPriceService
 
     private bool IsTraderAvailable(TraderClass trader)
     {
-        return trader.Info.Available && !trader.Info.Disabled && trader.Info.Unlocked;
+        bool isAvailable = trader.Info.Available && !trader.Info.Disabled && trader.Info.Unlocked;
+        bool isIgnored = this.TradersToIgnore.Any(
+            x => x.Equals(trader.Id, StringComparison.OrdinalIgnoreCase)
+            || x.Equals(trader.LocalizedName, StringComparison.OrdinalIgnoreCase));
+
+        return isAvailable && !isIgnored;
     }
 
     private bool TryGetTraderUserItemPrice(TraderClass trader, TradeItem tradeItem,
@@ -93,4 +100,6 @@ public class TraderPriceService
     }
 
     public static TraderPriceService Instance => instance.Value;
+
+    public List<string> TradersToIgnore { get; set; } = [];
 }

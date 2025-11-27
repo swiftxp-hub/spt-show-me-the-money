@@ -5,6 +5,8 @@ using UnityEngine;
 using System;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Enums;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Services;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Configuration;
 
@@ -17,12 +19,14 @@ public class PluginConfiguration
     public PluginConfiguration(ConfigFile configFile)
     {
         // --- 1. Main settings
-        this.EnablePlugin = configFile.BindConfiguration("1. Main settings", "Enable plug-in", true, $"Enable or disable the plug-in.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 8);
-        this.EnableTraderPrices = configFile.BindConfiguration("1. Main settings", "Enable trader price(s)", true, $"Enable the trader price(s) in the tool-tip.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 7);
-        this.EnableFleaPrices = configFile.BindConfiguration("1. Main settings", "Enable flea price(s)", true, $"Enable the flea price(s) in the tool-tip.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 6);
-        this.ShowPricePerSlot = configFile.BindConfiguration("1. Main settings", "Show price-per-slot", true, $"Show the price-per-slot in the tool-tip. The mod continues to calculate in the background using price-per-slot, even if the display is deactivated.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 5);
-        this.ShowWeaponModsPrice = configFile.BindConfiguration("1. Main settings", "Show weapon-mods price", true, $"Show the total price of all modifications installed in a weapon.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 4);
-        this.ShowArmorPlatesPrice = configFile.BindConfiguration("1. Main settings", "Show armor-plates price", true, $"Show the total price of all (removable-)plates installed in an armor.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 3);
+        this.EnablePlugin = configFile.BindConfiguration("1. Main settings", "Enable plug-in", true, $"Enable or disable the plug-in.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 7);
+        this.EnableTraderPrices = configFile.BindConfiguration("1. Main settings", "Enable trader price(s)", true, $"Enable the trader price(s) in the tool-tip.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 6);
+        this.EnableFleaPrices = configFile.BindConfiguration("1. Main settings", "Enable flea price(s)", true, $"Enable the flea price(s) in the tool-tip.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 5);
+        this.ShowPricePerSlot = configFile.BindConfiguration("1. Main settings", "Show price-per-slot", true, $"Show the price-per-slot in the tool-tip. The mod continues to calculate in the background using price-per-slot, even if the display is deactivated.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 4);
+        this.ShowWeaponModsPrice = configFile.BindConfiguration("1. Main settings", "Show weapon-mods price", true, $"Show the total price of all modifications installed in a weapon.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 3);
+        this.ShowArmorPlatesPrice = configFile.BindConfiguration("1. Main settings", "Show armor-plates price", true, $"Show the total price of all (removable-)plates installed in an armor.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 2);
+
+        this.TradersToIgnore = configFile.BindConfiguration("1. Main settings", "Trader(s) to ignore", "", $"List of traders to be ignored, separated by commas. You can enter either the trader's ID or their name.{Environment.NewLine}{Environment.NewLine}Example: Prapor,Skier,Peacekeeper", 1);
 
         this.ToolTipDelay = configFile.BindConfiguration("1. Main settings", "Tool-Tip delay", 0.0m, $"Delays the tool-tip for x seconds.{Environment.NewLine}{Environment.NewLine}(Plug-In Default: 0, EFT Default: 0.6)", 0);
 
@@ -83,6 +87,17 @@ public class PluginConfiguration
             0
         );
 
+        this.TradersToIgnore.SettingChanged += (_, _) =>
+        {
+            List<string> tradersToIngore = [.. (TradersToIgnore.GetValue() ?? string.Empty)
+                .Trim()
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => s.Trim())
+                .Where(s => s.Length > 0)];
+
+            TraderPriceService.Instance.TradersToIgnore = tradersToIngore;
+        };
+
         this.FleaTaxToggleMode.SettingChanged += (_, _) =>
         {
             if (this.FleaTaxToggleMode.IsEnabled())
@@ -107,9 +122,7 @@ public class PluginConfiguration
 
     public ConfigEntry<bool> ShowArmorPlatesPrice { get; set; }
 
-    public ConfigEntry<int> UpdateInterval { get; set; }
-
-    public ConfigEntry<bool> UpdateDuringRaid { get; set; }
+    public ConfigEntry<string> TradersToIgnore { get; set; }
 
     public ConfigEntry<decimal> ToolTipDelay { get; set; }
     #endregion
@@ -210,5 +223,9 @@ public class PluginConfiguration
     public ConfigEntry<bool> FleaTaxToggleMode { get; set; }
 
     public ConfigEntry<KeyboardShortcut> FleaTaxToggleKey { get; set; }
+
+    public ConfigEntry<int> UpdateInterval { get; set; }
+
+    public ConfigEntry<bool> UpdateDuringRaid { get; set; }
     #endregion
 }
