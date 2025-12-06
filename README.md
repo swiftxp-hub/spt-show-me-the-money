@@ -94,7 +94,9 @@ Just to be clear: Triggering this does **not** cause LiveFleaPrices itself to co
 - SPT-LiveFleaPrices ≥ v2.0.1 (DrakiaXYZ)  
 - UIFixes ≥ v5.0.5 (Tyfon)  
 - ODT’s Item Info ≥ v2.0.2 (kobethuy)  
-  - Note: ODT’s Item Info has Opinions™ about how color-coding should work. It may overwrite item-name color, but price colors remain intact.
+  - Note: ODT’s Item Info has Opinions™ about how color-coding should work. It may overwrite item-name color, but price colors remain intact.  
+- All Quests Checkmarks ≥ v1.3.1 (ZGFueDkx)  
+- MoreCheckmarks ≥ v2.0.0 (VIPkiller17)  
 
 #### Planned features/changes
 
