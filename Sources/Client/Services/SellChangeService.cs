@@ -9,12 +9,14 @@ public static class SellChangeService
         if (desiredSellChance == -1d)
             desiredSellChance = PartialRagfairConfigService.Instance.PartialRagfairConfig?.MaxSellChancePercent ?? 100;
 
-        double sellModifier = (PartialRagfairConfigService.Instance.PartialRagfairConfig?.Base ?? 50) * qualityModifier;
+        double baseSellChancePercent = (PartialRagfairConfigService.Instance.PartialRagfairConfig?.Base ?? 50) * qualityModifier;
 
-        double result = averageOfferPrice
-            * (PartialRagfairConfigService.Instance.PartialRagfairConfig?.SellMultiplier ?? 1.24d)
-            / Math.Pow((desiredSellChance - 10) / sellModifier, 0.25);
+        double modifier = Math.Pow((desiredSellChance - 10) / baseSellChancePercent, 0.25);
 
-        return result;
+        double playerListedPriceRub = (averageOfferPrice *
+            (PartialRagfairConfigService.Instance.PartialRagfairConfig?.SellMultiplier ?? 1.24d))
+            / modifier;
+
+        return playerListedPriceRub;
     }
 }
