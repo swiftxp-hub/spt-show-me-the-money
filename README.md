@@ -1,124 +1,173 @@
-# Show me the money SPT-mod
-
-A BepInEx plugin and an accompanying server mod for SPT (Single Player Tarkov).
-
 ![Preview Image MOD](https://raw.githubusercontent.com/swiftxp-hub/spt-show-me-the-money/refs/heads/main/Assets/preview.png)
 
-Notice: A quick-sell companion mod is available [here](https://github.com/swiftxp-hub/spt-show-me-the-money-quick-sell).
+---
+> **Speed up your sales!**  
+> A remarkably convenient quick-sell add-on lurks in the **Addon** tab, waiting patiently for you to notice it. If patience is not your strong suit, you may bend spacetime and simply click **[here](https://forge.sp-tarkov.com/addon/1/quick-sell)**.
+---
 
-## What does it do?
+---
+As many of you have seen in the recent announcements from the SPT developers on Discord about the changes with Tarkov 1.0, the long-term outlook for SPT and FIKA is uncertain. If you haven’t read their message yet, you can find it here:
 
-The BepInEx plugin modifies the in-game tooltip of items to display price information (in stash and in raid). The dealer who would buy the item for the best price and an average price for the flea market is displayed. The display is divided into "price-per-slot" and "total"-price. The best offer is highlighted. Also flea market taxes can be included. Version >=1.5.0 adds a color coding feature (by default the color scheme familiar from WoW, ranging from poor to legendary).
+https://discord.com/channels/875684761291599922/875706629260197908/1439239841895158022
 
-The accompanying server mod provides several endpoints for the BepInEx plugin, which are used to retrieve the trader prices for EUR and USD and the flea market prices.
+FIKA will no longer be adding major new features, focusing instead on support and bug fixes for as long as SPT remains viable.
 
-Several configuration options are offered via the BepInEx configurator.
+For my mod, I’ll be taking a similar approach: I’ll continue providing maintenance updates and fixing bugs, but I don’t currently plan to develop new large-scale features. The project has grown far beyond what I expected when I started it, and it has genuinely been great to read your feedback and turn it into improvements. Thank you for every comment and conversation on Discord.
 
-The mod is written in such a way that the load on the SPT-server is as low as possible.
+The mod’s source code is available on GitHub, so if anyone wants to fork it and build new features on top of it, feel free - you have my blessing.  
 
-## Requirements
+---
 
-Basically none.
+## Tabs {.tabset}
 
-## Installation
+### SMTM
+#### What does it do?
 
-### If you have a completely normal installation of SP-Tarkov (everything inside one folder, on one machine, like the SPT-Installer is doing it):
+Imagine examining an item in Tarkov and having the game whisper gently into your ear:  
+“Here’s exactly how much money this thing is worth, who will buy it, and whether selling it is a brilliant idea or a catastrophic financial farce.”
 
-Extract the contents of the .zip file into your SPT directory. 
+That’s what SMTM does. It modifies the in-game tooltip to reveal:
 
-You should end up having the following files copied to your SPT directory:
-- C:\yourSPTfolder\BepInEx\plugins\SwiftXP.ShowMeTheMoney.dll
-- C:\yourSPTfolder\user\mods\swiftxp-showmethemoney\package.json
-- C:\yourSPTfolder\user\mods\swiftxp-showmethemoney\src\mod.ts
+- The trader who will pay you the *most* (because some traders appreciate your junk more than others)  
+- The flea market price required to achieve a **100% chance of sale**  
+- Both **price per slot** and **total price**, helpfully highlighted so you don’t have to do arithmetic  
+- Optional inclusion of flea market taxes, for those who enjoy pain
 
-### If you have your client and your server separated:
+Version **1.5.0+** adds color-coding based on the World of Warcraft rarity scheme - from *poor* (grey, sad, mildly apologetic) to *legendary* (orange, smug, expensive).
 
-Extract the "BepInEx" folder from the .zip to your client and extract the "user" folder to your server.
+The server-side portion of the mod exposes an endpoint that politely hands the client mod the relevant backend configuration and flea prices.
 
-You should end up having the following files copied...
+Everything is configured through the BepInEx Configurator.  
+And yes, the mod is designed to whisper requests to the SPT server, not shout them.
 
-... on your client:
-- C:\yourSPTclient\BepInEx\plugins\SwiftXP.ShowMeTheMoney.dll
+#### Requirements
 
-... on your server:
-- C:\yourSPTserver\user\mods\swiftxp-showmethemoney\package.json
-- C:\yourSPTserver\user\mods\swiftxp-showmethemoney\src\mod.ts
+Practically none. If you can run SPT, you can run this.
 
-### If you use the Fika headless client
+#### Installation
 
-There is no need to install anything to your Fika headless client for this mod to work properly. I would actually recommend to NOT install my mod on your Fika headless client. This also means that I recommend to add my mod to your Exclusions.json, if you use [Corter's Mod Sync](https://github.com/c-orter/ModSync). [Please see his FAQ on how to add sync-exclusions](https://github.com/c-orter/ModSync/wiki/Configuration#exclusions).
+##### If your SPT installation is normal (i.e. not a baroque cathedral of symbolic links and misplaced folders):
 
-## Configuration
+1. Extract the contents of the `.zip` or `.7z` straight into your SPT directory.  
+2. When you're done, you should see:
+```
+- C:\yourSPTfolder\BepInEx\plugins\com.swiftxp.spt.showmethemoney\SwiftXP.SPT.ShowMeTheMoney.Client.dll
+- C:\yourSPTfolder\SPT\user\mods\com.swiftxp.spt.showmethemoney\SwiftXP.SPT.ShowMeTheMoney.Server.dll
+```
 
-Please use the BepInEx configurator to configure features of the mod (usually accessible by pressing F12 or F1 when you are in-game):
+##### If your client and server are separated like two star-crossed lovers:
+
+Extract the **BepInEx** folder into the client.  
+Extract the **user** folder into the server.
+
+Client:
+```
+- C:\yourSPTclient\BepInEx\plugins\com.swiftxp.spt.showmethemoney\SwiftXP.SPT.ShowMeTheMoney.Client.dll
+```
+
+Server:
+```
+- C:\yourSPTserver\SPT\user\mods\com.swiftxp.spt.showmethemoney\SwiftXP.SPT.ShowMeTheMoney.Server.dll
+```
+
+##### If you use the FIKA headless client:
+
+Splendid news: **Do not install anything there.** Seriously, don’t. It will only cause complications, headaches, and possibly the rising of ancient eldritch forces. Add this mod to your `Exclusions.json` if you use Corter’s Mod Sync.
+
+#### Configuration
+
+Access the BepInEx Configurator (usually via **F12** or **F1**) and behold:
 
 ![BepInEx Plugin Configuration](https://raw.githubusercontent.com/swiftxp-hub/spt-show-me-the-money/refs/heads/main/Assets/plugin-configuration.png)
 
-![Demonstration of toggle-mode for flea tax](https://raw.githubusercontent.com/swiftxp-hub/spt-show-me-the-money/refs/heads/main/Assets/toggle-tax-sample.gif)
+Here you can also summon fresh flea market prices from the server. This is particularly handy if you’re using **SPT-LiveFleaPrices**, which updates prices regularly but not telepathically.
 
-As you can see, you can also manually trigger the plugin to retrieve the current flea market prices from your SPT server (this can be useful when you installed [DrakiaXYZ's SPT-LiveFleaPrices](https://github.com/DrakiaXYZ/SPT-LiveFleaPrices) - however, the flea market prices are updated regulary).
+Just to be clear: Triggering this does **not** cause LiveFleaPrices itself to contact the celestial flea-market-gods. It simply fetches whatever your SPT server already knows.
 
-Just for clarifcation: This does not trigger DrakiaXYZ's SPT-LiveFleaPrices to query the latest flea prices, but my mod queries the latest flea prices from your SPT server (which are set by SPT-LiveFleaPrices).
+#### Remarks
 
-## Remarks
+- Changes to trader price markups (e.g., via SVM) are automatically accounted for.  
+- Multiple languages are supported, but if something looks as if it was spat out by a malfunctioning Babel Fish, leave a comment. Disabling color-coding may help.
 
-- Changes on the Trader Price Markups (e.g. editable via SVM) are taken into account by this mod.
-- I have tried to support multiple languages, but if you notice any problems, please let me know in the comments. Disabling the color coding feature may help in the meantime.
+#### Known compatibility
 
-## Known compatibility
+- SPT-LiveFleaPrices ≥ v2.0.1 (DrakiaXYZ)  
+- UIFixes ≥ v5.0.5 (Tyfon)  
+- ODT’s Item Info ≥ v2.0.2 (kobethuy)  
+  - Note: ODT’s Item Info has Opinions™ about how color-coding should work. It may overwrite item-name color, but price colors remain intact.  
+- All Quests Checkmarks ≥ v1.3.1 (ZGFueDkx)  
+- MoreCheckmarks ≥ v2.0.0 (VIPkiller17)  
 
-- [SPT-LiveFleaPrices](https://github.com/DrakiaXYZ/SPT-LiveFleaPrices) v1.5.2 by DrakiaXYZ
-- [More Checkmarks](https://github.com/TommySoucy/MoreCheckmarks) v1.5.17 by TommySoucy
-- [UIFixes](https://github.com/tyfon7/UIFixes) v4.2.2 by Tyfon
+#### Planned features/changes
 
-## Known problems
+- … *(imagine a gentle, wistful sigh here)*
 
-- The damage report/health condition screen may rarely show the price information tooltip. I'm almost tempted not to fix it. It's too funny.
-- A buddy of mine has a minor problem with the "Toggle-mode for flea tax" where the tooltip sometimes gets "stuck"—meaning the display doesn't jump back when he releases Left-Alt. I haven't been able to figure out what's causing the problem yet. But he also told me that he doesn't think it's a big deal.
-- Some weapons have suffixes in their names, such as "Carbine." These are not always colored by the color coding feature.
+#### Known problems
 
-## Problems that may occur
+- A friend of mine occasionally experiences a stuck tooltip when using the flea-tax toggle. I have investigated this thoroughly and discovered that… I still have no idea why it happens.  
+- Some weapons feature suffixes like “Carbine.” These sometimes refuse to participate in color-coding. Possibly out of spite.
 
-- Price information for traders added by other mods may or may not work. E.g. [Couturier](https://hub.sp-tarkov.com/files/file/2943-couturier-gear-and-clothing-pack/) v1.2.0 by turbodestroyer seems to work fine.
-- The "Toggle-mode for flea tax"-feature is implemented in such a way that other mods that modify the tooltip should still work, but still... if you encounter problems, please let me know in the comments.
+#### Problems that may occur
 
-## Tested environment
+- Traders added by other mods may or may not play nicely with the price system.  
+- The flea-tax toggle exists to maintain peace between tooltip-altering mods. If something goes wrong, let me know.
 
-- SPT 3.11.4 (this mod should work with every SPT 3.11 release, but it's not tested except for version 3.11.4)
-- EFT 16.1.3.35392
+### FAQ  
+*(Last updated Nov 17, 2025 — SMTM v2.5.1)*
 
-## Support and feature requests
+- **How do I install SMTM?**  
+  - Extract the folders into your SPT directory. If that sounds too simple, consult the installation section above.
 
-Please note that I maintain all my mods in my spare time. Therefore, I can only invest a limited amount of time, especially when it comes to support requests.
+- **How do I configure SMTM?**  
+  - Press F12 or F1. A configuration window will appear, as if summoned from a parallel dimension.
 
-## Features that may come in the future
+- **Is there a quick-sell addon?**  
+  - Yes! It has its own tab. It is quite proud of this.
 
-- ​More appearence options
-- What-ever comes to my mind or by feature-requests in the comments/SPT-discord
+- **No price information appears. What now?**  
+  - Check your installation. Reinstall if confused. Also, please don’t use WinRAR to extract `.7z` files. It sometimes mangles them like a clumsy Vogon.
 
-## For nerds
+- **No flea market prices?**  
+  - You must unlock the flea market unless you enable “Always show flea market price.” If prices are missing entirely, the server component is probably not installed correctly.
 
-Please note that all of the following information may be incomplete or misinterpreted on my part, especially my knowledge or interpretation of how SPT simulates the flea market.
+- **I get SSL errors. Help?**  
+  - Unlikely to be SMTM’s fault. SSL in Tarkov behaves like a paranoid toaster. Seek help on the SPT Discord.
 
-### How does the mod calculate the flea prices?
+- **Why do flea prices differ from the average?**  
+  - Because:
+    - SMTM shows the 100% sell-chance price, not the average.  
+    - It updates flea data every 5 minutes to avoid server overload.  
+    - Live Flea Prices may cause sudden market lurches.  
+    - The flea market is fundamentally chaotic, briefly capable of holding an opinion, and possibly drunk.
 
-I made major changes on the flea price calculation in version 1.6.0. I will rewrite this section when I have time.
+- **Displayed flea prices seem wildly wrong. Why?**  
+  - Check your settings (SPT, SVM, SMTM, etc.). If still wrong, report details: item, expected vs shown price, screenshots, logs, the alignment of Jupiter, etc.
 
-### What is the difference between "Handbook" and "Traders"?​
+- **Armor plates don’t affect flea price. Why?**  
+  - Because SPT 4.0.4 also ignores plate value in its sell-chance logic. SMTM 2.5.0 can display plate value separately. SPT 4.0.5 may fix this.
 
-The short answer is (when your SPT-server uses standard settings [v3.11.x]):
+- **Key remaining-uses don’t affect the price. Why?**  
+  - SPT 4.0.4 bug. A 1/40 key and a 40/40 key sell for the same amount. SMTM mimics SPT’s logic.
+    **SPT 4.0.5 fixed this bug.** Update for SMTM (2.5.1) is available.
 
-    ​Handbook uses $1 = ₽​​125 and €1 = ₽133 for currency conversions
-    Traders uses $1 = ₽​​139 and €1 = P153 for currency conversions
+{.endtabset}
 
-The long answer is... when you ask the SPT-server for currency courses then one will get the values from the "handbook.json" in the SPT-database. To be honest, I have no idea where they are used, but I'm sure there's a good reason for them. That's also why I set them as default settings. They are also used as a fallback, if, for some reason, the mod is unable to retrieve the USD or EUR prices from Peacekeeper and Skier when using the “Traders” setting in my mod.
+---
 
-When you use the "Traders" option then the mod tries retrieve the actual prices you have to pay at Peacekeeper and Skier for USD/EUR. As mentioned before, the "Handbook" prices are used as a fallback, if, for some reason, the mod is unable to retrieve the USD or EUR prices from Peacekeeper and Skier.
+#### Support & Feature Requests
 
-## Motivation behind this mod
+I maintain this in my spare time, between bouts of existential dread and tea.  
+Please be patient.
 
-Me and my friends are playing SPT in coop with FIKA. Until now, we have always used a different mod from another modder to display the best prices for items. Unfortunately, I realized that this mod put a lot of strain on our very small VServer we use for the SPT-server. A lot of small requests were being sent to the SPT-server. This regularly led to quite severe lags. Our tiny little VServer was not able to keep up.
+#### Why this mod exists
 
-Since I had wanted to create mods for SPT for quite some time, I took this as an opportunity to write a new plugin for us with the premise to put as little pressure on the SPT-server as possible. Now that we have been using it for a while, I have decided to make it publicly available.
+My friends and I play SPT co-op via FIKA.  
+We used another price-display mod that turned our poor little VServer into a molten puddle of lag.  
+Requests flooded in like panicked bureaucrats. The server begged for mercy.
 
-Shout-out to the SPT-Team and all other SPT modders out there. You're amazing!
+So I built a new plugin. This one. Designed to be gentle, efficient, and unlikely to ignite anything.
+
+It worked splendidly, so I shared it.
+
+**Shout-out to the SPT team and all modders.  
+You’re brilliant, bewildering, and beloved.**

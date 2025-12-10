@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "moduleDetection": "force",
+        "target": "ESNext",
+        "module": "Preserve",
+        "resolveJsonModule": true,
+        "allowJs": true,
+        "esModuleInterop": true,
+        "isolatedModules": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "verbatimModuleSyntax": false,
+        "baseUrl": ".",
+        "paths": {
+            "@spt/*": [
+                "./types/*"
+            ],
+        }
+    },
+    "include": [
+        "src/*",
+        "src/**/*"
+    ]
+}
