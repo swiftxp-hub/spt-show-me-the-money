@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using SwiftXP.SPT.Common.ConfigurationManager;
-using SwiftXP.SPT.Common.Notifications;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Models;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Services;
@@ -26,8 +25,6 @@ public class FleaPriceService
                 fleaPrice *= qualityModifier;
 
                 double bestFleaPrice = SellChangeService.GetPriceForDesiredSellChange(fleaPrice, qualityModifier);
-
-                NotificationsService.Instance.SendLongAlert($"{bestFleaPrice}, {fleaPrice}, {qualityModifier}");
 
                 if (bestFleaPrice > 0d)
                     SetFleaPriceOfTradeItem(tradeItem, bestFleaPrice, includeTaxInPrices);

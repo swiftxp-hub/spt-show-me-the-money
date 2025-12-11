@@ -10,7 +10,7 @@ using SwiftXP.SPT.ShowMeTheMoney.Client.Services;
 namespace SwiftXP.SPT.ShowMeTheMoney.Client;
 
 [BepInPlugin("com.swiftxp.spt.showmethemoney", MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
-[BepInDependency("com.SPT.custom", "3.11.4")]
+[BepInDependency("com.SPT.custom", "3.11.0")]
 [BepInProcess("EscapeFromTarkov.exe")]
 public class Plugin : BaseUnityPlugin
 {
