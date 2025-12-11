@@ -127,7 +127,9 @@ Server:
   
 - C:\yourSPTfolder\user\mods\swiftxp-showmethemoney\package.json
 - C:\yourSPTfolder\user\mods\swiftxp-showmethemoney\src\mod.ts
+- C:\yourSPTfolder\user\mods\swiftxp-showmethemoney\src\models\partialRagfairConfig.ts
 - C:\yourSPTfolder\user\mods\swiftxp-showmethemoney\src\services\fleaPricesService.ts
+- C:\yourSPTfolder\user\mods\swiftxp-showmethemoney\src\services\ragfairConfigService.ts
 ```
 
 ##### If your client and server are separated like two star-crossed lovers:
@@ -144,7 +146,9 @@ Server:
 ```
 - C:\yourSPTserver\user\mods\swiftxp-showmethemoney\package.json
 - C:\yourSPTserver\user\mods\swiftxp-showmethemoney\src\mod.ts
-- C:\yourSPTserver\user\mods\swiftxp-showmethemoney\src\services\fleaPricesService.ts
+- C:\yourSPTfolder\user\mods\swiftxp-showmethemoney\src\models\partialRagfairConfig.ts
+- C:\yourSPTfolder\user\mods\swiftxp-showmethemoney\src\services\fleaPricesService.ts
+- C:\yourSPTfolder\user\mods\swiftxp-showmethemoney\src\services\ragfairConfigService.ts
 ```
 
 ### FAQ  
