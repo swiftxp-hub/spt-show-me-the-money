@@ -44,33 +44,7 @@ And yes, the mod is designed to whisper requests to the SPT server, not shout th
 
 Practically none. If you can run SPT, you can run this.
 
-#### Installation
-
-##### If your SPT installation is normal (i.e. not a baroque cathedral of symbolic links and misplaced folders):
-
-1. Extract the contents of the `.zip` or `.7z` straight into your SPT directory.  
-2. When you're done, you should see:
-```
-- C:\yourSPTfolder\BepInEx\plugins\com.swiftxp.spt.showmethemoney\SwiftXP.SPT.ShowMeTheMoney.Client.dll
-- C:\yourSPTfolder\SPT\user\mods\com.swiftxp.spt.showmethemoney\SwiftXP.SPT.ShowMeTheMoney.Server.dll
-```
-
-##### If your client and server are separated like two star-crossed lovers:
-
-Extract the **BepInEx** folder into the client.  
-Extract the **user** folder into the server.
-
-Client:
-```
-- C:\yourSPTclient\BepInEx\plugins\com.swiftxp.spt.showmethemoney\SwiftXP.SPT.ShowMeTheMoney.Client.dll
-```
-
-Server:
-```
-- C:\yourSPTserver\SPT\user\mods\com.swiftxp.spt.showmethemoney\SwiftXP.SPT.ShowMeTheMoney.Server.dll
-```
-
-##### If you use the FIKA headless client:
+#### If you use the FIKA headless client:
 
 Splendid news: **Do not install anything there.** Seriously, don’t. It will only cause complications, headaches, and possibly the rising of ancient eldritch forces. Add this mod to your `Exclusions.json` if you use Corter’s Mod Sync.
 
@@ -112,11 +86,72 @@ Just to be clear: Triggering this does **not** cause LiveFleaPrices itself to co
 - Traders added by other mods may or may not play nicely with the price system.  
 - The flea-tax toggle exists to maintain peace between tooltip-altering mods. If something goes wrong, let me know.
 
+### SPT 4.x Installation  
+
+#### Installation
+
+##### If your SPT installation is normal (i.e. not a baroque cathedral of symbolic links and misplaced folders):
+
+1. Extract the contents of the `.zip` or `.7z` straight into your SPT directory.  
+2. When you're done, you should see:
+```
+- C:\yourSPTfolder\BepInEx\plugins\com.swiftxp.spt.showmethemoney\SwiftXP.SPT.ShowMeTheMoney.Client.dll
+- C:\yourSPTfolder\SPT\user\mods\com.swiftxp.spt.showmethemoney\SwiftXP.SPT.ShowMeTheMoney.Server.dll
+```
+
+##### If your client and server are separated like two star-crossed lovers:
+
+Extract the **BepInEx** folder into the client.  
+Extract the **user** folder into the server.
+
+Client:
+```
+- C:\yourSPTclient\BepInEx\plugins\com.swiftxp.spt.showmethemoney\SwiftXP.SPT.ShowMeTheMoney.Client.dll
+```
+
+Server:
+```
+- C:\yourSPTserver\SPT\user\mods\com.swiftxp.spt.showmethemoney\SwiftXP.SPT.ShowMeTheMoney.Server.dll
+```
+
+### SPT 3.11.x Installation  
+
+#### Installation
+
+##### If your SPT installation is normal (i.e. not a baroque cathedral of symbolic links and misplaced folders):
+
+1. Extract the contents of the `.zip` or `.7z` straight into your SPT directory.  
+2. When you're done, you should see:
+```
+- C:\yourSPTfolder\BepInEx\plugins\SwiftXP.ShowMeTheMoney.dll  
+  
+- C:\yourSPTfolder\user\mods\swiftxp-showmethemoney\package.json
+- C:\yourSPTfolder\user\mods\swiftxp-showmethemoney\src\mod.ts
+- C:\yourSPTfolder\user\mods\swiftxp-showmethemoney\src\services\fleaPricesService.ts
+```
+
+##### If your client and server are separated like two star-crossed lovers:
+
+Extract the **BepInEx** folder into the client.  
+Extract the **user** folder into the server.
+
+Client:
+```
+- C:\yourSPTclient\BepInEx\plugins\SwiftXP.ShowMeTheMoney.dll
+```
+
+Server:
+```
+- C:\yourSPTserver\user\mods\swiftxp-showmethemoney\package.json
+- C:\yourSPTserver\user\mods\swiftxp-showmethemoney\src\mod.ts
+- C:\yourSPTserver\user\mods\swiftxp-showmethemoney\src\services\fleaPricesService.ts
+```
+
 ### FAQ  
-*(Last updated Nov 17, 2025 — SMTM v2.5.1)*
+*(Last updated Dez 11, 2025 — SMTM v2.5.3)*
 
 - **How do I install SMTM?**  
-  - Extract the folders into your SPT directory. If that sounds too simple, consult the installation section above.
+  - Extract the folders into your SPT directory. If that sounds too simple, consult the installation section(s).
 
 - **How do I configure SMTM?**  
   - Press F12 or F1. A configuration window will appear, as if summoned from a parallel dimension.
