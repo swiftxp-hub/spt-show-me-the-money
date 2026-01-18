@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/Sources/">
+    <Project Path="Sources/Client/SwiftXP.SPT.ShowMeTheMoney.Client.csproj" />
+    <Project Path="Sources/Server/SwiftXP.SPT.ShowMeTheMoney.Server.csproj" />
+  </Folder>
+</Solution>
