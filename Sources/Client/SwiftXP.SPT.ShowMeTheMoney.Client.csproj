@@ -6,7 +6,7 @@
 
     <AssemblyName>SwiftXP.SPT.ShowMeTheMoney.Client</AssemblyName>
     <Product>Show Me The Money</Product>
-    <Version>2.5.3</Version>
+    <Version>2.5.4</Version>
     <RestoreAdditionalProjectSources>
       https://api.nuget.org/v3/index.json;
       https://nuget.bepinex.dev/v3/index.json
@@ -23,11 +23,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)\..\..\..\spt-common\**\*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)/../../../spt-common/**/*.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="$(MSBuildThisFileDirectory)\..\..\..\spt4-shared-dlls\*.dll" />
+    <Reference Include="$(MSBuildThisFileDirectory)/../../../spt4-shared-dlls/**/*.dll" />
   </ItemGroup>
   
   <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">

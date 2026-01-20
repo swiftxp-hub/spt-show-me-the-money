@@ -50,6 +50,10 @@ public class FleaPricesService(ISptLogger<ShowMeTheMoneyStaticRouter> sptLogger,
             catch (Exception) { }
         });
 
+        // Check dictionary for NaN or Infinity and remove them.
+        result = new(result.Where(x => !Double.IsNaN(x.Value) && !Double.IsInfinity(x.Value))
+            .ToDictionary(x => x.Key, x => x.Value));
+
         stopwatch.Stop();
         sptLogger.Debug($"FleaPriceService.Get() was finished in {stopwatch.ElapsedMilliseconds}ms.");
 
