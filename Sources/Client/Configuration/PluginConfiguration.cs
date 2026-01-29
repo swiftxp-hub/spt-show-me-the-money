@@ -82,7 +82,7 @@ public class PluginConfiguration
             () =>
             {
                 FleaPricesService.Instance.ForceUpdatePrices();
-                NotificationsService.SendLongNotice("Flea prices will update as soon as possible...");
+                NotificationsService.Instance.SendLongNotice("Flea prices will update as soon as possible...");
             },
             0
         );

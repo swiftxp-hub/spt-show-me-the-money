@@ -8,7 +8,15 @@ namespace SwiftXP.SPT.ShowMeTheMoney.Client.Services;
 
 public class FleaPriceService
 {
-    public static bool GetFleaPrice(TradeItem tradeItem, bool includeTaxInPrices)
+    private static readonly Lazy<FleaPriceService> s_instance = new(() => new FleaPriceService());
+
+    private FleaPriceService() { }
+
+#pragma warning disable CA1822 // Mark members as static
+
+    public bool GetFleaPrice(TradeItem tradeItem, bool includeTaxInPrices)
+#pragma warning restore CA1822 // Mark members as static
+
     {
         if (tradeItem.Item.CanSellOnRagfair && FleaPricesService.Instance.FleaPrices != null)
         {
@@ -100,4 +108,6 @@ public class FleaPriceService
 
         return "Flea";
     }
+
+    public static FleaPriceService Instance => s_instance.Value;
 }

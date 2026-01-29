@@ -173,7 +173,7 @@ public class SimpleTooltipShowPatch : ModulePatch
                 || (RagFairClass.Settings.isOnlyFoundInRaidAllowed && tradeItem.Item.MarkedAsSpawnedInSession)
                 || Plugin.Configuration!.AlwaysShowFleaPrice.IsEnabled()))
         {
-            hasFleaPrice = FleaPriceService.GetFleaPrice(tradeItem, Plugin.Configuration!.IncludeFleaTax);
+            hasFleaPrice = FleaPriceService.Instance.GetFleaPrice(tradeItem, Plugin.Configuration!.IncludeFleaTax);
         }
 
         if (hasTraderPrice)
@@ -214,7 +214,7 @@ public class SimpleTooltipShowPatch : ModulePatch
                     || (RagFairClass.Settings.isOnlyFoundInRaidAllowed && mod.MarkedAsSpawnedInSession)
                     || Plugin.Configuration!.AlwaysShowFleaPrice.IsEnabled()))
             {
-                modHasFleaPrice = FleaPriceService.GetFleaPrice(modTradeItem, Plugin.Configuration!.IncludeFleaTax);
+                modHasFleaPrice = FleaPriceService.Instance.GetFleaPrice(modTradeItem, Plugin.Configuration!.IncludeFleaTax);
             }
 
             if (modHasTraderPrice && modHasFleaPrice)
@@ -260,7 +260,7 @@ public class SimpleTooltipShowPatch : ModulePatch
                     || (RagFairClass.Settings.isOnlyFoundInRaidAllowed && armorPlateItemClass.MarkedAsSpawnedInSession)
                     || Plugin.Configuration!.AlwaysShowFleaPrice.IsEnabled()))
             {
-                modHasFleaPrice = FleaPriceService.GetFleaPrice(plateTradeItem, Plugin.Configuration!.IncludeFleaTax);
+                modHasFleaPrice = FleaPriceService.Instance.GetFleaPrice(plateTradeItem, Plugin.Configuration!.IncludeFleaTax);
             }
 
             if (modHasTraderPrice && modHasFleaPrice)
