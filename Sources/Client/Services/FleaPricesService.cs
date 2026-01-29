@@ -19,7 +19,7 @@ public class FleaPricesService
 
     private DateTimeOffset lastUpdate = DateTimeOffset.MinValue;
 
-    private static readonly Lazy<FleaPricesService> instance = new(() => new FleaPricesService());
+    private static readonly Lazy<FleaPricesService> s_instance = new(() => new FleaPricesService());
 
     private FleaPricesService() { }
 
@@ -28,8 +28,8 @@ public class FleaPricesService
         while (true)
         {
             if ((!EFTHelper.IsInRaid || Plugin.Configuration!.UpdateDuringRaid.IsEnabled())
-                && (this.FleaPrices == null
-                    || (DateTimeOffset.Now - this.lastUpdate).TotalMinutes >= Plugin.Configuration!.UpdateInterval.GetValue()))
+                && (FleaPrices == null
+                    || (DateTimeOffset.Now - lastUpdate).TotalMinutes >= Plugin.Configuration!.UpdateInterval.GetValue()))
             {
                 Task<string> getJsonTask = RequestHandler.GetJsonAsync(RemotePathToGetStaticPriceTable);
                 yield return new WaitUntil(() => getJsonTask.IsCompleted);
@@ -38,20 +38,20 @@ public class FleaPricesService
                 if (!string.IsNullOrWhiteSpace(fleaPricesJson))
                 {
                     FleaPrices = JsonConvert.DeserializeObject<Dictionary<MongoID, double>>(fleaPricesJson);
-                    this.lastUpdate = DateTimeOffset.Now;
+                    lastUpdate = DateTimeOffset.Now;
                 }
             }
 
-            yield return this.coroutineIntervalWait;
+            yield return coroutineIntervalWait;
         }
     }
 
     public void ForceUpdatePrices()
     {
-        this.lastUpdate = DateTimeOffset.MinValue;
+        lastUpdate = DateTimeOffset.MinValue;
     }
 
-    public static FleaPricesService Instance => instance.Value;
+    public static FleaPricesService Instance => s_instance.Value;
 
     public Dictionary<MongoID, double>? FleaPrices { get; private set; }
 }

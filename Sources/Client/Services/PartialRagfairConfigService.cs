@@ -12,7 +12,7 @@ public class PartialRagfairConfigService
 {
     private const string RemotePathToGetPartialRagfairConfig = "/showMeTheMoney/getPartialRagfairConfig";
 
-    private static readonly Lazy<PartialRagfairConfigService> instance = new(() => new PartialRagfairConfigService());
+    private static readonly Lazy<PartialRagfairConfigService> s_instance = new(() => new PartialRagfairConfigService());
 
     private PartialRagfairConfigService() { }
 
@@ -26,7 +26,7 @@ public class PartialRagfairConfigService
             PartialRagfairConfig = JsonConvert.DeserializeObject<PartialRagfairConfig>(json);
     }
 
-    public static PartialRagfairConfigService Instance => instance.Value;
+    public static PartialRagfairConfigService Instance => s_instance.Value;
 
     public PartialRagfairConfig? PartialRagfairConfig { get; private set; }
 }

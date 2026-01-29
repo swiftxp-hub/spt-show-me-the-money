@@ -8,17 +8,17 @@ namespace SwiftXP.SPT.ShowMeTheMoney.Client.Extensions;
 
 public static class TraderClassExtensions
 {
-    private static readonly FieldInfo SupplyDataField =
+    private static readonly FieldInfo s_supplyDataField =
         typeof(TraderClass).GetField("SupplyData_0", BindingFlags.Public | BindingFlags.Instance);
 
     public static SupplyData? GetSupplyData(this TraderClass trader) =>
-        SupplyDataField?.GetValue(trader) as SupplyData;
+        s_supplyDataField?.GetValue(trader) as SupplyData;
 
     public static async void UpdateSupplyData(this TraderClass trader)
     {
         try
         {
-            if (SupplyDataField.GetValue(trader) is null)
+            if (s_supplyDataField.GetValue(trader) is null)
             {
                 Result<SupplyData> result = await SptSession.Session.GetSupplyData(trader.Id);
                 if (result.Failed)
@@ -28,7 +28,7 @@ public static class TraderClassExtensions
                     return;
                 }
 
-                SupplyDataField.SetValue(trader, result.Value);
+                s_supplyDataField.SetValue(trader, result.Value);
             }
         }
         catch (Exception exception)

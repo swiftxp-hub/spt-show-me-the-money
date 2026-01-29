@@ -14,16 +14,16 @@ namespace SwiftXP.SPT.ShowMeTheMoney.Client;
 [BepInProcess("EscapeFromTarkov.exe")]
 public class Plugin : BaseUnityPlugin
 {
-    private static ModulePatch? TooltipUpdatePatch;
+    private static ModulePatch? s_tooltipUpdatePatch;
 
     public static void EnableTooltipUpdatePatch()
     {
-        TooltipUpdatePatch!.Enable();
+        s_tooltipUpdatePatch!.Enable();
     }
 
     public static void DisableTooltipUpdatePatch()
     {
-        TooltipUpdatePatch!.Disable();
+        s_tooltipUpdatePatch!.Disable();
     }
 
     private void Awake()
@@ -70,7 +70,7 @@ public class Plugin : BaseUnityPlugin
 
         new SimpleTooltipShowPatch().Enable();
 
-        TooltipUpdatePatch = new TooltipUpdatePatch();
+        s_tooltipUpdatePatch = new TooltipUpdatePatch();
 
         if (Configuration!.FleaTaxToggleMode.IsEnabled())
             EnableTooltipUpdatePatch();

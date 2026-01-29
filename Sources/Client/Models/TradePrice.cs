@@ -17,13 +17,13 @@ public class TradePrice
         bool includeTaxInPrices = false)
     {
         this.tradeItem = tradeItem;
-        this.SingleObjectPrice = singleObjectPrice;
-        this.TotalPrice = totalPrice;
+        SingleObjectPrice = singleObjectPrice;
+        TotalPrice = totalPrice;
 
-        this.TraderId = traderId;
-        this.TraderName = traderName;
-        this.CurrencyCourse = currencyCourse;
-        this.CurrencyId = currencyId;
+        TraderId = traderId;
+        TraderName = traderName;
+        CurrencyCourse = currencyCourse;
+        CurrencyId = currencyId;
 
         this.singleObjectTax = singleObjectTax;
         this.totalTax = totalTax;
@@ -33,15 +33,15 @@ public class TradePrice
 
     public double GetComparePrice()
     {
-        double price = this.SingleObjectPrice / this.tradeItem.ItemSlotCount;
+        double price = SingleObjectPrice / tradeItem.ItemSlotCount;
 
-        if (this.includeTaxInPrices)
+        if (includeTaxInPrices)
         {
-            if (this.singleObjectTax is not null)
-                price -= this.singleObjectTax.Value / this.tradeItem.ItemSlotCount;
+            if (singleObjectTax is not null)
+                price -= singleObjectTax.Value / tradeItem.ItemSlotCount;
 
-            else if (this.totalTax is not null)
-                price -= this.totalTax.Value / this.tradeItem.Item.StackObjectsCount / this.tradeItem.ItemSlotCount;
+            else if (totalTax is not null)
+                price -= totalTax.Value / tradeItem.Item.StackObjectsCount / tradeItem.ItemSlotCount;
         }
 
         return price;
@@ -49,18 +49,18 @@ public class TradePrice
 
     public double GetComparePriceInRouble()
     {
-        double price = this.SingleObjectPrice / this.tradeItem.ItemSlotCount;
+        double price = SingleObjectPrice / tradeItem.ItemSlotCount;
 
         if (CurrencyCourse.HasValue)
             price *= CurrencyCourse.Value;
 
-        if (this.includeTaxInPrices)
+        if (includeTaxInPrices)
         {
-            if (this.singleObjectTax is not null)
-                price -= this.singleObjectTax.Value / this.tradeItem.ItemSlotCount;
+            if (singleObjectTax is not null)
+                price -= singleObjectTax.Value / tradeItem.ItemSlotCount;
 
-            else if (this.totalTax is not null)
-                price -= this.totalTax.Value / this.tradeItem.Item.StackObjectsCount / this.tradeItem.ItemSlotCount;
+            else if (totalTax is not null)
+                price -= totalTax.Value / tradeItem.Item.StackObjectsCount / tradeItem.ItemSlotCount;
         }
 
         return price;
@@ -68,18 +68,18 @@ public class TradePrice
 
     public double GetTotalPrice()
     {
-        double? price = this.TotalPrice;
+        double? price = TotalPrice;
 
-        if (this.TotalPrice is null)
-            price = this.SingleObjectPrice * this.tradeItem.Item.StackObjectsCount;
+        if (TotalPrice is null)
+            price = SingleObjectPrice * tradeItem.Item.StackObjectsCount;
 
-        if (this.includeTaxInPrices)
+        if (includeTaxInPrices)
         {
-            if (this.totalTax is not null)
-                price -= this.totalTax.Value;
+            if (totalTax is not null)
+                price -= totalTax.Value;
 
-            else if (this.singleObjectTax is not null)
-                price -= this.singleObjectTax.Value * this.tradeItem.Item.StackObjectsCount;
+            else if (singleObjectTax is not null)
+                price -= singleObjectTax.Value * tradeItem.Item.StackObjectsCount;
         }
 
         return price!.Value;
@@ -87,21 +87,21 @@ public class TradePrice
 
     public double GetTotalPriceInRouble()
     {
-        double? price = this.TotalPrice;
+        double? price = TotalPrice;
 
-        if (this.TotalPrice is null)
-            price = this.SingleObjectPrice * this.tradeItem.Item.StackObjectsCount;
+        if (TotalPrice is null)
+            price = SingleObjectPrice * tradeItem.Item.StackObjectsCount;
 
         if (CurrencyCourse.HasValue)
             price *= CurrencyCourse.Value;
 
-        if (this.includeTaxInPrices)
+        if (includeTaxInPrices)
         {
-            if (this.totalTax is not null)
-                price -= this.totalTax.Value;
+            if (totalTax is not null)
+                price -= totalTax.Value;
 
-            else if (this.singleObjectTax is not null)
-                price -= this.singleObjectTax.Value * this.tradeItem.Item.StackObjectsCount;
+            else if (singleObjectTax is not null)
+                price -= singleObjectTax.Value * tradeItem.Item.StackObjectsCount;
         }
 
         return price!.Value;
@@ -109,17 +109,17 @@ public class TradePrice
 
     public double GetTotalTax()
     {
-        double? tax = this.totalTax;
+        double? tax = totalTax;
 
-        if (this.totalTax is null)
-            tax = this.singleObjectTax * this.tradeItem.Item.StackObjectsCount;
+        if (totalTax is null)
+            tax = singleObjectTax * tradeItem.Item.StackObjectsCount;
 
         return tax!.Value;
     }
 
     public bool HasTax()
     {
-        return this.singleObjectTax.HasValue || this.totalTax.HasValue;
+        return singleObjectTax.HasValue || totalTax.HasValue;
     }
 
     public int SingleObjectPrice { get; private set; }
@@ -138,8 +138,8 @@ public class TradePrice
     {
         get
         {
-            if (this.CurrencyId.HasValue)
-                return GClass3130.GetCurrencyCharById(this.CurrencyId.Value);
+            if (CurrencyId.HasValue)
+                return GClass3130.GetCurrencyCharById(CurrencyId.Value);
 
             return "₽";
         }

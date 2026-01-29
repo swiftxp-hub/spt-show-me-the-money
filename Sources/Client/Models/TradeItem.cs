@@ -7,11 +7,11 @@ public class TradeItem
     public TradeItem(Item item, TradePrice? traderPrice = null, TradePrice? fleaPrice = null)
     {
         XYCellSizeStruct itemSize = item.CalculateCellSize();
-        this.ItemSlotCount = itemSize.X * itemSize.Y;
+        ItemSlotCount = itemSize.X * itemSize.Y;
 
-        this.Item = item;
-        this.TraderPrice = traderPrice;
-        this.FleaPrice = fleaPrice;
+        Item = item;
+        TraderPrice = traderPrice;
+        FleaPrice = fleaPrice;
     }
 
     public TradePrice? FleaPrice { get; set; }
@@ -22,7 +22,7 @@ public class TradeItem
     {
         get
         {
-            return this.Item.StackObjectsCount;
+            return Item.StackObjectsCount;
         }
     }
 
