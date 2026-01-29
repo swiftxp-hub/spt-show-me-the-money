@@ -27,7 +27,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+    <!-- <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" /> -->
     <PackageReference Include="BepInEx.Core" Version="5.*" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
     <PackageReference Include="UnityEngine.Modules" Version="2022.3.43" IncludeAssets="compile" />
@@ -39,7 +39,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="$(MSBuildThisFileDirectory)/../../../spt4-shared-dlls/**/*.dll" />
+    <!-- <Reference Include="$(MSBuildThisFileDirectory)/../../../spt4-shared-dlls/**/*.dll" /> -->
+
+    <Reference Include="$(MSBuildThisFileDirectory)/../../../spt4-shared-dlls/0Harmony.dll" />
+    <Reference Include="$(MSBuildThisFileDirectory)/../../../spt4-shared-dlls/Assembly-CSharp.dll" />
+    <Reference Include="$(MSBuildThisFileDirectory)/../../../spt4-shared-dlls/BepInEx.dll" />
+    <Reference Include="$(MSBuildThisFileDirectory)/../../../spt4-shared-dlls/Comfort.dll" />
+    <Reference Include="$(MSBuildThisFileDirectory)/../../../spt4-shared-dlls/ItemComponent.Types.dll" />
+    <Reference Include="$(MSBuildThisFileDirectory)/../../../spt4-shared-dlls/Newtonsoft.Json.dll" />
+    <Reference Include="$(MSBuildThisFileDirectory)/../../../spt4-shared-dlls/Sirenix.Serialization.dll" />
+    <Reference Include="$(MSBuildThisFileDirectory)/../../../spt4-shared-dlls/spt-common.dll" />
+    <Reference Include="$(MSBuildThisFileDirectory)/../../../spt4-shared-dlls/spt-reflection.dll" />
+    <Reference Include="$(MSBuildThisFileDirectory)/../../../spt4-shared-dlls/Unity.TextMeshPro.dll" />
+    <Reference Include="$(MSBuildThisFileDirectory)/../../../spt4-shared-dlls/UnityEngine.CoreModule.dll" />
+    <Reference Include="$(MSBuildThisFileDirectory)/../../../spt4-shared-dlls/UnityEngine.IMGUIModule.dll" />
+    <Reference Include="$(MSBuildThisFileDirectory)/../../../spt4-shared-dlls/UnityEngine.UI.dll" />
   </ItemGroup>
   
   <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
@@ -47,7 +61,7 @@
   </ItemGroup>
 
   <Target Name="GenerateLicenseFile" AfterTargets="Publish">
-    <Message Text="Starte Lizenz-Generierung (mit Roll-Forward)..." Importance="high" />
+    <Message Text="Generating license file..." Importance="high" />
 
     <Exec
       Command="$(LicenseToolPath) --input &quot;$(MSBuildProjectFullPath)&quot; --output --outfile &quot;$(PublishDir)SwiftXP.SPT.ShowMeTheMoney.Client.LICENSES.txt&quot;"
@@ -55,6 +69,6 @@
       ConsoleToMSBuild="true"
       IgnoreExitCode="false" />
 
-    <Message Text="Lizenz-Generierung abgeschlossen." Importance="high" />
+    <Message Text="License file generated." Importance="high" />
   </Target>
 </Project>

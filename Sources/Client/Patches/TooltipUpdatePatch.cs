@@ -11,6 +11,8 @@ public class TooltipUpdatePatch : ModulePatch
     protected override MethodBase GetTargetMethod() =>
         AccessTools.FirstMethod(typeof(Tooltip), x => x.Name == nameof(Tooltip.Update));
 
+    private static bool s_fleaTaxIsToggled;
+
     [PatchPrefix]
 #pragma warning disable CA1707 // Identifiers should not contain underscores
 
@@ -19,12 +21,35 @@ public class TooltipUpdatePatch : ModulePatch
 
     {
         if (SimpleTooltipShowPatch.PatchIsActive
-            && Plugin.Configuration!.FleaTaxToggleMode.IsEnabled()
-            && (Plugin.Configuration!.FleaTaxToggleKey.GetValue().IsDown()
-                || Plugin.Configuration!.FleaTaxToggleKey.GetValue().IsUp()
-                || Plugin.Configuration!.FleaTaxToggleKey.GetValue().IsPressed()))
+            && Plugin.Configuration!.FleaTaxToggleMode.IsEnabled())
         {
-            SimpleTooltipShowPatch.Update();
+            if (IsFleaTaxToggleKeyPressed())
+            {
+                if (!s_fleaTaxIsToggled)
+                {
+                    s_fleaTaxIsToggled = true;
+                    SimpleTooltipShowPatch.Update();
+                }
+            }
+            else
+            {
+                if (s_fleaTaxIsToggled)
+                {
+                    s_fleaTaxIsToggled = false;
+                    SimpleTooltipShowPatch.Update();
+                }
+            }
         }
+        else
+        {
+            s_fleaTaxIsToggled = false;
+        }
+    }
+
+    private static bool IsFleaTaxToggleKeyPressed()
+    {
+        return Plugin.Configuration!.FleaTaxToggleKey.GetValue().IsDown()
+            || Plugin.Configuration!.FleaTaxToggleKey.GetValue().IsUp()
+            || Plugin.Configuration!.FleaTaxToggleKey.GetValue().IsPressed();
     }
 }

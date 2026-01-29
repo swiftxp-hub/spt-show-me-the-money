@@ -43,8 +43,19 @@ public class FleaPricesService(ISptLogger<FleaPricesService> sptLogger,
 
                 if (price > 0d && !double.IsNaN(price) && !double.IsInfinity(price))
                     result.TryAdd(fleaPrice.Key, price);
+
+                // Fallback to price which was delivered by RagfairPriceService.
+                else if (fleaPrice.Value > 0d && !double.IsNaN(fleaPrice.Value) && !double.IsInfinity(fleaPrice.Value))
+                    result.TryAdd(fleaPrice.Key, fleaPrice.Value);
             }
-            catch (Exception) { }
+            catch (Exception ex)
+            {
+                sptLogger.Debug($"Error calculating price for item {fleaPrice.Key}: {ex}");
+
+                // Fallback to price which was delivered by RagfairPriceService.
+                if (fleaPrice.Value > 0d && !double.IsNaN(fleaPrice.Value) && !double.IsInfinity(fleaPrice.Value))
+                    result.TryAdd(fleaPrice.Key, fleaPrice.Value);
+            }
         });
 
         stopwatch.Stop();
@@ -90,7 +101,10 @@ public class FleaPricesService(ISptLogger<FleaPricesService> sptLogger,
                 }
             }
         }
-        catch (Exception) { }
+        catch (Exception ex)
+        {
+            sptLogger.Debug($"Error getting average price for item {itemTemplateId}: {ex}");
+        }
 
         return 0d;
     }

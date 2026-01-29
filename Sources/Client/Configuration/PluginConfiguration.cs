@@ -12,9 +12,9 @@ namespace SwiftXP.SPT.ShowMeTheMoney.Client.Configuration;
 
 public class PluginConfiguration
 {
-    private ConfigEntry<bool> includeFleaTaxConfigEntry;
+    private ConfigEntry<bool> _includeFleaTaxConfigEntry;
 
-    private ConfigEntry<bool> showFleaTaxConfigEntry;
+    private ConfigEntry<bool> _showFleaTaxConfigEntry;
 
     public PluginConfiguration(ConfigFile configFile)
     {
@@ -66,8 +66,8 @@ public class PluginConfiguration
         // --- 5. Flea market
         AlwaysShowFleaPrice = configFile.BindConfiguration("5. Flea market", "Always show flea price", false, $"Always show the flea price of an item even if the flea market is not yet unlocked or the item is not found-in-raid and the \"Can only sell items with 'Found in raid' tag\" setting in SPT/SVM is enabled.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 8);
         FleaPriceMultiplicand = configFile.BindConfiguration("5. Flea market", "Flea price multiplicand", 1.0m, $"Sets the multiplicand by which the average flea market price is multiplied and then displayed in the tooltip. The following calculation is performed:{Environment.NewLine}{Environment.NewLine}Average flea market price of the item * Flea price multiplicand{Environment.NewLine}{Environment.NewLine}(Default: 1.0)", 7);
-        includeFleaTaxConfigEntry = configFile.BindConfiguration("5. Flea market", "Include flea tax", false, $"Determines whether taxes for the flea market are included in the flea price.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 6);
-        showFleaTaxConfigEntry = configFile.BindConfiguration("5. Flea market", "Show flea tax", false, $"Show the flea tax in the tool-tip.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 5);
+        _includeFleaTaxConfigEntry = configFile.BindConfiguration("5. Flea market", "Include flea tax", false, $"Determines whether taxes for the flea market are included in the flea price.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 6);
+        _showFleaTaxConfigEntry = configFile.BindConfiguration("5. Flea market", "Show flea tax", false, $"Show the flea tax in the tool-tip.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 5);
         FleaTaxToggleMode = configFile.BindConfiguration("5. Flea market", "Toggle-mode for flea tax", false, $"When toggle mode is activated, the flea tax is only displayed when the specified key or key combination is pressed.{Environment.NewLine}{Environment.NewLine}(Default: Disabled)", 4);
         FleaTaxToggleKey = configFile.BindConfiguration("5. Flea market", "Toggle-mode key", new KeyboardShortcut(KeyCode.LeftAlt), $"Defines which key or key combination needs to be pressed to display the flea tax.{Environment.NewLine}{Environment.NewLine}(Default: LeftAlt)", 3);
 
@@ -190,15 +190,15 @@ public class PluginConfiguration
         {
             if (FleaTaxToggleMode.IsEnabled())
             {
-                return includeFleaTaxConfigEntry.IsEnabled()
+                return _includeFleaTaxConfigEntry.IsEnabled()
                     && FleaTaxToggleKey.GetValue().IsPressed();
             }
 
-            return includeFleaTaxConfigEntry.IsEnabled();
+            return _includeFleaTaxConfigEntry.IsEnabled();
         }
         set
         {
-            includeFleaTaxConfigEntry.Value = value;
+            _includeFleaTaxConfigEntry.Value = value;
         }
     }
 
@@ -208,15 +208,15 @@ public class PluginConfiguration
         {
             if (FleaTaxToggleMode.IsEnabled())
             {
-                return showFleaTaxConfigEntry.IsEnabled()
+                return _showFleaTaxConfigEntry.IsEnabled()
                     && FleaTaxToggleKey.GetValue().IsPressed();
             }
 
-            return showFleaTaxConfigEntry.IsEnabled();
+            return _showFleaTaxConfigEntry.IsEnabled();
         }
         set
         {
-            showFleaTaxConfigEntry.Value = value;
+            _showFleaTaxConfigEntry.Value = value;
         }
     }
 
