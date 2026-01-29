@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using SPTarkov.Server.Core.Models.Spt.Mod;
+using SwiftXP.SPT.Common.Runtime;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Server;
 
@@ -9,7 +10,7 @@ public record ModMetadata : AbstractModMetadata
     public override string Name { get; init; } = "Show Me The Money";
     public override string Author { get; init; } = "SwiftXP";
     public override List<string>? Contributors { get; init; } = [];
-    public override SemanticVersioning.Version Version { get; init; } = new("2.5.4");
+    public override SemanticVersioning.Version Version { get; init; } = new(AppMetadata.Version);
     public override SemanticVersioning.Range SptVersion { get; init; } = new("~4.0.11");
 
     public override List<string>? Incompatibilities { get; init; } = [];

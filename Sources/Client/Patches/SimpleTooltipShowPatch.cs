@@ -13,18 +13,23 @@ using TMPro;
 using SwiftXP.SPT.Common.ConfigurationManager;
 using System.Linq;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Services;
+using System.Globalization;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Patches;
 
 public class SimpleTooltipShowPatch : ModulePatch
 {
-    private static string? patchText;
+    private static string? s_patchText;
 
     protected override MethodBase GetTargetMethod() =>
         AccessTools.FirstMethod(typeof(SimpleTooltip), x => x.Name == nameof(SimpleTooltip.Show) && x.GetParameters()[0].Name == "text");
 
     [PatchPrefix]
+#pragma warning disable CA1707 // Identifiers should not contain underscores
+
     public static void PatchPrefix(SimpleTooltip __instance, ref string text, Vector2? offset, ref float delay, float? maxWidth)
+#pragma warning restore CA1707 // Identifiers should not contain underscores
+
     {
         try
         {
@@ -39,13 +44,13 @@ public class SimpleTooltipShowPatch : ModulePatch
             if (success)
             {
                 if (Plugin.Configuration!.EnableColorCoding.IsEnabled()
-                    && (Plugin.Configuration!.ColorCodingMode.GetValue() == ColorCodingModeEnum.ItemName || Plugin.Configuration!.ColorCodingMode.GetValue() == ColorCodingModeEnum.Both))
+                    && (Plugin.Configuration!.ColorCodingMode.GetValue() == ColorCodingMode.ItemName || Plugin.Configuration!.ColorCodingMode.GetValue() == ColorCodingMode.Both))
                 {
                     SetColorCoding(ref text, Plugin.HoveredItem.LocalizedName(), highestComparePrice);
                 }
 
-                patchText = priceInformationText;
-                text += patchText;
+                s_patchText = priceInformationText;
+                text += s_patchText;
                 PatchIsActive = true;
             }
         }
@@ -67,9 +72,9 @@ public class SimpleTooltipShowPatch : ModulePatch
                     bool success = TryShowPriceInformation(out string? priceInformationText, out double? _);
                     if (success)
                     {
-                        string newTooltipText = instanceText.Replace(patchText, priceInformationText);
+                        string newTooltipText = instanceText.Replace(s_patchText, priceInformationText);
 
-                        patchText = priceInformationText;
+                        s_patchText = priceInformationText;
                         Instance.SetText(newTooltipText);
                     }
                 }
@@ -84,7 +89,7 @@ public class SimpleTooltipShowPatch : ModulePatch
     public static void OnClose()
     {
         Instance = null;
-        patchText = null;
+        s_patchText = null;
         PatchIsActive = false;
     }
 
@@ -121,8 +126,8 @@ public class SimpleTooltipShowPatch : ModulePatch
 
         StringBuilder textToAppendToTooltip = new();
 
-        TooltipFontSizeEnum fontSize = Plugin.Configuration!.FontSize.GetValue();
-        if (fontSize != TooltipFontSizeEnum.Normal)
+        TooltipFontSize fontSize = Plugin.Configuration!.FontSize.GetValue();
+        if (fontSize != TooltipFontSize.Normal)
             textToAppendToTooltip.Append($"<size={(int)fontSize}%>");
 
         if (Plugin.Configuration!.RenderInItalics.IsEnabled())
@@ -143,7 +148,7 @@ public class SimpleTooltipShowPatch : ModulePatch
         if (Plugin.Configuration!.RenderInItalics.IsEnabled())
             textToAppendToTooltip.Append("</i>");
 
-        if (fontSize != TooltipFontSizeEnum.Normal)
+        if (fontSize != TooltipFontSize.Normal)
             textToAppendToTooltip.Append("</size>");
 
         priceInformationText = textToAppendToTooltip.ToString();
@@ -168,7 +173,7 @@ public class SimpleTooltipShowPatch : ModulePatch
                 || (RagFairClass.Settings.isOnlyFoundInRaidAllowed && tradeItem.Item.MarkedAsSpawnedInSession)
                 || Plugin.Configuration!.AlwaysShowFleaPrice.IsEnabled()))
         {
-            hasFleaPrice = FleaPriceService.Instance.GetFleaPrice(tradeItem, Plugin.Configuration!.IncludeFleaTax);
+            hasFleaPrice = FleaPriceService.GetFleaPrice(tradeItem, Plugin.Configuration!.IncludeFleaTax);
         }
 
         if (hasTraderPrice)
@@ -209,7 +214,7 @@ public class SimpleTooltipShowPatch : ModulePatch
                     || (RagFairClass.Settings.isOnlyFoundInRaidAllowed && mod.MarkedAsSpawnedInSession)
                     || Plugin.Configuration!.AlwaysShowFleaPrice.IsEnabled()))
             {
-                modHasFleaPrice = FleaPriceService.Instance.GetFleaPrice(modTradeItem, Plugin.Configuration!.IncludeFleaTax);
+                modHasFleaPrice = FleaPriceService.GetFleaPrice(modTradeItem, Plugin.Configuration!.IncludeFleaTax);
             }
 
             if (modHasTraderPrice && modHasFleaPrice)
@@ -255,7 +260,7 @@ public class SimpleTooltipShowPatch : ModulePatch
                     || (RagFairClass.Settings.isOnlyFoundInRaidAllowed && armorPlateItemClass.MarkedAsSpawnedInSession)
                     || Plugin.Configuration!.AlwaysShowFleaPrice.IsEnabled()))
             {
-                modHasFleaPrice = FleaPriceService.Instance.GetFleaPrice(plateTradeItem, Plugin.Configuration!.IncludeFleaTax);
+                modHasFleaPrice = FleaPriceService.GetFleaPrice(plateTradeItem, Plugin.Configuration!.IncludeFleaTax);
             }
 
             if (modHasTraderPrice && modHasFleaPrice)
@@ -427,7 +432,7 @@ public class SimpleTooltipShowPatch : ModulePatch
             string slotPrice = FormatPrice(tradePriceA.GetComparePrice(), tradePriceA.CurrencySymbol);
 
             if (Plugin.Configuration!.EnableColorCoding.IsEnabled()
-                && (Plugin.Configuration!.ColorCodingMode.GetValue() == ColorCodingModeEnum.Price || Plugin.Configuration!.ColorCodingMode.GetValue() == ColorCodingModeEnum.Both))
+                && (Plugin.Configuration!.ColorCodingMode.GetValue() == ColorCodingMode.Price || Plugin.Configuration!.ColorCodingMode.GetValue() == ColorCodingMode.Both))
             {
                 SetColorCoding(ref slotPrice, slotPrice, tradePriceA.GetComparePriceInRouble());
             }
@@ -440,7 +445,7 @@ public class SimpleTooltipShowPatch : ModulePatch
             totalPrice = $"<b>{totalPrice}</b>";
 
         if (Plugin.Configuration!.EnableColorCoding.IsEnabled()
-            && (Plugin.Configuration!.ColorCodingMode.GetValue() == ColorCodingModeEnum.Price || Plugin.Configuration!.ColorCodingMode.GetValue() == ColorCodingModeEnum.Both)
+            && (Plugin.Configuration!.ColorCodingMode.GetValue() == ColorCodingMode.Price || Plugin.Configuration!.ColorCodingMode.GetValue() == ColorCodingMode.Both)
             && ((tradeItem.ItemSlotCount == 1 && tradeItem.Item.StackObjectsCount == 1) || !Plugin.Configuration!.ShowPricePerSlot.IsEnabled()))
         {
             SetColorCoding(ref totalPrice, totalPrice, tradePriceA.GetComparePriceInRouble());
@@ -462,21 +467,21 @@ public class SimpleTooltipShowPatch : ModulePatch
         val = Math.Round(val);
 
         if (val >= 100000000)
-            return $"{currency}{(val / 1000000).ToString("#,0M")}";
+            return $"{currency}{(val / 1000000).ToString("#,0M", CultureInfo.InvariantCulture)}";
 
         if (val >= 10000000)
-            return $"{currency}{(val / 1000000).ToString("0.#")}M";
+            return $"{currency}{(val / 1000000).ToString("0.#", CultureInfo.InvariantCulture)}M";
 
         if (val >= 100000)
-            return $"{currency}{(val / 1000).ToString("#,0k")}";
+            return $"{currency}{(val / 1000).ToString("#,0k", CultureInfo.InvariantCulture)}";
 
         if (val >= 10000)
-            return $"{currency}{(val / 1000).ToString("0.#")}k";
+            return $"{currency}{(val / 1000).ToString("0.#", CultureInfo.InvariantCulture)}k";
 
         return $"{currency}{val:#,0}";
     }
 
     public static SimpleTooltip? Instance { get; private set; }
 
-    public static bool PatchIsActive { get; private set; } = false;
+    public static bool PatchIsActive { get; private set; }
 }

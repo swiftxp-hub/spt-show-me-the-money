@@ -12,7 +12,11 @@ public class TooltipUpdatePatch : ModulePatch
         AccessTools.FirstMethod(typeof(Tooltip), x => x.Name == nameof(Tooltip.Update));
 
     [PatchPrefix]
+#pragma warning disable CA1707 // Identifiers should not contain underscores
+
     public static void PatchPrefix(Tooltip __instance)
+#pragma warning restore CA1707 // Identifiers should not contain underscores
+
     {
         if (SimpleTooltipShowPatch.PatchIsActive
             && Plugin.Configuration!.FleaTaxToggleMode.IsEnabled()

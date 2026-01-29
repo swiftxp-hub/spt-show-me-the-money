@@ -1,6 +1,6 @@
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Enums;
 
-public enum TooltipFontSizeEnum
+public enum TooltipFontSize
 {
     Normal = 100,
 

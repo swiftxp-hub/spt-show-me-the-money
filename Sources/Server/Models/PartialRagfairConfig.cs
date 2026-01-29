@@ -7,7 +7,7 @@ public record PartialRagfairConfig
 {
     public int Base { get; set; }
 
-    public Dictionary<MongoId, double>? ItemPriceMultiplier { get; set; }
+    public Dictionary<string, double>? ItemPriceMultiplier { get; set; }
 
     public int MaxSellChancePercent { get; set; }
 

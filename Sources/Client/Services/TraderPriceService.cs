@@ -13,7 +13,7 @@ namespace SwiftXP.SPT.ShowMeTheMoney.Client.Services;
 
 public class TraderPriceService
 {
-    private static readonly Lazy<TraderPriceService> instance = new(() => new TraderPriceService());
+    private static readonly Lazy<TraderPriceService> s_instance = new(() => new TraderPriceService());
 
     private TraderPriceService() { }
 
@@ -22,16 +22,16 @@ public class TraderPriceService
         TradePrice? highestTraderPrice = null;
         foreach (TraderClass trader in SptSession.Session.Traders)
         {
-            if (this.IsTraderAvailable(trader))
+            if (IsTraderAvailable(trader))
             {
                 TraderClass.GStruct300? singleObjectPrice = null;
                 TraderClass.GStruct300? totalPrice = null;
 
-                bool hasPrice = this.TryGetTraderUserItemPrice(trader, tradeItem, out singleObjectPrice, out totalPrice);
+                bool hasPrice = TryGetTraderUserItemPrice(trader, tradeItem, out singleObjectPrice, out totalPrice);
                 if (hasPrice && (!Plugin.Configuration!.RoublesOnly.IsEnabled() || singleObjectPrice!.Value.CurrencyId.ToString() == SptConstants.CurrencyIds.Roubles))
                 {
                     MongoID? currencyId = singleObjectPrice!.Value.CurrencyId;
-                    double? currencyCourse = this.GetCurrencyCourse(trader, currencyId);
+                    double? currencyCourse = GetCurrencyCourse(trader, currencyId);
                     double itemPrice = singleObjectPrice.Value.Amount;
 
                     int? totalItemPrice = totalPrice != null ? totalPrice.Value.Amount : null;
@@ -60,14 +60,14 @@ public class TraderPriceService
     private bool IsTraderAvailable(TraderClass trader)
     {
         bool isAvailable = trader.Info.Available && !trader.Info.Disabled && trader.Info.Unlocked;
-        bool isIgnored = this.TradersToIgnore.Any(
+        bool isIgnored = TradersToIgnore.Any(
             x => x.Equals(trader.Id, StringComparison.OrdinalIgnoreCase)
             || x.Equals(trader.LocalizedName, StringComparison.OrdinalIgnoreCase));
 
         return isAvailable && !isIgnored;
     }
 
-    private bool TryGetTraderUserItemPrice(TraderClass trader, TradeItem tradeItem,
+    private static bool TryGetTraderUserItemPrice(TraderClass trader, TradeItem tradeItem,
         out TraderClass.GStruct300? singleObjectPrice, out TraderClass.GStruct300? totalPrice)
     {
         singleObjectPrice = null;
@@ -89,7 +89,7 @@ public class TraderPriceService
         return singleObjectPrice is not null;
     }
 
-    private double? GetCurrencyCourse(TraderClass trader, MongoID? currencyId)
+    private static double? GetCurrencyCourse(TraderClass trader, MongoID? currencyId)
     {
         if (!currencyId.HasValue)
             return null;
@@ -99,7 +99,7 @@ public class TraderPriceService
         return result ?? 1;
     }
 
-    public static TraderPriceService Instance => instance.Value;
+    public static TraderPriceService Instance => s_instance.Value;
 
     public List<string> TradersToIgnore { get; set; } = [];
 }

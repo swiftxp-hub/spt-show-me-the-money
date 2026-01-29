@@ -34,7 +34,7 @@ public class Plugin : BaseUnityPlugin
         EnablePatches();
     }
 
-    private void InitLogger()
+    private static void InitLogger()
     {
         SptLogger = new SimpleSptLogger(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_VERSION);
     }
@@ -54,7 +54,7 @@ public class Plugin : BaseUnityPlugin
         StartCoroutine(FleaPricesService.Instance.UpdatePrices());
     }
 
-    private void EnablePatches()
+    private static void EnablePatches()
     {
         SptLogger!.LogInfo("Enable patches...");
 
@@ -76,9 +76,9 @@ public class Plugin : BaseUnityPlugin
             EnableTooltipUpdatePatch();
     }
 
-    public static PluginConfiguration? Configuration;
+    public static PluginConfiguration? Configuration { get; set; }
 
-    public static SimpleSptLogger? SptLogger;
+    public static SimpleSptLogger? SptLogger { get; set; }
 
     public static Item? HoveredItem { get; set; }
 

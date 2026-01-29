@@ -8,11 +8,7 @@ namespace SwiftXP.SPT.ShowMeTheMoney.Client.Services;
 
 public class FleaPriceService
 {
-    private static readonly Lazy<FleaPriceService> instance = new(() => new FleaPriceService());
-
-    private FleaPriceService() { }
-
-    public bool GetFleaPrice(TradeItem tradeItem, bool includeTaxInPrices)
+    public static bool GetFleaPrice(TradeItem tradeItem, bool includeTaxInPrices)
     {
         if (tradeItem.Item.CanSellOnRagfair && FleaPricesService.Instance.FleaPrices != null)
         {
@@ -44,7 +40,7 @@ public class FleaPriceService
         return tradeItem.FleaPrice is not null;
     }
 
-    private double GetWeaponPrice(Weapon weapon, double staticWeaponPrice)
+    private static double GetWeaponPrice(Weapon weapon, double staticWeaponPrice)
     {
         double totalWeaponPrice = staticWeaponPrice;
 
@@ -104,6 +100,4 @@ public class FleaPriceService
 
         return "Flea";
     }
-
-    public static FleaPriceService Instance => instance.Value;
 }

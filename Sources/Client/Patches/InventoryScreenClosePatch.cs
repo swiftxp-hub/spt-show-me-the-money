@@ -11,7 +11,11 @@ public class InventoryScreenClosePatch : ModulePatch
         AccessTools.FirstMethod(typeof(InventoryScreen), x => x.Name == nameof(InventoryScreen.Close));
 
     [PatchPrefix]
+#pragma warning disable CA1707 // Identifiers should not contain underscores
+
     public static void PatchPrefix(Tooltip __instance)
+#pragma warning restore CA1707 // Identifiers should not contain underscores
+
     {
         Plugin.HoveredItem = null;
         SimpleTooltipShowPatch.OnClose();

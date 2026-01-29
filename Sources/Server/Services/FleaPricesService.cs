@@ -16,43 +16,36 @@ using SPTarkov.Server.Core.Services;
 namespace SwiftXP.SPT.ShowMeTheMoney.Server.Services;
 
 [Injectable(InjectionType.Scoped)]
-public class FleaPricesService(ISptLogger<ShowMeTheMoneyStaticRouter> sptLogger,
+public class FleaPricesService(ISptLogger<FleaPricesService> sptLogger,
     ItemHelper itemHelper,
     RagfairPriceService ragfairPriceService,
     RagfairOfferService ragfairOfferService,
     PaymentHelper paymentHelper)
 {
-    public ConcurrentDictionary<MongoId, double> Get()
+    public ConcurrentDictionary<string, double> Get()
     {
         Stopwatch stopwatch = new();
         stopwatch.Start();
 
         Dictionary<MongoId, double> fleaPrices = ragfairPriceService.GetAllFleaPrices();
-        ConcurrentDictionary<MongoId, double> result = new(fleaPrices);
+        ConcurrentDictionary<string, double> result = new();
 
         Parallel.ForEach(fleaPrices, fleaPrice =>
         {
             try
             {
+                double price;
+
                 if (itemHelper.IsOfBaseclass(fleaPrice.Key, BaseClasses.WEAPON))
-                {
-                    double? staticWeaponPrice = ragfairPriceService.GetStaticPriceForItem(fleaPrice.Key);
-                    if (staticWeaponPrice.HasValue)
-                        result[fleaPrice.Key] = staticWeaponPrice.Value;
-                }
+                    price = ragfairPriceService.GetStaticPriceForItem(fleaPrice.Key) ?? 0;
                 else
-                {
-                    double newPrice = GetAveragePriceFromOffers(fleaPrice.Key);
-                    if (newPrice > 0d)
-                        result[fleaPrice.Key] = newPrice;
-                }
+                    price = GetAveragePriceFromOffers(fleaPrice.Key);
+
+                if (price > 0d && !double.IsNaN(price) && !double.IsInfinity(price))
+                    result.TryAdd(fleaPrice.Key, price);
             }
             catch (Exception) { }
         });
-
-        // Check dictionary for NaN or Infinity and remove them.
-        result = new(result.Where(x => !Double.IsNaN(x.Value) && !Double.IsInfinity(x.Value))
-            .ToDictionary(x => x.Key, x => x.Value));
 
         stopwatch.Stop();
         sptLogger.Debug($"FleaPriceService.Get() was finished in {stopwatch.ElapsedMilliseconds}ms.");
@@ -67,12 +60,12 @@ public class FleaPricesService(ISptLogger<ShowMeTheMoneyStaticRouter> sptLogger,
             IEnumerable<RagfairOffer>? offers = ragfairOfferService.GetOffersOfType(itemTemplateId);
             if (offers != null && offers.Any())
             {
-                List<RagfairOffer> countableOffers = [.. offers
+                IEnumerable<RagfairOffer> countableOffers = offers
                     .Where(x => !x.Requirements!.Any(req => !paymentHelper.IsMoneyTpl(req.TemplateId))
                         && !x.IsTraderOffer()
-                        && !x.IsPlayerOffer())];
+                        && !x.IsPlayerOffer());
 
-                if (countableOffers.Count > 0)
+                if (countableOffers.Any())
                 {
                     double offerSum = 0;
                     int countedOffers = 0;
