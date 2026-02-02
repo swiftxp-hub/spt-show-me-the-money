@@ -16,7 +16,7 @@ public class PluginConfiguration
 
     private ConfigEntry<bool> _showFleaTaxConfigEntry;
 
-    public PluginConfiguration(ConfigFile configFile)
+    public PluginConfiguration(ConfigFile configFile, Action onForceUpdate)
     {
         // --- 1. Main settings
         EnablePlugin = configFile.BindConfiguration("1. Main settings", "Enable plug-in", true, $"Enable or disable the plug-in.{Environment.NewLine}{Environment.NewLine}(Default: Enabled)", 7);
@@ -81,8 +81,8 @@ public class PluginConfiguration
             "Pulls the current flea prices from your SPT server instance (can take up to 30 seconds).",
             () =>
             {
-                FleaPricesService.Instance.ForceUpdatePrices();
-                NotificationsService.Instance.SendLongNotice("Flea prices will update as soon as possible...");
+                onForceUpdate();
+                EftNotificationHelper.SendLongNotice("Flea prices will update as soon as possible...");
             },
             0
         );

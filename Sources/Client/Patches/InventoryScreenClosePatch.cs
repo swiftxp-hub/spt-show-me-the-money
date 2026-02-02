@@ -2,6 +2,7 @@ using EFT.UI;
 using SPT.Reflection.Patching;
 using System.Reflection;
 using HarmonyLib;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Models;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Patches;
 
@@ -17,7 +18,7 @@ public class InventoryScreenClosePatch : ModulePatch
 #pragma warning restore CA1707 // Identifiers should not contain underscores
 
     {
-        Plugin.HoveredItem = null;
+        PluginContextDataHolder.SetHoveredItem(null);
         SimpleTooltipShowPatch.OnClose();
     }
 }

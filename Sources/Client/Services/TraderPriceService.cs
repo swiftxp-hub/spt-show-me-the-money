@@ -28,7 +28,7 @@ public class TraderPriceService
                 TraderClass.GStruct300? totalPrice = null;
 
                 bool hasPrice = TryGetTraderUserItemPrice(trader, tradeItem, out singleObjectPrice, out totalPrice);
-                if (hasPrice && (!Plugin.Configuration!.RoublesOnly.IsEnabled() || singleObjectPrice!.Value.CurrencyId.ToString() == SptConstants.CurrencyIds.Roubles))
+                if (hasPrice && (!PluginContextDataHolder.Current!.Configuration!.RoublesOnly.IsEnabled() || singleObjectPrice!.Value.CurrencyId.ToString() == SptConstants.CurrencyIds.Roubles))
                 {
                     MongoID? currencyId = singleObjectPrice!.Value.CurrencyId;
                     double? currencyCourse = GetCurrencyCourse(trader, currencyId);
@@ -83,7 +83,8 @@ public class TraderPriceService
         }
         catch (Exception)
         {
-            Plugin.SptLogger!.LogDebug($"Could not get price from trader \"{trader.LocalizedName}\". Skipping.");
+            PluginContextDataHolder.Current.SptLogger?
+                .LogDebug($"Could not get price from trader \"{trader.LocalizedName}\". Skipping.");
         }
 
         return singleObjectPrice is not null;

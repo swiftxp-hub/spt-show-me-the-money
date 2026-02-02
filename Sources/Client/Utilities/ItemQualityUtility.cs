@@ -2,9 +2,9 @@ using System;
 using System.Linq;
 using EFT.InventoryLogic;
 
-namespace SwiftXP.SPT.ShowMeTheMoney.Client.Services;
+namespace SwiftXP.SPT.ShowMeTheMoney.Client.Utilities;
 
-public static class ItemQualityService
+public static class ItemQualityUtility
 {
     public static double GetItemQualityModifier(Item item)
     {

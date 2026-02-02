@@ -1,20 +1,21 @@
 ﻿using BepInEx;
-using EFT.InventoryLogic;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Configuration;
-using SwiftXP.SPT.ShowMeTheMoney.Client.Patches;
 using SwiftXP.SPT.Common.Loggers;
 using SPT.Reflection.Patching;
-using SwiftXP.SPT.Common.ConfigurationManager;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Services;
+using System.Threading;
+using System;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Patches;
+using SwiftXP.SPT.Common.ConfigurationManager;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Models;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client;
 
 [BepInPlugin("com.swiftxp.spt.showmethemoney", MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 [BepInDependency("com.SPT.custom", "4.0.11")]
 [BepInProcess("EscapeFromTarkov.exe")]
-public class Plugin : BaseUnityPlugin
+public class Plugin : BaseUnityPlugin, IDisposable
 {
-    private static ModulePatch? s_tooltipUpdatePatch;
 
     public static void EnableTooltipUpdatePatch()
     {
@@ -28,36 +29,25 @@ public class Plugin : BaseUnityPlugin
 
     private void Awake()
     {
-        InitLogger();
-        BindBepInExConfiguration();
-        InitPriceServices();
+        SimpleSptLogger simpleSptLogger = new(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_VERSION);
+        PluginConfiguration pluginConfiguration = new(Config, OnForceUpdate);
+
+        PluginContextDataHolder.SetContextInstances(simpleSptLogger, pluginConfiguration);
+
+        _fleaPriceUpdaterCancellationTokenSource = new CancellationTokenSource();
+        _partialRagfairConfigServiceCancellationTokenSource = new CancellationTokenSource();
+
+        _ = new PartialRagfairConfigService(simpleSptLogger)
+            .GetPartialRagfairConfigAsync(_partialRagfairConfigServiceCancellationTokenSource.Token);
+
+        _fleaPriceUpdaterService = new FleaPriceUpdaterService(simpleSptLogger);
+        _ = _fleaPriceUpdaterService.ContinuouslyUpdateFleaPricesAsync(_fleaPriceUpdaterCancellationTokenSource.Token);
+
         EnablePatches();
-    }
-
-    private static void InitLogger()
-    {
-        SptLogger = new SimpleSptLogger(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_VERSION);
-    }
-
-    private void BindBepInExConfiguration()
-    {
-        SptLogger!.LogInfo("Bind configuration...");
-
-        Configuration = new PluginConfiguration(Config);
-    }
-
-    private void InitPriceServices()
-    {
-        SptLogger!.LogInfo("Initializing config and flea price service...");
-
-        StartCoroutine(PartialRagfairConfigService.Instance.GetPartialRagfairConfig());
-        StartCoroutine(FleaPricesService.Instance.UpdatePrices());
     }
 
     private static void EnablePatches()
     {
-        SptLogger!.LogInfo("Enable patches...");
-
         new TraderClassPatch().Enable();
 
         new EditBuildScreenShowPatch().Enable();
@@ -72,15 +62,52 @@ public class Plugin : BaseUnityPlugin
 
         s_tooltipUpdatePatch = new TooltipUpdatePatch();
 
-        if (Configuration!.FleaTaxToggleMode.IsEnabled())
+        if (PluginContextDataHolder.Current.Configuration?.FleaTaxToggleMode.IsEnabled() ?? false)
             EnableTooltipUpdatePatch();
     }
 
-    public static PluginConfiguration? Configuration { get; set; }
+    private void OnForceUpdate()
+    {
+        if (_fleaPriceUpdaterService != null)
+            _fleaPriceUpdaterService.ForceUpdate();
+    }
 
-    public static SimpleSptLogger? SptLogger { get; set; }
+    private void OnDestroy()
+    {
+        if (_fleaPriceUpdaterCancellationTokenSource != null)
+        {
+            _fleaPriceUpdaterCancellationTokenSource.Cancel();
+            _fleaPriceUpdaterCancellationTokenSource.Dispose();
+            _fleaPriceUpdaterCancellationTokenSource = null;
+        }
 
-    public static Item? HoveredItem { get; set; }
+        if (_partialRagfairConfigServiceCancellationTokenSource != null)
+        {
+            _partialRagfairConfigServiceCancellationTokenSource.Cancel();
+            _partialRagfairConfigServiceCancellationTokenSource.Dispose();
+            _partialRagfairConfigServiceCancellationTokenSource = null;
+        }
+    }
 
-    public static bool DisableTemporary { get; set; }
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            OnDestroy();
+        }
+    }
+
+    private CancellationTokenSource? _fleaPriceUpdaterCancellationTokenSource;
+
+    private CancellationTokenSource? _partialRagfairConfigServiceCancellationTokenSource;
+
+    private FleaPriceUpdaterService? _fleaPriceUpdaterService;
+
+    private static ModulePatch? s_tooltipUpdatePatch;
 }

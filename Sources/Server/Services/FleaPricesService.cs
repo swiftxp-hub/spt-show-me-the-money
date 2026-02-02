@@ -2,9 +2,10 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using SPTarkov.DI.Annotations;
+using SPTarkov.Server.Core.DI;
 using SPTarkov.Server.Core.Extensions;
 using SPTarkov.Server.Core.Helpers;
 using SPTarkov.Server.Core.Models.Common;
@@ -15,97 +16,138 @@ using SPTarkov.Server.Core.Services;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Server.Services;
 
-[Injectable(InjectionType.Scoped)]
+[Injectable(InjectionType = InjectionType.Singleton, TypePriority = OnLoadOrder.PreSptModLoader - 1)]
 public class FleaPricesService(ISptLogger<FleaPricesService> sptLogger,
     ItemHelper itemHelper,
     RagfairPriceService ragfairPriceService,
     RagfairOfferService ragfairOfferService,
     PaymentHelper paymentHelper)
 {
-    public ConcurrentDictionary<string, double> Get()
+#pragma warning disable CA1859 // Use concrete types when possible for improved performance
+
+    private IReadOnlyDictionary<string, double> _cachedPrices = new Dictionary<string, double>();
+#pragma warning restore CA1859 // Use concrete types when possible for improved performance
+
+    private DateTime _nextUpdate = DateTime.MinValue;
+
+    private readonly Lock _lock = new();
+
+    private const int CacheDurationSeconds = 60;
+
+    public IReadOnlyDictionary<string, double> Get()
     {
-        Stopwatch stopwatch = new();
-        stopwatch.Start();
+        if (_nextUpdate > DateTime.UtcNow && _cachedPrices.Count > 0)
+            return _cachedPrices;
 
-        Dictionary<MongoId, double> fleaPrices = ragfairPriceService.GetAllFleaPrices();
-        ConcurrentDictionary<string, double> result = new();
-
-        Parallel.ForEach(fleaPrices, fleaPrice =>
+        lock (_lock)
         {
-            try
+            if (_nextUpdate > DateTime.UtcNow && _cachedPrices.Count > 0)
+                return _cachedPrices;
+
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
+            Dictionary<MongoId, double> fleaPrices = ragfairPriceService.GetAllFleaPrices();
+            ConcurrentDictionary<string, double> tempResult = new(Environment.ProcessorCount, fleaPrices.Count);
+
+            Parallel.ForEach(fleaPrices, fleaPrice =>
             {
-                double price;
+                try
+                {
+                    double price;
 
-                if (itemHelper.IsOfBaseclass(fleaPrice.Key, BaseClasses.WEAPON))
-                    price = ragfairPriceService.GetStaticPriceForItem(fleaPrice.Key) ?? 0;
-                else
-                    price = GetAveragePriceFromOffers(fleaPrice.Key);
+                    MongoId itemId = fleaPrice.Key;
+                    double fallbackPrice = fleaPrice.Value;
 
-                if (price > 0d && !double.IsNaN(price) && !double.IsInfinity(price))
-                    result.TryAdd(fleaPrice.Key, price);
+                    if (itemHelper.IsOfBaseclass(itemId, BaseClasses.WEAPON))
+                        price = ragfairPriceService.GetStaticPriceForItem(itemId) ?? 0;
+                    else
+                        price = GetAveragePriceFromOffers(itemId);
 
-                // Fallback to price which was delivered by RagfairPriceService.
-                else if (fleaPrice.Value > 0d && !double.IsNaN(fleaPrice.Value) && !double.IsInfinity(fleaPrice.Value))
-                    result.TryAdd(fleaPrice.Key, fleaPrice.Value);
-            }
-            catch (Exception ex)
-            {
-                sptLogger.Debug($"Error calculating price for item {fleaPrice.Key}: {ex}");
+                    if (IsValidPrice(price))
+                        tempResult.TryAdd(itemId, price);
 
-                // Fallback to price which was delivered by RagfairPriceService.
-                if (fleaPrice.Value > 0d && !double.IsNaN(fleaPrice.Value) && !double.IsInfinity(fleaPrice.Value))
-                    result.TryAdd(fleaPrice.Key, fleaPrice.Value);
-            }
-        });
+                    else if (IsValidPrice(fallbackPrice))
+                        tempResult.TryAdd(itemId, fallbackPrice);
+                }
+                catch (Exception ex)
+                {
+                    sptLogger.Debug($"{Constants.LoggerPrefix}Error calculating price for item {fleaPrice.Key}: {ex}");
 
-        stopwatch.Stop();
-        sptLogger.Debug($"FleaPriceService.Get() was finished in {stopwatch.ElapsedMilliseconds}ms.");
+                    if (IsValidPrice(fleaPrice.Value))
+                        tempResult.TryAdd(fleaPrice.Key, fleaPrice.Value);
+                }
+            });
 
-        return result;
+            _cachedPrices = new Dictionary<string, double>(tempResult);
+            _nextUpdate = DateTime.UtcNow.AddSeconds(CacheDurationSeconds);
+
+            stopwatch.Stop();
+            sptLogger.Debug($"{Constants.LoggerPrefix}Flea prices updated. Found {_cachedPrices.Count} items in {stopwatch.ElapsedMilliseconds}ms.");
+
+            return _cachedPrices;
+        }
     }
 
     private double GetAveragePriceFromOffers(MongoId itemTemplateId)
     {
-        try
+        IEnumerable<RagfairOffer>? offers = ragfairOfferService.GetOffersOfType(itemTemplateId);
+
+        if (offers == null)
+            return 0d;
+
+        double offerSum = 0;
+        int countedOffers = 0;
+
+        foreach (RagfairOffer offer in offers)
         {
-            IEnumerable<RagfairOffer>? offers = ragfairOfferService.GetOffersOfType(itemTemplateId);
-            if (offers != null && offers.Any())
+            if (offer.IsTraderOffer() || offer.IsPlayerOffer())
+                continue;
+
+            if (offer.Items == null || offer.Items.Count == 0)
+                continue;
+
+            bool isMoneyOnly = true;
+            if (offer.Requirements != null)
             {
-                IEnumerable<RagfairOffer> countableOffers = offers
-                    .Where(x => !x.Requirements!.Any(req => !paymentHelper.IsMoneyTpl(req.TemplateId))
-                        && !x.IsTraderOffer()
-                        && !x.IsPlayerOffer());
-
-                if (countableOffers.Any())
+                foreach (OfferRequirement requirement in offer.Requirements)
                 {
-                    double offerSum = 0;
-                    int countedOffers = 0;
-
-                    foreach (RagfairOffer ragfairOffer in countableOffers)
+                    if (!paymentHelper.IsMoneyTpl(requirement.TemplateId))
                     {
-                        Item firstItem = ragfairOffer.Items!.First();
-                        double itemCount = ragfairOffer.SellInOnePiece.GetValueOrDefault(false)
-                            ? firstItem.Upd?.StackObjectsCount
-                            ?? 1 : 1;
-
-                        double? perItemPrice = ragfairOffer.RequirementsCost / itemCount;
-                        if (perItemPrice.HasValue && perItemPrice > 0)
-                        {
-                            offerSum += perItemPrice.Value;
-                            ++countedOffers;
-                        }
+                        isMoneyOnly = false;
+                        break;
                     }
-
-                    if (offerSum > 0d)
-                        return Math.Round(offerSum / countedOffers);
                 }
             }
-        }
-        catch (Exception ex)
-        {
-            sptLogger.Debug($"Error getting average price for item {itemTemplateId}: {ex}");
+
+            if (!isMoneyOnly)
+                continue;
+
+            Item firstItem = offer.Items[0];
+
+            double itemCount = offer.SellInOnePiece.GetValueOrDefault(false)
+                ? firstItem.Upd?.StackObjectsCount ?? 1
+                : 1;
+
+            if (itemCount <= 0)
+                continue;
+
+            double? perItemPrice = offer.RequirementsCost / itemCount;
+
+            if (perItemPrice.HasValue && perItemPrice > 0)
+            {
+                offerSum += perItemPrice.Value;
+                ++countedOffers;
+            }
         }
 
+        if (countedOffers > 0)
+            return Math.Round(offerSum / countedOffers);
+
         return 0d;
+    }
+
+    private static bool IsValidPrice(double price)
+    {
+        return price > 0d && !double.IsNaN(price) && !double.IsInfinity(price);
     }
 }

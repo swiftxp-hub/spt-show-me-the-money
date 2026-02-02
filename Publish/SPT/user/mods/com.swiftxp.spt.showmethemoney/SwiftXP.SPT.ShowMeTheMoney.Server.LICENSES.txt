@@ -1,0 +1,24 @@
+####################################################################################################
+Package:SPTarkov.Common
+Version:4.0.11
+project URL:https://sp-tarkov.com/
+Description:Common shared library for the Single Player Tarkov projects.
+licenseUrl:https://www.nuget.org/packages/SPTarkov.Common/4.0.11/License
+license Type:LICENSE
+
+####################################################################################################
+Package:SPTarkov.DI
+Version:4.0.11
+project URL:https://sp-tarkov.com/
+Description:Dependency injection shared library for the Single Player Tarkov projects.
+licenseUrl:https://www.nuget.org/packages/SPTarkov.DI/4.0.11/License
+license Type:LICENSE
+
+####################################################################################################
+Package:SPTarkov.Server.Core
+Version:4.0.11
+project URL:https://sp-tarkov.com/
+Description:Core library for the Single Player Tarkov server.
+licenseUrl:https://www.nuget.org/packages/SPTarkov.Server.Core/4.0.11/License
+license Type:LICENSE
+

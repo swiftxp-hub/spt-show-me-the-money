@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using SPTarkov.Server.Core.Models.Common;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Server.Models;
 

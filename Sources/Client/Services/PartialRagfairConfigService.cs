@@ -1,32 +1,42 @@
 using System;
-using System.Collections;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SPT.Common.Http;
+using SwiftXP.SPT.Common.Loggers.Interfaces;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Models;
-using UnityEngine;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Services;
 
-public class PartialRagfairConfigService
+public class PartialRagfairConfigService(ISimpleSptLogger simpleSptLogger)
 {
-    private const string RemotePathToGetPartialRagfairConfig = "/showMeTheMoney/getPartialRagfairConfig";
-
-    private static readonly Lazy<PartialRagfairConfigService> s_instance = new(() => new PartialRagfairConfigService());
-
-    private PartialRagfairConfigService() { }
-
-    public IEnumerator GetPartialRagfairConfig()
+    public async Task GetPartialRagfairConfigAsync(CancellationToken cancellationToken)
     {
-        Task<string> getJsonTask = RequestHandler.GetJsonAsync(RemotePathToGetPartialRagfairConfig);
-        yield return new WaitUntil(() => getJsonTask.IsCompleted);
+        try
+        {
+            string jsonResult = await RequestHandler.GetJsonAsync(Constants.RemotePathToGetPartialRagfairConfig);
 
-        string json = getJsonTask.Result;
-        if (!string.IsNullOrWhiteSpace(json))
-            PartialRagfairConfig = JsonConvert.DeserializeObject<PartialRagfairConfig>(json);
+            if (cancellationToken.IsCancellationRequested)
+                return;
+
+            PartialRagfairConfig? partialRagfairConfig = await Task.Run(() =>
+            {
+                return JsonConvert.DeserializeObject<PartialRagfairConfig>(jsonResult);
+            });
+
+            if (cancellationToken.IsCancellationRequested)
+                return;
+
+            if (partialRagfairConfig != null)
+                PartialRagfairConfigHolder.UpdateData(partialRagfairConfig);
+        }
+        catch (OperationCanceledException)
+        {
+
+        }
+        catch (Exception ex)
+        {
+            simpleSptLogger.LogException(ex);
+        }
     }
-
-    public static PartialRagfairConfigService Instance => s_instance.Value;
-
-    public PartialRagfairConfig? PartialRagfairConfig { get; private set; }
 }

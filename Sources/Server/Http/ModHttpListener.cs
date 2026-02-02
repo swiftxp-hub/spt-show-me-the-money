@@ -1,24 +1,25 @@
 using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using SPTarkov.DI.Annotations;
 using SPTarkov.Server.Core.DI;
 using SPTarkov.Server.Core.Models.Common;
 using SPTarkov.Server.Core.Models.Utils;
-using SwiftXP.SPT.ShowMeTheMoney.Server.Http.Interfaces;
+using SPTarkov.Server.Core.Servers.Http;
 using SwiftXP.SPT.ShowMeTheMoney.Server.Services;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Server.Http;
 
 [Injectable(InjectionType = InjectionType.Singleton, TypePriority = OnLoadOrder.PreSptModLoader)]
 public class ModHttpListener(
-    ISptLogger<ModHttpListener> logger,
+    ISptLogger<ModHttpListener> sptLogger,
     FleaPricesService fleaPricesService,
-    RagfairConfigService ragfairConfigService)
-
-    : IModHttpListener
+    RagfairConfigService ragfairConfigService) : IHttpListener
 {
+    private static readonly PathString s_pathGetFleaPrices = new($"{Constants.RoutePrefix}{Constants.RouteGetFleaPrices}");
+    private static readonly PathString s_pathGetPartialRagfairConfig = new($"{Constants.RoutePrefix}{Constants.RouteGetPartialRagfairConfig}");
+
     public bool CanHandle(MongoId sessionId, HttpContext context)
     {
         return context.Request.Path.StartsWithSegments(Constants.RoutePrefix, StringComparison.OrdinalIgnoreCase);
@@ -28,24 +29,24 @@ public class ModHttpListener(
     {
         try
         {
-            string requestPath = context.Request.Path.Value ?? string.Empty;
+            PathString path = context.Request.Path;
 
-            if (IsRoute(requestPath, Constants.RouteGetFleaPrices))
+            if (path.Equals(s_pathGetFleaPrices, StringComparison.OrdinalIgnoreCase))
             {
                 await HandleGetFleaPricesAsync(context);
             }
-            else if (IsRoute(requestPath, Constants.RouteGetPartialRagfairConfig))
+            else if (path.Equals(s_pathGetPartialRagfairConfig, StringComparison.OrdinalIgnoreCase))
             {
                 await HandleGetPartialRagfairConfigAsync(context);
             }
             else
             {
-                await HandleUnknownRouteAsync(context, requestPath);
+                await HandleUnknownRouteAsync(context, path.Value ?? string.Empty);
             }
         }
         catch (Exception ex)
         {
-            logger.Error($"[Show Me The Money] Error handling request: {ex.Message}");
+            sptLogger.Error($"{Constants.LoggerPrefix}Error handling request: {ex.Message}");
 
             context.Response.StatusCode = 500;
         }
@@ -53,29 +54,24 @@ public class ModHttpListener(
 
     private async Task HandleGetFleaPricesAsync(HttpContext context)
     {
-        ConcurrentDictionary<string, double> result = fleaPricesService!.Get();
+        IReadOnlyDictionary<string, double> result = fleaPricesService.Get();
 
         await context.Response.WriteAsJsonAsync(result, context.RequestAborted);
     }
 
     private async Task HandleGetPartialRagfairConfigAsync(HttpContext context)
     {
-        Models.PartialRagfairConfig result = ragfairConfigService!.Get();
+        Models.PartialRagfairConfig result = ragfairConfigService.Get();
 
         await context.Response.WriteAsJsonAsync(result, context.RequestAborted);
     }
 
-#pragma warning disable CS1998 // This async method lacks 'await' operators.
-    private async Task HandleUnknownRouteAsync(HttpContext context, string requestPath)
-#pragma warning restore CS1998 // This async method lacks 'await' operators.
+    private Task HandleUnknownRouteAsync(HttpContext context, string requestPath)
     {
-        logger.Warning($"[Show Me The Money] Unknown route: {requestPath}");
+        sptLogger.Warning($"{Constants.LoggerPrefix}Unknown route: {requestPath}");
 
         context.Response.StatusCode = 404;
-    }
 
-    private static bool IsRoute(string path, string subRoute)
-    {
-        return path.Equals($"{Constants.RoutePrefix}{subRoute}", StringComparison.OrdinalIgnoreCase);
+        return Task.CompletedTask;
     }
 }

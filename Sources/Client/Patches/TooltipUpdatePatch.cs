@@ -3,6 +3,7 @@ using SPT.Reflection.Patching;
 using System.Reflection;
 using HarmonyLib;
 using SwiftXP.SPT.Common.ConfigurationManager;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Models;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Patches;
 
@@ -21,7 +22,7 @@ public class TooltipUpdatePatch : ModulePatch
 
     {
         if (SimpleTooltipShowPatch.PatchIsActive
-            && Plugin.Configuration!.FleaTaxToggleMode.IsEnabled())
+            && PluginContextDataHolder.Current!.Configuration!.FleaTaxToggleMode.IsEnabled())
         {
             if (IsFleaTaxToggleKeyPressed())
             {
@@ -48,8 +49,8 @@ public class TooltipUpdatePatch : ModulePatch
 
     private static bool IsFleaTaxToggleKeyPressed()
     {
-        return Plugin.Configuration!.FleaTaxToggleKey.GetValue().IsDown()
-            || Plugin.Configuration!.FleaTaxToggleKey.GetValue().IsUp()
-            || Plugin.Configuration!.FleaTaxToggleKey.GetValue().IsPressed();
+        return PluginContextDataHolder.Current!.Configuration!.FleaTaxToggleKey.GetValue().IsDown()
+            || PluginContextDataHolder.Current!.Configuration!.FleaTaxToggleKey.GetValue().IsUp()
+            || PluginContextDataHolder.Current!.Configuration!.FleaTaxToggleKey.GetValue().IsPressed();
     }
 }

@@ -2,6 +2,7 @@ using System.Reflection;
 using EFT.UI;
 using HarmonyLib;
 using SPT.Reflection.Patching;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Models;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Patches;
 
@@ -17,6 +18,6 @@ public class EditBuildScreenClosePatch : ModulePatch
 #pragma warning restore CA1707 // Identifiers should not contain underscores
 
     {
-        Plugin.DisableTemporary = false;
+        PluginContextDataHolder.SetDisableTemporary(false);
     }
 }

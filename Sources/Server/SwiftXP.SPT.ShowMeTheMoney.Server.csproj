@@ -32,6 +32,8 @@
     <PackageReference Include="SPTarkov.Server.Core" Version="4.0.11" />
   </ItemGroup>
 
+  <Import Project="$(MSBuildThisFileDirectory)/../Common/Utilities/Targets/ExtraCleanUp.targets"/>
+
   <Target Name="GenerateLicenseFile" AfterTargets="Publish">
     <Message Text="Generating license file..." Importance="high" />
 
@@ -42,5 +44,17 @@
       IgnoreExitCode="false" />
 
     <Message Text="License file generated." Importance="high" />
+  </Target>
+
+  <Target Name="CopyToPublishFolder" AfterTargets="GenerateLicenseFile">
+    <Message Text="Copying published files to /Publish folder..." Importance="high" />
+
+    <ItemGroup>
+      <PublishedFiles Include="$(PublishDir)SwiftXP.SPT.ShowMeTheMoney.Server.dll" />
+      <PublishedFiles Include="$(PublishDir)SwiftXP.SPT.ShowMeTheMoney.Server.LICENSES.txt" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(PublishedFiles)"
+      DestinationFolder="$(MSBuildProjectDirectory)/../../Publish/SPT/user/mods/com.swiftxp.spt.showmethemoney" />
   </Target>
 </Project>
