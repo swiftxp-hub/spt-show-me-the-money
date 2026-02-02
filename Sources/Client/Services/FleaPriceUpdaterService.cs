@@ -17,7 +17,7 @@ public class FleaPriceUpdaterService(ISimpleSptLogger simpleSptLogger)
 {
     public async Task ContinuouslyUpdateFleaPricesAsync(CancellationToken cancellationToken)
     {
-        TimeSpan interval = TimeSpan.FromSeconds(5);
+        TimeSpan interval = TimeSpan.FromSeconds(30);
         JsonSerializer serializer = new();
 
         while (!cancellationToken.IsCancellationRequested)
