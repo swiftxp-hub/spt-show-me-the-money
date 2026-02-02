@@ -9,7 +9,7 @@ namespace SwiftXP.SPT.ShowMeTheMoney.Server;
 [Injectable(InjectionType = InjectionType.Singleton, TypePriority = OnLoadOrder.PreSptModLoader + 1)]
 
 #pragma warning disable CS9113 // Parameter is unread.
-public class TheModfatherMod(ModHttpListener httpListener)
+public class ShowMeTheMoneyMod(ModHttpListener httpListener)
 #pragma warning restore CS9113 // Parameter is unread.
     : IPreSptLoadModAsync
 {
