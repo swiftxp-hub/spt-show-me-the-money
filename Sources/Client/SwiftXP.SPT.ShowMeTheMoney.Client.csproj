@@ -4,6 +4,9 @@
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
 
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+
     <AssemblyName>SwiftXP.SPT.ShowMeTheMoney.Client</AssemblyName>
     <Product>Show Me The Money</Product>
     <RestoreAdditionalProjectSources>
