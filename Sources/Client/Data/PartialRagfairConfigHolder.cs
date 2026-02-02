@@ -1,4 +1,4 @@
-namespace SwiftXP.SPT.ShowMeTheMoney.Client.Models;
+namespace SwiftXP.SPT.ShowMeTheMoney.Client.Data;
 
 public static class PartialRagfairConfigHolder
 {

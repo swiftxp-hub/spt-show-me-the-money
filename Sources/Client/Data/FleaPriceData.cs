@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace SwiftXP.SPT.ShowMeTheMoney.Client.Models;
+namespace SwiftXP.SPT.ShowMeTheMoney.Client.Data;
 
 public record FleaPriceData
 {

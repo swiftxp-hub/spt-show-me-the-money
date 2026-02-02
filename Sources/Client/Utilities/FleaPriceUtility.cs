@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using EFT.InventoryLogic;
 using SwiftXP.SPT.Common.ConfigurationManager;
-using SwiftXP.SPT.ShowMeTheMoney.Client.Models;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Data;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Utilities;
 
@@ -10,6 +10,13 @@ public static class FleaPriceUtility
 {
     public static bool GetFleaPrice(TradeItem tradeItem, bool includeTaxInPrices)
     {
+        return GetFleaPrice(tradeItem, includeTaxInPrices, out bool _);
+    }
+
+    public static bool GetFleaPrice(TradeItem tradeItem, bool includeTaxInPrices, out bool isCombinedPrice)
+    {
+        isCombinedPrice = false;
+
         try
         {
             if (tradeItem.Item.CanSellOnRagfair && FleaPriceDataHolder.Current != null)
@@ -22,6 +29,7 @@ public static class FleaPriceUtility
                     if (tradeItem.Item is Weapon weapon)
                     {
                         fleaPrice = GetWeaponPrice(weapon, fleaPrice);
+                        isCombinedPrice = true;
                     }
                     // Handle everything else
                     else

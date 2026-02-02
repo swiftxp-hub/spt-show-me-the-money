@@ -1,6 +1,6 @@
 using EFT;
 
-namespace SwiftXP.SPT.ShowMeTheMoney.Client.Models;
+namespace SwiftXP.SPT.ShowMeTheMoney.Client.Data;
 
 public class TradePrice
 {

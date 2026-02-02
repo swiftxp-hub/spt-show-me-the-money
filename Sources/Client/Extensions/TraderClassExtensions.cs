@@ -3,7 +3,7 @@ using System.Reflection;
 using Comfort.Common;
 using EFT;
 using SwiftXP.SPT.Common.Sessions;
-using SwiftXP.SPT.ShowMeTheMoney.Client.Models;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Data;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Extensions;
 

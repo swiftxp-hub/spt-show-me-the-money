@@ -2,7 +2,7 @@ using EFT.InventoryLogic;
 using SwiftXP.SPT.Common.Loggers;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Configuration;
 
-namespace SwiftXP.SPT.ShowMeTheMoney.Client.Models;
+namespace SwiftXP.SPT.ShowMeTheMoney.Client.Data;
 
 public record PluginContextData
 {

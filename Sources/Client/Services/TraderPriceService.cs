@@ -7,7 +7,7 @@ using SwiftXP.SPT.Common.ConfigurationManager;
 using SwiftXP.SPT.Common.Constants;
 using SwiftXP.SPT.Common.Sessions;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Extensions;
-using SwiftXP.SPT.ShowMeTheMoney.Client.Models;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Data;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Services;
 

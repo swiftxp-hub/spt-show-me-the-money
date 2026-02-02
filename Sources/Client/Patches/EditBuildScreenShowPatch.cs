@@ -2,7 +2,7 @@ using System.Reflection;
 using EFT.UI;
 using HarmonyLib;
 using SPT.Reflection.Patching;
-using SwiftXP.SPT.ShowMeTheMoney.Client.Models;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Data;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Patches;
 

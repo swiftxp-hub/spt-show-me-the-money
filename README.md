@@ -152,7 +152,7 @@ Server:
 ```
 
 ### FAQ  
-*(Last updated Dez 11, 2025 — SMTM v2.5.3)*
+*(Last updated Feb 02, 2026 — SMTM v2.7.0)*
 
 - **How do I install SMTM?**  
   - Extract the folders into your SPT directory. If that sounds too simple, consult the installation section(s).
@@ -171,6 +171,9 @@ Server:
 
 - **I get SSL errors. Help?**  
   - Unlikely to be SMTM’s fault. SSL in Tarkov behaves like a paranoid toaster. Seek help on the SPT Discord.
+
+- **What does the `(+)` in the tooltip mean?**  
+  - This indicates that the displayed flea market price includes all attachments/mods. If the sign is missing, the price refers only to the base item.
 
 - **Why do flea prices differ from the average?**  
   - Because:

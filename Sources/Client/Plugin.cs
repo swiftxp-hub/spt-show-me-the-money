@@ -7,7 +7,7 @@ using System.Threading;
 using System;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Patches;
 using SwiftXP.SPT.Common.ConfigurationManager;
-using SwiftXP.SPT.ShowMeTheMoney.Client.Models;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Data;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client;
 

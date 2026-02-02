@@ -1,7 +1,7 @@
 using EFT.InventoryLogic;
 using EFT.UI;
 using SPT.Reflection.Patching;
-using SwiftXP.SPT.ShowMeTheMoney.Client.Models;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Data;
 using System.Reflection;
 using UnityEngine;
 using System;
@@ -167,6 +167,7 @@ public class SimpleTooltipShowPatch : ModulePatch
         TradeItem tradeItem = new(item);
         bool hasTraderPrice = false;
         bool hasFleaPrice = false;
+        bool isCombinedPrice = false;
 
         if (PluginContextDataHolder.Current!.Configuration!.EnableTraderPrices.IsEnabled())
             hasTraderPrice = TraderPriceService.Instance.GetBestTraderPrice(tradeItem);
@@ -177,7 +178,7 @@ public class SimpleTooltipShowPatch : ModulePatch
                 || (RagFairClass.Settings.isOnlyFoundInRaidAllowed && tradeItem.Item.MarkedAsSpawnedInSession)
                 || PluginContextDataHolder.Current!.Configuration!.AlwaysShowFleaPrice.IsEnabled()))
         {
-            hasFleaPrice = FleaPriceUtility.GetFleaPrice(tradeItem, PluginContextDataHolder.Current!.Configuration!.IncludeFleaTax);
+            hasFleaPrice = FleaPriceUtility.GetFleaPrice(tradeItem, PluginContextDataHolder.Current!.Configuration!.IncludeFleaTax, out isCombinedPrice);
         }
 
         if (hasTraderPrice)
@@ -188,7 +189,7 @@ public class SimpleTooltipShowPatch : ModulePatch
 
         if (hasFleaPrice)
         {
-            ShowPrice(tradeItem, tradeItem.FleaPrice!, tradeItem.TraderPrice, textToAppendToTooltip);
+            ShowPrice(tradeItem, tradeItem.FleaPrice!, tradeItem.TraderPrice, textToAppendToTooltip, isCombinedPrice);
 
             if (highestComparePrice is null || tradeItem.FleaPrice!.GetComparePriceInRouble() > tradeItem.TraderPrice!.GetComparePriceInRouble())
                 highestComparePrice = tradeItem.FleaPrice!.GetComparePriceInRouble();
@@ -411,7 +412,7 @@ public class SimpleTooltipShowPatch : ModulePatch
         return textMesh?.text ?? null;
     }
 
-    private static void ShowPrice(TradeItem tradeItem, TradePrice tradePriceA, TradePrice? tradePriceB, StringBuilder text)
+    private static void ShowPrice(TradeItem tradeItem, TradePrice tradePriceA, TradePrice? tradePriceB, StringBuilder text, bool isCombinedPrice = false)
     {
         text.Append("<br>");
 
@@ -456,6 +457,9 @@ public class SimpleTooltipShowPatch : ModulePatch
         }
 
         text.Append(totalPrice);
+
+        if (isCombinedPrice)
+            text.Append(" (+)");
 
         if (PluginContextDataHolder.Current!.Configuration!.ShowFleaTax && tradePriceA.HasTax())
             text.Append($" {"ragfair/Fee".Localized(null)}: {FormatPrice(tradePriceA.GetTotalTax())}");

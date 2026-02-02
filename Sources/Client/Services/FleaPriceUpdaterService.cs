@@ -9,7 +9,7 @@ using SPT.Common.Http;
 using SwiftXP.SPT.Common.ConfigurationManager;
 using SwiftXP.SPT.Common.EFT;
 using SwiftXP.SPT.Common.Loggers.Interfaces;
-using SwiftXP.SPT.ShowMeTheMoney.Client.Models;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Data;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Services;
 
