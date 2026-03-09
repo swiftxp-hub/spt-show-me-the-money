@@ -4,7 +4,7 @@ using SPTarkov.DI.Annotations;
 using SPTarkov.Server.Core.DI;
 using SPTarkov.Server.Core.Models.Spt.Config;
 using SPTarkov.Server.Core.Servers;
-using SwiftXP.SPT.ShowMeTheMoney.Server.Models;
+using SwiftXP.SPT.ShowMeTheMoney.Server.Data;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Server.Services;
 

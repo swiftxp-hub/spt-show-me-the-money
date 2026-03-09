@@ -6,8 +6,9 @@ using EFT.InventoryLogic;
 using SwiftXP.SPT.Common.ConfigurationManager;
 using SwiftXP.SPT.Common.Constants;
 using SwiftXP.SPT.Common.Sessions;
-using SwiftXP.SPT.ShowMeTheMoney.Client.Extensions;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Contexts.Holders;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Data;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Extensions;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Services;
 
@@ -28,7 +29,7 @@ public class TraderPriceService
                 TraderClass.GStruct300? totalPrice = null;
 
                 bool hasPrice = TryGetTraderUserItemPrice(trader, tradeItem, out singleObjectPrice, out totalPrice);
-                if (hasPrice && (!PluginContextDataHolder.Current!.Configuration!.RoublesOnly.IsEnabled() || singleObjectPrice!.Value.CurrencyId.ToString() == SptConstants.CurrencyIds.Roubles))
+                if (hasPrice && (!PluginContextHolder.Current!.Configuration!.RoublesOnly.IsEnabled() || singleObjectPrice!.Value.CurrencyId.ToString() == SptConstants.CurrencyIds.Roubles))
                 {
                     MongoID? currencyId = singleObjectPrice!.Value.CurrencyId;
                     double? currencyCourse = GetCurrencyCourse(trader, currencyId);
@@ -83,7 +84,7 @@ public class TraderPriceService
         }
         catch (Exception)
         {
-            PluginContextDataHolder.Current.SptLogger?
+            PluginContextHolder.Current.SptLogger?
                 .LogDebug($"Could not get price from trader \"{trader.LocalizedName}\". Skipping.");
         }
 

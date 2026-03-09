@@ -2,11 +2,11 @@ using EFT.InventoryLogic;
 using SwiftXP.SPT.Common.Loggers;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Configuration;
 
-namespace SwiftXP.SPT.ShowMeTheMoney.Client.Data;
+namespace SwiftXP.SPT.ShowMeTheMoney.Client.Contexts;
 
-public record PluginContextData
+public record PluginContext
 {
-    public PluginContextData(SimpleSptLogger? simpleSptLogger, PluginConfiguration? pluginConfiguration,
+    public PluginContext(SimpleSptLogger? simpleSptLogger, PluginConfiguration? pluginConfiguration,
         Item? hoveredItem, bool disableTemporary)
     {
         SptLogger = simpleSptLogger;
@@ -17,7 +17,7 @@ public record PluginContextData
 
     public SimpleSptLogger? SptLogger { get; }
 
-    public PluginConfiguration? Configuration { get; set; }
+    public PluginConfiguration? Configuration { get; }
 
     public Item? HoveredItem { get; }
 

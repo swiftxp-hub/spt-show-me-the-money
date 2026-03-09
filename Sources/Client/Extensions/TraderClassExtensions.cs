@@ -3,7 +3,7 @@ using System.Reflection;
 using Comfort.Common;
 using EFT;
 using SwiftXP.SPT.Common.Sessions;
-using SwiftXP.SPT.ShowMeTheMoney.Client.Data;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Contexts.Holders;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Extensions;
 
@@ -24,7 +24,7 @@ public static class TraderClassExtensions
                 Result<SupplyData> result = await SptSession.Session.GetSupplyData(trader.Id);
                 if (result.Failed)
                 {
-                    PluginContextDataHolder.Current.SptLogger?
+                    PluginContextHolder.Current.SptLogger?
                         .LogError("Unable to update supply data for trader(s)! Plug-in will not work properly without that data");
 
                     return;
@@ -35,7 +35,7 @@ public static class TraderClassExtensions
         }
         catch (Exception exception)
         {
-            PluginContextDataHolder.Current.SptLogger?
+            PluginContextHolder.Current.SptLogger?
                 .LogException(exception);
         }
     }

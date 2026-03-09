@@ -71,7 +71,7 @@ public class FleaPricesService(ISptLogger<FleaPricesService> sptLogger,
                 }
                 catch (Exception ex)
                 {
-                    sptLogger.Debug($"{Constants.LoggerPrefix}Error calculating price for item {fleaPrice.Key}: {ex}");
+                    sptLogger.Debug($"{Constants.LoggerPrefix}[DEBUG] Error calculating price for item {fleaPrice.Key}: {ex}");
 
                     if (IsValidPrice(fleaPrice.Value))
                         tempResult.TryAdd(fleaPrice.Key, fleaPrice.Value);
@@ -82,7 +82,7 @@ public class FleaPricesService(ISptLogger<FleaPricesService> sptLogger,
             _nextUpdate = DateTime.UtcNow.AddSeconds(CacheDurationSeconds);
 
             stopwatch.Stop();
-            sptLogger.Debug($"{Constants.LoggerPrefix}Flea prices updated. Found {_cachedPrices.Count} items in {stopwatch.ElapsedMilliseconds}ms.");
+            sptLogger.Debug($"{Constants.LoggerPrefix}[DEBUG] Flea prices updated. Found {_cachedPrices.Count} items in {stopwatch.ElapsedMilliseconds}ms.");
 
             return _cachedPrices;
         }

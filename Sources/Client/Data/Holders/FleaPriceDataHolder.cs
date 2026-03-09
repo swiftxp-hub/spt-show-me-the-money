@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace SwiftXP.SPT.ShowMeTheMoney.Client.Data;
+namespace SwiftXP.SPT.ShowMeTheMoney.Client.Data.Holders;
 
 public static class FleaPriceDataHolder
 {

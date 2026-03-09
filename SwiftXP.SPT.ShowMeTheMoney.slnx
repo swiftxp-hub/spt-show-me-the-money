@@ -3,4 +3,8 @@
     <Project Path="Sources/Client/SwiftXP.SPT.ShowMeTheMoney.Client.csproj" />
     <Project Path="Sources/Server/SwiftXP.SPT.ShowMeTheMoney.Server.csproj" />
   </Folder>
+
+  <Folder Name="/Tests/">
+    <Project Path="Tests/Server.Tests/SwiftXP.SPT.TheModfather.Server.Tests.csproj" />
+  </Folder>
 </Solution>

@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using SPT.Common.Http;
 using SwiftXP.SPT.Common.Loggers.Interfaces;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Data;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Data.Holders;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Services;
 

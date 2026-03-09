@@ -9,7 +9,8 @@ using SPT.Common.Http;
 using SwiftXP.SPT.Common.ConfigurationManager;
 using SwiftXP.SPT.Common.EFT;
 using SwiftXP.SPT.Common.Loggers.Interfaces;
-using SwiftXP.SPT.ShowMeTheMoney.Client.Data;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Contexts.Holders;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Data.Holders;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Services;
 
@@ -25,9 +26,9 @@ public class FleaPriceUpdaterService(ISimpleSptLogger simpleSptLogger)
             try
             {
                 if (_forceUpdate ||
-                    ((!EFTHelper.IsInRaid || PluginContextDataHolder.Current!.Configuration!.UpdateDuringRaid.IsEnabled())
+                    ((!EFTHelper.IsInRaid || PluginContextHolder.Current!.Configuration!.UpdateDuringRaid.IsEnabled())
                         && (FleaPriceDataHolder.Current == null
-                            || (DateTimeOffset.UtcNow - FleaPriceDataHolder.Current.Timestamp).TotalMinutes >= PluginContextDataHolder.Current!.Configuration!.UpdateInterval.GetValue())))
+                            || (DateTimeOffset.UtcNow - FleaPriceDataHolder.Current.Timestamp).TotalMinutes >= PluginContextHolder.Current!.Configuration!.UpdateInterval.GetValue())))
                 {
                     _forceUpdate = false;
 
@@ -81,5 +82,5 @@ public class FleaPriceUpdaterService(ISimpleSptLogger simpleSptLogger)
         _forceUpdate = true;
     }
 
-    private bool _forceUpdate;
+    private volatile bool _forceUpdate;
 }

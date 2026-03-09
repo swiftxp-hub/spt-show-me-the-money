@@ -46,7 +46,7 @@ public class ModHttpListener(
         }
         catch (Exception ex)
         {
-            sptLogger.Error($"{Constants.LoggerPrefix}Error handling request: {ex.Message}");
+            sptLogger.Error($"{Constants.LoggerPrefix}[ERROR] Error handling request: {ex.Message}");
 
             context.Response.StatusCode = 500;
         }
@@ -61,14 +61,14 @@ public class ModHttpListener(
 
     private async Task HandleGetPartialRagfairConfigAsync(HttpContext context)
     {
-        Models.PartialRagfairConfig result = ragfairConfigService.Get();
+        Data.PartialRagfairConfig result = ragfairConfigService.Get();
 
         await context.Response.WriteAsJsonAsync(result, context.RequestAborted);
     }
 
     private Task HandleUnknownRouteAsync(HttpContext context, string requestPath)
     {
-        sptLogger.Warning($"{Constants.LoggerPrefix}Unknown route: {requestPath}");
+        sptLogger.Warning($"{Constants.LoggerPrefix}[WARNING] Unknown route: {requestPath}");
 
         context.Response.StatusCode = 404;
 

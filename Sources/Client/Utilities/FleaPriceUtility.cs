@@ -2,7 +2,9 @@ using System;
 using System.Linq;
 using EFT.InventoryLogic;
 using SwiftXP.SPT.Common.ConfigurationManager;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Contexts.Holders;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Data;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Data.Holders;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Utilities;
 
@@ -49,7 +51,7 @@ public static class FleaPriceUtility
         }
         catch (Exception ex)
         {
-            PluginContextDataHolder.Current.SptLogger?
+            PluginContextHolder.Current.SptLogger?
                 .LogException(ex);
         }
 
@@ -71,12 +73,12 @@ public static class FleaPriceUtility
 
     private static void SetFleaPriceOfTradeItem(TradeItem tradeItem, double fleaPrice, bool includeTaxInPrices)
     {
-        int fleaPriceAfterMultiply = (int)Math.Round(fleaPrice * (double)PluginContextDataHolder.Current!.Configuration!.FleaPriceMultiplicand.GetValue());
+        int fleaPriceAfterMultiply = (int)Math.Round(fleaPrice * (double)PluginContextHolder.Current!.Configuration!.FleaPriceMultiplicand.GetValue());
 
         double? singleObjectTaxPrice = null;
         double? totalTaxPrice = null;
 
-        if (PluginContextDataHolder.Current!.Configuration!.IncludeFleaTax || PluginContextDataHolder.Current!.Configuration!.ShowFleaTax)
+        if (PluginContextHolder.Current!.Configuration!.IncludeFleaTax || PluginContextHolder.Current!.Configuration!.ShowFleaTax)
         {
             singleObjectTaxPrice = FleaTaxCalculatorAbstractClass.CalculateTaxPrice(tradeItem.Item, 1, fleaPriceAfterMultiply, false);
             totalTaxPrice = FleaTaxCalculatorAbstractClass.CalculateTaxPrice(tradeItem.Item, tradeItem.ItemObjectCount, fleaPriceAfterMultiply, false);

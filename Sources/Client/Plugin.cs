@@ -7,12 +7,13 @@ using System.Threading;
 using System;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Patches;
 using SwiftXP.SPT.Common.ConfigurationManager;
-using SwiftXP.SPT.ShowMeTheMoney.Client.Data;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Contexts.Holders;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client;
 
 [BepInPlugin("com.swiftxp.spt.showmethemoney", MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
-[BepInDependency("com.SPT.custom", "4.0.11")]
+[BepInDependency("com.SPT.custom", "4.0.12")]
+[BepInDependency("com.fika.headless", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInProcess("EscapeFromTarkov.exe")]
 public class Plugin : BaseUnityPlugin, IDisposable
 {
@@ -29,10 +30,12 @@ public class Plugin : BaseUnityPlugin, IDisposable
 
     private void Awake()
     {
+        // Todo: Check if mod is running under fika headless.
+
         SimpleSptLogger simpleSptLogger = new(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_VERSION);
         PluginConfiguration pluginConfiguration = new(Config, OnForceUpdate);
 
-        PluginContextDataHolder.SetContextInstances(simpleSptLogger, pluginConfiguration);
+        PluginContextHolder.SetContextInstances(simpleSptLogger, pluginConfiguration);
 
         _fleaPriceUpdaterCancellationTokenSource = new CancellationTokenSource();
         _partialRagfairConfigServiceCancellationTokenSource = new CancellationTokenSource();
@@ -62,7 +65,7 @@ public class Plugin : BaseUnityPlugin, IDisposable
 
         s_tooltipUpdatePatch = new TooltipUpdatePatch();
 
-        if (PluginContextDataHolder.Current.Configuration?.FleaTaxToggleMode.IsEnabled() ?? false)
+        if (PluginContextHolder.Current.Configuration?.FleaTaxToggleMode.IsEnabled() ?? false)
             EnableTooltipUpdatePatch();
     }
 

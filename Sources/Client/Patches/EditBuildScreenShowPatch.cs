@@ -2,7 +2,7 @@ using System.Reflection;
 using EFT.UI;
 using HarmonyLib;
 using SPT.Reflection.Patching;
-using SwiftXP.SPT.ShowMeTheMoney.Client.Data;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Contexts.Holders;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Patches;
 
@@ -18,6 +18,6 @@ public class EditBuildScreenShowPatch : ModulePatch
 #pragma warning restore CA1707 // Identifiers should not contain underscores
 
     {
-        PluginContextDataHolder.SetDisableTemporary(true);
+        PluginContextHolder.SetDisableTemporary(true);
     }
 }

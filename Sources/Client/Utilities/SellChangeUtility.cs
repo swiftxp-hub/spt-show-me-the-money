@@ -1,5 +1,5 @@
 using System;
-using SwiftXP.SPT.ShowMeTheMoney.Client.Data;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Data.Holders;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Utilities;
 

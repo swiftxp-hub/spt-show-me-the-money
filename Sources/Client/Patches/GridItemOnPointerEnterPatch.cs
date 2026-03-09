@@ -1,7 +1,7 @@
 using EFT.UI.DragAndDrop;
 using HarmonyLib;
 using SPT.Reflection.Patching;
-using SwiftXP.SPT.ShowMeTheMoney.Client.Data;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Contexts.Holders;
 using System.Reflection;
 using UnityEngine.EventSystems;
 
@@ -15,6 +15,6 @@ public class GridItemOnPointerEnterPatch : ModulePatch
     [PatchPrefix]
     static void PatchPrefix(GridItemView __instance, PointerEventData eventData)
     {
-        PluginContextDataHolder.SetHoveredItem(__instance?.Item);
+        PluginContextHolder.SetHoveredItem(__instance?.Item);
     }
 }

@@ -1,7 +1,7 @@
 using EFT.InventoryLogic;
 using EFT.UI;
 using SPT.Reflection.Patching;
-using SwiftXP.SPT.ShowMeTheMoney.Client.Data;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Contexts;
 using System.Reflection;
 using UnityEngine;
 using System;
@@ -15,6 +15,8 @@ using System.Linq;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Services;
 using System.Globalization;
 using SwiftXP.SPT.ShowMeTheMoney.Client.Utilities;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Data;
+using SwiftXP.SPT.ShowMeTheMoney.Client.Contexts.Holders;
 
 namespace SwiftXP.SPT.ShowMeTheMoney.Client.Patches;
 
@@ -43,12 +45,12 @@ public class SimpleTooltipShowPatch : ModulePatch
             bool success = TryShowPriceInformation(out string? priceInformationText, out double? highestComparePrice);
             if (success)
             {
-                if (PluginContextDataHolder.Current!.Configuration!.EnableColorCoding.IsEnabled()
-                    && (PluginContextDataHolder.Current!.Configuration!.ColorCodingMode.GetValue() == ColorCodingMode.ItemName
-                        || PluginContextDataHolder.Current!.Configuration!.ColorCodingMode.GetValue() == ColorCodingMode.Both))
+                if (PluginContextHolder.Current!.Configuration!.EnableColorCoding.IsEnabled()
+                    && (PluginContextHolder.Current!.Configuration!.ColorCodingMode.GetValue() == ColorCodingMode.ItemName
+                        || PluginContextHolder.Current!.Configuration!.ColorCodingMode.GetValue() == ColorCodingMode.Both))
                 {
-                    if (PluginContextDataHolder.Current.HoveredItem is not null)
-                        SetColorCoding(ref text, PluginContextDataHolder.Current.HoveredItem.LocalizedName(), highestComparePrice);
+                    if (PluginContextHolder.Current.HoveredItem is not null)
+                        SetColorCoding(ref text, PluginContextHolder.Current.HoveredItem.LocalizedName(), highestComparePrice);
                 }
 
                 s_patchText = priceInformationText;
@@ -58,7 +60,7 @@ public class SimpleTooltipShowPatch : ModulePatch
         }
         catch (Exception exception)
         {
-            PluginContextDataHolder.Current.SptLogger?
+            PluginContextHolder.Current.SptLogger?
                 .LogException(exception);
         }
     }
@@ -85,7 +87,7 @@ public class SimpleTooltipShowPatch : ModulePatch
         }
         catch (Exception exception)
         {
-            PluginContextDataHolder.Current.SptLogger?
+            PluginContextHolder.Current.SptLogger?
                 .LogException(exception);
         }
     }
@@ -99,8 +101,8 @@ public class SimpleTooltipShowPatch : ModulePatch
 
     private static bool AreTooltipRequirementsMeet(in string tooltipText)
     {
-        return PluginContextDataHolder.Current!.Configuration!.EnablePlugin.IsEnabled()
-            && !PluginContextDataHolder.Current.DisableTemporary
+        return PluginContextHolder.Current!.Configuration!.EnablePlugin.IsEnabled()
+            && !PluginContextHolder.Current.DisableTemporary
             && !IsInsuredByTooltip(tooltipText)
             && !IsCheckmarkTooltip(tooltipText);
     }
@@ -130,26 +132,26 @@ public class SimpleTooltipShowPatch : ModulePatch
 
         StringBuilder textToAppendToTooltip = new();
 
-        TooltipFontSize fontSize = PluginContextDataHolder.Current!.Configuration!.FontSize.GetValue();
+        TooltipFontSize fontSize = PluginContextHolder.Current!.Configuration!.FontSize.GetValue();
         if (fontSize != TooltipFontSize.Normal)
             textToAppendToTooltip.Append($"<size={(int)fontSize}%>");
 
-        if (PluginContextDataHolder.Current!.Configuration!.RenderInItalics.IsEnabled())
+        if (PluginContextHolder.Current!.Configuration!.RenderInItalics.IsEnabled())
             textToAppendToTooltip.Append("<i>");
 
-        Item? item = PluginContextDataHolder.Current.HoveredItem;
+        Item? item = PluginContextHolder.Current.HoveredItem;
         if (item is not null && ItemMeetsRequirements(item))
         {
             ShowTradeAndFleaPriceInformation(item, ref textToAppendToTooltip, out highestComparePrice);
 
-            if (PluginContextDataHolder.Current!.Configuration!.ShowWeaponModsPrice.IsEnabled() && item is Weapon weapon)
+            if (PluginContextHolder.Current!.Configuration!.ShowWeaponModsPrice.IsEnabled() && item is Weapon weapon)
                 ShowWeaponModsPriceInformation(weapon, ref textToAppendToTooltip);
 
-            if (PluginContextDataHolder.Current!.Configuration!.ShowArmorPlatesPrice.IsEnabled() && (item.GetItemComponent<ArmorHolderComponent>()?.MoveAbleArmorPlates?.Any() ?? false))
+            if (PluginContextHolder.Current!.Configuration!.ShowArmorPlatesPrice.IsEnabled() && (item.GetItemComponent<ArmorHolderComponent>()?.MoveAbleArmorPlates?.Any() ?? false))
                 ShowArmorPlatesPriceInformation(item, ref textToAppendToTooltip);
         }
 
-        if (PluginContextDataHolder.Current!.Configuration!.RenderInItalics.IsEnabled())
+        if (PluginContextHolder.Current!.Configuration!.RenderInItalics.IsEnabled())
             textToAppendToTooltip.Append("</i>");
 
         if (fontSize != TooltipFontSize.Normal)
@@ -169,16 +171,16 @@ public class SimpleTooltipShowPatch : ModulePatch
         bool hasFleaPrice = false;
         bool isCombinedPrice = false;
 
-        if (PluginContextDataHolder.Current!.Configuration!.EnableTraderPrices.IsEnabled())
+        if (PluginContextHolder.Current!.Configuration!.EnableTraderPrices.IsEnabled())
             hasTraderPrice = TraderPriceService.Instance.GetBestTraderPrice(tradeItem);
 
-        if (PluginContextDataHolder.Current!.Configuration!.EnableFleaPrices.IsEnabled()
-            && (SptSession.Session.RagFair.Available || PluginContextDataHolder.Current!.Configuration!.AlwaysShowFleaPrice.IsEnabled())
+        if (PluginContextHolder.Current!.Configuration!.EnableFleaPrices.IsEnabled()
+            && (SptSession.Session.RagFair.Available || PluginContextHolder.Current!.Configuration!.AlwaysShowFleaPrice.IsEnabled())
             && (!RagFairClass.Settings.isOnlyFoundInRaidAllowed
                 || (RagFairClass.Settings.isOnlyFoundInRaidAllowed && tradeItem.Item.MarkedAsSpawnedInSession)
-                || PluginContextDataHolder.Current!.Configuration!.AlwaysShowFleaPrice.IsEnabled()))
+                || PluginContextHolder.Current!.Configuration!.AlwaysShowFleaPrice.IsEnabled()))
         {
-            hasFleaPrice = FleaPriceUtility.GetFleaPrice(tradeItem, PluginContextDataHolder.Current!.Configuration!.IncludeFleaTax, out isCombinedPrice);
+            hasFleaPrice = FleaPriceUtility.GetFleaPrice(tradeItem, PluginContextHolder.Current!.Configuration!.IncludeFleaTax, out isCombinedPrice);
         }
 
         if (hasTraderPrice)
@@ -210,16 +212,16 @@ public class SimpleTooltipShowPatch : ModulePatch
             bool modHasTraderPrice = false;
             bool modHasFleaPrice = false;
 
-            if (PluginContextDataHolder.Current!.Configuration!.EnableTraderPrices.IsEnabled())
+            if (PluginContextHolder.Current!.Configuration!.EnableTraderPrices.IsEnabled())
                 modHasTraderPrice = TraderPriceService.Instance.GetBestTraderPrice(modTradeItem);
 
-            if (PluginContextDataHolder.Current!.Configuration!.EnableFleaPrices.IsEnabled()
-                && (SptSession.Session.RagFair.Available || PluginContextDataHolder.Current!.Configuration!.AlwaysShowFleaPrice.IsEnabled())
+            if (PluginContextHolder.Current!.Configuration!.EnableFleaPrices.IsEnabled()
+                && (SptSession.Session.RagFair.Available || PluginContextHolder.Current!.Configuration!.AlwaysShowFleaPrice.IsEnabled())
                 && (!RagFairClass.Settings.isOnlyFoundInRaidAllowed
                     || (RagFairClass.Settings.isOnlyFoundInRaidAllowed && mod.MarkedAsSpawnedInSession)
-                    || PluginContextDataHolder.Current!.Configuration!.AlwaysShowFleaPrice.IsEnabled()))
+                    || PluginContextHolder.Current!.Configuration!.AlwaysShowFleaPrice.IsEnabled()))
             {
-                modHasFleaPrice = FleaPriceUtility.GetFleaPrice(modTradeItem, PluginContextDataHolder.Current!.Configuration!.IncludeFleaTax);
+                modHasFleaPrice = FleaPriceUtility.GetFleaPrice(modTradeItem, PluginContextHolder.Current!.Configuration!.IncludeFleaTax);
             }
 
             if (modHasTraderPrice && modHasFleaPrice)
@@ -256,16 +258,16 @@ public class SimpleTooltipShowPatch : ModulePatch
             bool modHasTraderPrice = false;
             bool modHasFleaPrice = false;
 
-            if (PluginContextDataHolder.Current!.Configuration!.EnableTraderPrices.IsEnabled())
+            if (PluginContextHolder.Current!.Configuration!.EnableTraderPrices.IsEnabled())
                 modHasTraderPrice = TraderPriceService.Instance.GetBestTraderPrice(plateTradeItem);
 
-            if (PluginContextDataHolder.Current!.Configuration!.EnableFleaPrices.IsEnabled()
-                && (SptSession.Session.RagFair.Available || PluginContextDataHolder.Current!.Configuration!.AlwaysShowFleaPrice.IsEnabled())
+            if (PluginContextHolder.Current!.Configuration!.EnableFleaPrices.IsEnabled()
+                && (SptSession.Session.RagFair.Available || PluginContextHolder.Current!.Configuration!.AlwaysShowFleaPrice.IsEnabled())
                 && (!RagFairClass.Settings.isOnlyFoundInRaidAllowed
                     || (RagFairClass.Settings.isOnlyFoundInRaidAllowed && armorPlateItemClass.MarkedAsSpawnedInSession)
-                    || PluginContextDataHolder.Current!.Configuration!.AlwaysShowFleaPrice.IsEnabled()))
+                    || PluginContextHolder.Current!.Configuration!.AlwaysShowFleaPrice.IsEnabled()))
             {
-                modHasFleaPrice = FleaPriceUtility.GetFleaPrice(plateTradeItem, PluginContextDataHolder.Current!.Configuration!.IncludeFleaTax);
+                modHasFleaPrice = FleaPriceUtility.GetFleaPrice(plateTradeItem, PluginContextHolder.Current!.Configuration!.IncludeFleaTax);
             }
 
             if (modHasTraderPrice && modHasFleaPrice)
@@ -293,8 +295,8 @@ public class SimpleTooltipShowPatch : ModulePatch
     {
         if (highestComparePrice is not null)
         {
-            Item item = PluginContextDataHolder.Current.HoveredItem!;
-            if (PluginContextDataHolder.Current!.Configuration!.UseCaliberPenetrationPower.IsEnabled()
+            Item item = PluginContextHolder.Current.HoveredItem!;
+            if (PluginContextHolder.Current!.Configuration!.UseCaliberPenetrationPower.IsEnabled()
                 && (item is AmmoBox || item is AmmoItemClass))
             {
                 SetColorCodingForAmmunition(item, ref text, textToReplace);
@@ -325,28 +327,28 @@ public class SimpleTooltipShowPatch : ModulePatch
         {
             switch (penetrationPower)
             {
-                case var _ when penetrationPower < (double)PluginContextDataHolder.Current!.Configuration!.PoorPenetrationValue.GetValue():
-                    colorCoding = PluginContextDataHolder.Current!.Configuration!.PoorColor.GetRGBHexCode();
+                case var _ when penetrationPower < (double)PluginContextHolder.Current!.Configuration!.PoorPenetrationValue.GetValue():
+                    colorCoding = PluginContextHolder.Current!.Configuration!.PoorColor.GetRGBHexCode();
                     break;
 
-                case var _ when penetrationPower < (double)PluginContextDataHolder.Current!.Configuration!.CommonPenetrationValue.GetValue():
-                    colorCoding = PluginContextDataHolder.Current!.Configuration!.CommonColor.GetRGBHexCode();
+                case var _ when penetrationPower < (double)PluginContextHolder.Current!.Configuration!.CommonPenetrationValue.GetValue():
+                    colorCoding = PluginContextHolder.Current!.Configuration!.CommonColor.GetRGBHexCode();
                     break;
 
-                case var _ when penetrationPower < (double)PluginContextDataHolder.Current!.Configuration!.UncommonPenetrationValue.GetValue():
-                    colorCoding = PluginContextDataHolder.Current!.Configuration!.UncommonColor.GetRGBHexCode();
+                case var _ when penetrationPower < (double)PluginContextHolder.Current!.Configuration!.UncommonPenetrationValue.GetValue():
+                    colorCoding = PluginContextHolder.Current!.Configuration!.UncommonColor.GetRGBHexCode();
                     break;
 
-                case var _ when penetrationPower < (double)PluginContextDataHolder.Current!.Configuration!.RarePenetrationValue.GetValue():
-                    colorCoding = PluginContextDataHolder.Current!.Configuration!.RareColor.GetRGBHexCode();
+                case var _ when penetrationPower < (double)PluginContextHolder.Current!.Configuration!.RarePenetrationValue.GetValue():
+                    colorCoding = PluginContextHolder.Current!.Configuration!.RareColor.GetRGBHexCode();
                     break;
 
-                case var _ when penetrationPower < (double)PluginContextDataHolder.Current!.Configuration!.EpicPenetrationValue.GetValue():
-                    colorCoding = PluginContextDataHolder.Current!.Configuration!.EpicColor.GetRGBHexCode();
+                case var _ when penetrationPower < (double)PluginContextHolder.Current!.Configuration!.EpicPenetrationValue.GetValue():
+                    colorCoding = PluginContextHolder.Current!.Configuration!.EpicColor.GetRGBHexCode();
                     break;
 
-                case var _ when penetrationPower >= (double)PluginContextDataHolder.Current!.Configuration!.EpicPenetrationValue.GetValue():
-                    colorCoding = PluginContextDataHolder.Current!.Configuration!.LegendaryColor.GetRGBHexCode();
+                case var _ when penetrationPower >= (double)PluginContextHolder.Current!.Configuration!.EpicPenetrationValue.GetValue():
+                    colorCoding = PluginContextHolder.Current!.Configuration!.LegendaryColor.GetRGBHexCode();
                     break;
             }
         }
@@ -361,28 +363,28 @@ public class SimpleTooltipShowPatch : ModulePatch
 
         switch (highestComparePrice)
         {
-            case var _ when highestComparePrice < (double)PluginContextDataHolder.Current!.Configuration!.PoorValue.GetValue():
-                colorCoding = PluginContextDataHolder.Current!.Configuration!.PoorColor.GetRGBHexCode();
+            case var _ when highestComparePrice < (double)PluginContextHolder.Current!.Configuration!.PoorValue.GetValue():
+                colorCoding = PluginContextHolder.Current!.Configuration!.PoorColor.GetRGBHexCode();
                 break;
 
-            case var _ when highestComparePrice < (double)PluginContextDataHolder.Current!.Configuration!.CommonValue.GetValue():
-                colorCoding = PluginContextDataHolder.Current!.Configuration!.CommonColor.GetRGBHexCode();
+            case var _ when highestComparePrice < (double)PluginContextHolder.Current!.Configuration!.CommonValue.GetValue():
+                colorCoding = PluginContextHolder.Current!.Configuration!.CommonColor.GetRGBHexCode();
                 break;
 
-            case var _ when highestComparePrice < (double)PluginContextDataHolder.Current!.Configuration!.UncommonValue.GetValue():
-                colorCoding = PluginContextDataHolder.Current!.Configuration!.UncommonColor.GetRGBHexCode();
+            case var _ when highestComparePrice < (double)PluginContextHolder.Current!.Configuration!.UncommonValue.GetValue():
+                colorCoding = PluginContextHolder.Current!.Configuration!.UncommonColor.GetRGBHexCode();
                 break;
 
-            case var _ when highestComparePrice < (double)PluginContextDataHolder.Current!.Configuration!.RareValue.GetValue():
-                colorCoding = PluginContextDataHolder.Current!.Configuration!.RareColor.GetRGBHexCode();
+            case var _ when highestComparePrice < (double)PluginContextHolder.Current!.Configuration!.RareValue.GetValue():
+                colorCoding = PluginContextHolder.Current!.Configuration!.RareColor.GetRGBHexCode();
                 break;
 
-            case var _ when highestComparePrice < (double)PluginContextDataHolder.Current!.Configuration!.EpicValue.GetValue():
-                colorCoding = PluginContextDataHolder.Current!.Configuration!.EpicColor.GetRGBHexCode();
+            case var _ when highestComparePrice < (double)PluginContextHolder.Current!.Configuration!.EpicValue.GetValue():
+                colorCoding = PluginContextHolder.Current!.Configuration!.EpicColor.GetRGBHexCode();
                 break;
 
-            case var _ when highestComparePrice >= (double)PluginContextDataHolder.Current!.Configuration!.EpicValue.GetValue():
-                colorCoding = PluginContextDataHolder.Current!.Configuration!.LegendaryColor.GetRGBHexCode();
+            case var _ when highestComparePrice >= (double)PluginContextHolder.Current!.Configuration!.EpicValue.GetValue():
+                colorCoding = PluginContextHolder.Current!.Configuration!.LegendaryColor.GetRGBHexCode();
                 break;
         }
 
@@ -392,7 +394,7 @@ public class SimpleTooltipShowPatch : ModulePatch
 
     private static void SetToolTipDelay(ref float delay)
     {
-        delay = (float)PluginContextDataHolder.Current!.Configuration!.ToolTipDelay.GetValue();
+        delay = (float)PluginContextHolder.Current!.Configuration!.ToolTipDelay.GetValue();
     }
 
     private static bool ItemMeetsRequirements(Item item)
@@ -432,12 +434,12 @@ public class SimpleTooltipShowPatch : ModulePatch
         else
             text.Append($"{tradePriceA.TraderName}: ");
 
-        if ((tradeItem.ItemSlotCount > 1 || tradeItem.Item.StackObjectsCount > 1) && PluginContextDataHolder.Current!.Configuration!.ShowPricePerSlot.IsEnabled())
+        if ((tradeItem.ItemSlotCount > 1 || tradeItem.Item.StackObjectsCount > 1) && PluginContextHolder.Current!.Configuration!.ShowPricePerSlot.IsEnabled())
         {
             string slotPrice = FormatPrice(tradePriceA.GetComparePrice(), tradePriceA.CurrencySymbol);
 
-            if (PluginContextDataHolder.Current!.Configuration!.EnableColorCoding.IsEnabled()
-                && (PluginContextDataHolder.Current!.Configuration!.ColorCodingMode.GetValue() == ColorCodingMode.Price || PluginContextDataHolder.Current!.Configuration!.ColorCodingMode.GetValue() == ColorCodingMode.Both))
+            if (PluginContextHolder.Current!.Configuration!.EnableColorCoding.IsEnabled()
+                && (PluginContextHolder.Current!.Configuration!.ColorCodingMode.GetValue() == ColorCodingMode.Price || PluginContextHolder.Current!.Configuration!.ColorCodingMode.GetValue() == ColorCodingMode.Both))
             {
                 SetColorCoding(ref slotPrice, slotPrice, tradePriceA.GetComparePriceInRouble());
             }
@@ -449,9 +451,9 @@ public class SimpleTooltipShowPatch : ModulePatch
         if (isBestPrice)
             totalPrice = $"<b>{totalPrice}</b>";
 
-        if (PluginContextDataHolder.Current!.Configuration!.EnableColorCoding.IsEnabled()
-            && (PluginContextDataHolder.Current!.Configuration!.ColorCodingMode.GetValue() == ColorCodingMode.Price || PluginContextDataHolder.Current!.Configuration!.ColorCodingMode.GetValue() == ColorCodingMode.Both)
-            && ((tradeItem.ItemSlotCount == 1 && tradeItem.Item.StackObjectsCount == 1) || !PluginContextDataHolder.Current!.Configuration!.ShowPricePerSlot.IsEnabled()))
+        if (PluginContextHolder.Current!.Configuration!.EnableColorCoding.IsEnabled()
+            && (PluginContextHolder.Current!.Configuration!.ColorCodingMode.GetValue() == ColorCodingMode.Price || PluginContextHolder.Current!.Configuration!.ColorCodingMode.GetValue() == ColorCodingMode.Both)
+            && ((tradeItem.ItemSlotCount == 1 && tradeItem.Item.StackObjectsCount == 1) || !PluginContextHolder.Current!.Configuration!.ShowPricePerSlot.IsEnabled()))
         {
             SetColorCoding(ref totalPrice, totalPrice, tradePriceA.GetComparePriceInRouble());
         }
@@ -461,13 +463,13 @@ public class SimpleTooltipShowPatch : ModulePatch
         if (isCombinedPrice)
             text.Append(" (+)");
 
-        if (PluginContextDataHolder.Current!.Configuration!.ShowFleaTax && tradePriceA.HasTax())
+        if (PluginContextHolder.Current!.Configuration!.ShowFleaTax && tradePriceA.HasTax())
             text.Append($" {"ragfair/Fee".Localized(null)}: {FormatPrice(tradePriceA.GetTotalTax())}");
     }
 
     private static string GetBestTradeColor()
     {
-        return ColorUtility.ToHtmlStringRGB(PluginContextDataHolder.Current!.Configuration!.BestTradeColor.GetValue());
+        return ColorUtility.ToHtmlStringRGB(PluginContextHolder.Current!.Configuration!.BestTradeColor.GetValue());
     }
 
     private static string FormatPrice(double val, string currency = "₽")

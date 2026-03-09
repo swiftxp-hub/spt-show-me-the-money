@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace SwiftXP.SPT.ShowMeTheMoney.Server.Models;
+namespace SwiftXP.SPT.ShowMeTheMoney.Server.Data;
 
 public record PartialRagfairConfig
 {
