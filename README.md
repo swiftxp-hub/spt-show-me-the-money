@@ -1,21 +1,15 @@
+---
+> **A quick update regarding SPT 4.1:**
+> As some of you might have noticed, the Forge will be shutting down soon. You can find the Discord message explaining the reasons here: https://discord.com/channels/875684761291599922/875706629260197908/1533159965597110352
+> 
+> Due to this announcement, I have decided to put the SPT 4.1 update for this mod on hold for now. I apologize for the disappointment. My time for modding is quite limited as it is, and considering the uncertain future of the project right now, I think it makes the most sense to step back.
+---
+
 ![Preview Image MOD](https://raw.githubusercontent.com/swiftxp-hub/spt-show-me-the-money/refs/heads/main/Assets/preview.png)
 
 ---
 > **Speed up your sales!**  
 > A remarkably convenient quick-sell add-on lurks in the **Addon** tab, waiting patiently for you to notice it. If patience is not your strong suit, you may bend spacetime and simply click **[here](https://forge.sp-tarkov.com/addon/1/quick-sell)**.
----
-
----
-As many of you have seen in the recent announcements from the SPT developers on Discord about the changes with Tarkov 1.0, the long-term outlook for SPT and FIKA is uncertain. If you haven’t read their message yet, you can find it here:
-
-https://discord.com/channels/875684761291599922/875706629260197908/1439239841895158022
-
-FIKA will no longer be adding major new features, focusing instead on support and bug fixes for as long as SPT remains viable.
-
-For my mod, I’ll be taking a similar approach: I’ll continue providing maintenance updates and fixing bugs, but I don’t currently plan to develop new large-scale features. The project has grown far beyond what I expected when I started it, and it has genuinely been great to read your feedback and turn it into improvements. Thank you for every comment and conversation on Discord.
-
-The mod’s source code is available on GitHub, so if anyone wants to fork it and build new features on top of it, feel free - you have my blessing.  
-
 ---
 
 ## Tabs {.tabset}
