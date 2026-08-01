@@ -1,5 +1,3 @@
-![Preview Image MOD](https://raw.githubusercontent.com/swiftxp-hub/spt-show-me-the-money/refs/heads/main/Assets/preview.png)
-
 ---
 > **A quick update regarding SPT 4.1:**
 > As some of you might have noticed, the Forge will be shutting down soon. You can find the Discord message explaining the reasons here: https://discord.com/channels/875684761291599922/875706629260197908/1533159965597110352
