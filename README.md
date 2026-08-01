@@ -1,14 +1,14 @@
----
+___
 > **A quick update regarding SPT 4.1:**
 > As some of you might have noticed, the Forge will be shutting down soon. You can find the Discord message explaining the reasons here: https://discord.com/channels/875684761291599922/875706629260197908/1533159965597110352
 > 
 > Due to this announcement, I have decided to put the SPT 4.1 update for this mod on hold for now. I apologize for the disappointment. My time for modding is quite limited as it is, and considering the uncertain future of the project right now, I think it makes the most sense to step back.
----
+___
 
----
+___
 > **Speed up your sales!**  
 > A remarkably convenient quick-sell add-on lurks in the **Addon** tab, waiting patiently for you to notice it. If patience is not your strong suit, you may bend spacetime and simply click **[here](https://forge.sp-tarkov.com/addon/1/quick-sell)**.
----
+___
 
 ## Tabs {.tabset}
 
